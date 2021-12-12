@@ -20,7 +20,7 @@ struct ListView: View {
             List(todos, id: \.self){ todo in
                 NavigationLink(destination:
                 {
-                    
+                    DetailView()
                 }, label: {
                     Text(todo.title ?? "Error")
                 })
