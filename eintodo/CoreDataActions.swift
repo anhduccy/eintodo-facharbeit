@@ -12,7 +12,7 @@ extension ContentView {
     public func addItem() {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
-            newToDo.title = ""
+            newToDo.title =
 
             do {
                 try viewContext.save()
@@ -26,7 +26,6 @@ extension ContentView {
     public func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
-
             do {
                 try viewContext.save()
             } catch {
