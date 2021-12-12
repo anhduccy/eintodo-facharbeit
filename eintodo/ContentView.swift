@@ -15,15 +15,22 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.timestamp, ascending: true)],
         animation: .default)
     public var items: FetchedResults<ToDo>
+    @State var showAddView: Bool = false
 
     var body: some View {
         NavigationView {
             Text("Hallo")
             .toolbar {
                 ToolbarItem {
-                    Button(action: addItem) {
+                    Button(action:{
+                        addItem()
+                        showAddView.toggle()
+                    }, label: {
                         Label("Add Item", systemImage: "plus")
-                    }
+                    })
+                        .sheet(isPresented: $showAddView){
+                            AddView(showAddView: $showAddView)
+                        }
                 }
             }
         }
