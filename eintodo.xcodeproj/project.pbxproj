@@ -17,7 +17,7 @@
 		794856032766996D0086927E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856022766996D0086927E /* ListView.swift */; };
 		794856072766A4500086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856062766A4500086927E /* CalendarView.swift */; };
 		794856092766A59F0086927E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856082766A59F0086927E /* DetailView.swift */; };
-		7948560B2766A6CF0086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560A2766A6CF0086927E /* AddView.swift */; };
+		7948560D2766A8B10086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560C2766A8B10086927E /* AddView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +33,7 @@
 		794856022766996D0086927E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		794856062766A4500086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CalendarView.swift; path = ../../../../../CalendarView.swift; sourceTree = "<group>"; };
 		794856082766A59F0086927E /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailView.swift; path = ../../../../../DetailView.swift; sourceTree = "<group>"; };
-		7948560A2766A6CF0086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddView.swift; path = ../../../../../AddView.swift; sourceTree = "<group>"; };
+		7948560C2766A8B10086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddView.swift; path = ../../../../../AddView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +69,7 @@
 				794855EA276690410086927E /* eintodoApp.swift */,
 				794855EC276690410086927E /* ContentView.swift */,
 				794856062766A4500086927E /* CalendarView.swift */,
-				7948560A2766A6CF0086927E /* AddView.swift */,
+				7948560C2766A8B10086927E /* AddView.swift */,
 				794856022766996D0086927E /* ListView.swift */,
 				794856082766A59F0086927E /* DetailView.swift */,
 				794855FE276697640086927E /* CoreDataActions.swift */,
@@ -162,7 +162,7 @@
 			files = (
 				794856092766A59F0086927E /* DetailView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
-				7948560B2766A6CF0086927E /* AddView.swift in Sources */,
+				7948560D2766A8B10086927E /* AddView.swift in Sources */,
 				794856072766A4500086927E /* CalendarView.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
