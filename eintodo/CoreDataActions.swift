@@ -12,7 +12,7 @@ extension ContentView {
     public func addItem() {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
-            newToDo.title =
+            newToDo.title = "Hallo"
 
             do {
                 try viewContext.save()

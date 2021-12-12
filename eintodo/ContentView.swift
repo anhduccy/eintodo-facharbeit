@@ -18,17 +18,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text("Hello")
-                        
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
+            Text("Hallo")
             .toolbar {
                 ToolbarItem {
                     Button(action: addItem) {
@@ -36,7 +26,6 @@ struct ContentView: View {
                     }
                 }
             }
-            Text("Select an item")
         }
     }
 

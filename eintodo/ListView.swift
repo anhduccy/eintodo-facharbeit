@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct ListView: View {
+    @Environment(\.managedObjectContext) public var viewContext
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.timestamp, ascending: true)],
+        animation: .default)
+    public var todos: FetchedResults<ToDo>
+
     var body: some View {
-        Text("Hello, World!")
+        List(todos, id: \.self){ todo in
+            Text(todo.title ?? "Error")
+        }
     }
 }
 

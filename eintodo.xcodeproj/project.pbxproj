@@ -15,6 +15,7 @@
 		794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 794855F5276690410086927E /* eintodo.xcdatamodeld */; };
 		794855FF276697640086927E /* CoreDataActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855FE276697640086927E /* CoreDataActions.swift */; };
 		794856032766996D0086927E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856022766996D0086927E /* ListView.swift */; };
+		7948560527669C620086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560427669C620086927E /* AddView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		794855F8276690410086927E /* eintodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = eintodo.entitlements; sourceTree = "<group>"; };
 		794855FE276697640086927E /* CoreDataActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataActions.swift; sourceTree = "<group>"; };
 		794856022766996D0086927E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		7948560427669C620086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddView.swift; path = ../../../../../AddView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				794855EA276690410086927E /* eintodoApp.swift */,
 				794855EC276690410086927E /* ContentView.swift */,
+				7948560427669C620086927E /* AddView.swift */,
 				794856022766996D0086927E /* ListView.swift */,
 				794855FE276697640086927E /* CoreDataActions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
@@ -151,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7948560527669C620086927E /* AddView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
