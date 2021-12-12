@@ -16,8 +16,15 @@ struct ListView: View {
     public var todos: FetchedResults<ToDo>
 
     var body: some View {
-        List(todos, id: \.self){ todo in
-            Text(todo.title ?? "Error")
+        NavigationView{
+            List(todos, id: \.self){ todo in
+                NavigationLink(destination:
+                {
+                    
+                }, label: {
+                    Text(todo.title ?? "Error")
+                })
+            }
         }
     }
 }
