@@ -12,8 +12,8 @@ struct AddView: View {
     
     @Binding var showAddView: Bool
     @State var title: String = ""
+    @State var deadline: Date = Date()
     @State var toggle_show_deadline: Bool = true
-    
     
     var body: some View {
         VStack{
@@ -28,7 +28,10 @@ struct AddView: View {
                     .toggleStyle(.switch)
             }
             if toggle_show_deadline {
-                Text("Toggle works")
+                DatePicker("",
+                    selection: $deadline,
+                    displayedComponents: [.date]
+                )
             }
             
             Spacer()
@@ -49,6 +52,7 @@ struct AddView: View {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
             newToDo.title = title
+            newToDo.deadline = deadline
 
             do {
                 try viewContext.save()
