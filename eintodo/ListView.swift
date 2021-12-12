@@ -22,7 +22,10 @@ struct ListView: View {
                 {
                     DetailView()
                 }, label: {
-                    Text(todo.title ?? "Error")
+                    VStack{
+                        Text(todo.title ?? "Error")
+                            .fontWeight(.bold)
+                    }
                 })
             }
         }
