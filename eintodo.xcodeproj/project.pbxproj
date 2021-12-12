@@ -13,6 +13,7 @@
 		794855F2276690410086927E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 794855F1276690410086927E /* Preview Assets.xcassets */; };
 		794855F4276690410086927E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855F3276690410086927E /* Persistence.swift */; };
 		794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 794855F5276690410086927E /* eintodo.xcdatamodeld */; };
+		794855FF276697640086927E /* CoreDataActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855FE276697640086927E /* CoreDataActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		794855F3276690410086927E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		794855F6276690410086927E /* eintodo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = eintodo.xcdatamodel; sourceTree = "<group>"; };
 		794855F8276690410086927E /* eintodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = eintodo.entitlements; sourceTree = "<group>"; };
+		794855FE276697640086927E /* CoreDataActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataActions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				794855EA276690410086927E /* eintodoApp.swift */,
 				794855EC276690410086927E /* ContentView.swift */,
+				794855FE276697640086927E /* CoreDataActions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
 				794855F3276690410086927E /* Persistence.swift */,
 				794855F8276690410086927E /* eintodo.entitlements */,
@@ -148,6 +151,7 @@
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */,
+				794855FF276697640086927E /* CoreDataActions.swift in Sources */,
 				794855EB276690410086927E /* eintodoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
