@@ -8,9 +8,34 @@
 import SwiftUI
 
 struct CalendarView: View {
+    @Environment(\.managedObjectContext) public var viewContext
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
+        animation: .default)
+    public var todos: FetchedResults<ToDo>
+    
     var body: some View {
         Text("CalendarView")
+        Button("Alles löschen"){
+            deleteItems()
+        }
     }
+    
+    public func deleteItems() {
+        withAnimation {
+            for todo in todos{
+                viewContext.delete(todo)
+            }
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
 }
 
 struct CalendarView_Previews: PreviewProvider {

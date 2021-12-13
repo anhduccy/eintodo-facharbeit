@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 extension ContentView {
+    /*
     public func addItem() {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
@@ -22,6 +23,7 @@ extension ContentView {
             }
         }
     }
+     */
 
     public func deleteItems(offsets: IndexSet) {
         withAnimation {

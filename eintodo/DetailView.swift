@@ -38,14 +38,8 @@ struct DetailView: View {
         .padding()
         .frame(width: 400, height: 400)
     }
-    private func saveToDo() {
+    private func saveToDo() { //Update CoreData fehlt
         withAnimation {
-            let newToDo = ToDo(context: viewContext)
-            newToDo.title = title
-            //newToDo.deadline = deadline
-            //newToDo.notification = notification
-            newToDo.isDone = false
-
             do {
                 try viewContext.save()
             } catch {

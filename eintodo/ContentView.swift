@@ -23,7 +23,6 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action:{
-                        addItem()
                         showAddView.toggle()
                     }, label: {
                         Label("Add Item", systemImage: "plus")
