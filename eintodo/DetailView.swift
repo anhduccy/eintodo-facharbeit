@@ -9,40 +9,25 @@ import SwiftUI
 
 struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
-    @Binding var showDetailView: Bool
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+    @State var todo: ToDo
     @State var title: String
     var body: some View {
         VStack{
             TextField("Titel", text: $title)
+                .textFieldStyle(.plain)
+                .font(.title.bold())
             Spacer()
-            HStack{
-                Button("Abbrechen"){
-                    showDetailView.toggle()
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(.red)
-                
-                Spacer()
-                
-                if(title != ""){
-                    Button(action: {
-                        showDetailView.toggle()
-                        updateToDo()
-                    }, label: {
-                       Text("Fertig")
-                            .foregroundColor(.blue)
-                            .fontWeight(.bold)
-                    })
-                    .buttonStyle(.plain)
-                }
-
-            }
         }
         .padding()
         .frame(width: 400, height: 400)
+        .onDisappear(perform: updateToDo)
     }
-    private func updateToDo() { //Update CoreData fehlt
+    
+    private func updateToDo() {
         withAnimation {
+            todo.title = title
             do {
                 try viewContext.save()
             } catch {

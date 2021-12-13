@@ -10,24 +10,21 @@ import SwiftUI
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
 
+
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
         animation: .default)
     public var todos: FetchedResults<ToDo>
     
-    @State var showDetailView: Bool = false
-
     var body: some View {
-        List{
-            ForEach(todos, id: \.self){ todo in
-                Button(todo.title ?? "Error"){
-                    showDetailView.toggle()
-                }
-                .buttonStyle(.plain)
-                .sheet(isPresented: $showDetailView){
-                    DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error")
-                }
-            }
+        NavigationView{
+            List (todos, id: \.self){ todo in
+                 NavigationLink(destination:
+                     DetailView(todo: todo, title: todo.title ?? "Error")) {
+                         Text(todo.title ?? "Error")
+                             .buttonStyle(.plain)
+                 }
+             }
         }
     }
 }
