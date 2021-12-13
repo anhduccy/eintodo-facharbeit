@@ -60,22 +60,25 @@ struct AddView: View {
             }
             Spacer()
             HStack{
-                if(title != ""){
-                    Button("Fertig"){
-                        showAddView.toggle()
-                        addToDo()
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundColor(.blue)
-                }
-                
-                Spacer()
-                
                 Button("Abbrechen"){
                     showAddView.toggle()
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(.red)
+                
+                Spacer()
+                
+                if(title != ""){
+                    Button(action: {
+                        showAddView.toggle()
+                        addToDo()
+                    }, label: {
+                       Text("Fertig")
+                            .foregroundColor(.blue)
+                            .fontWeight(.bold)
+                    })
+                    .buttonStyle(.plain)
+                }
 
             }
         }

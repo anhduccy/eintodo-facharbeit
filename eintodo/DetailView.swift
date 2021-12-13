@@ -16,22 +16,25 @@ struct DetailView: View {
             TextField("Titel", text: $title)
             Spacer()
             HStack{
-                if(title != ""){
-                    Button("Fertig"){
-                        showDetailView.toggle()
-                        updateToDo()
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundColor(.blue)
-                }
-                
-                Spacer()
-                
                 Button("Abbrechen"){
                     showDetailView.toggle()
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(.red)
+                
+                Spacer()
+                
+                if(title != ""){
+                    Button(action: {
+                        showDetailView.toggle()
+                        updateToDo()
+                    }, label: {
+                       Text("Fertig")
+                            .foregroundColor(.blue)
+                            .fontWeight(.bold)
+                    })
+                    .buttonStyle(.plain)
+                }
 
             }
         }
