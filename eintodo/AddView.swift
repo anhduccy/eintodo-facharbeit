@@ -23,37 +23,38 @@ struct AddView: View {
             TextField("Titel", text: $title)
                 .font(.title.bold())
                 .textFieldStyle(.plain)
-            
-            HStack{
-                Image(systemName: "calendar.circle.fill")
-                    .foregroundColor(.red)
-                Text("Fälligkeitsdatum")
-                    .font(.headline)
-                Spacer()
-                Toggle("", isOn: $toggle_show_deadline)
-                    .toggleStyle(.switch)
-            }
-            if toggle_show_deadline {
-                DatePicker("",
-                    selection: $deadline,
-                    displayedComponents: [.date]
-                )
-            }
-            
-            HStack{
-                Image(systemName: "bell.circle.fill")
-                    .foregroundColor(.orange)
-                Text("Erinnerung")
-                    .font(.headline)
-                Spacer()
-                Toggle("", isOn: $toggle_show_notification)
-                    .toggleStyle(.switch)
-            }
-            if toggle_show_notification {
-                DatePicker("",
-                    selection: $notification,
-                           displayedComponents: [.date, .hourAndMinute]
-                )
+            List{
+                HStack{
+                    Image(systemName: "calendar.circle.fill")
+                        .foregroundColor(.red)
+                    Text("Fälligkeitsdatum")
+                        .font(.title3)
+                    Spacer()
+                    Toggle("", isOn: $toggle_show_deadline)
+                        .toggleStyle(.switch)
+                }
+                if toggle_show_deadline {
+                    DatePicker("",
+                        selection: $deadline,
+                        displayedComponents: [.date]
+                    )
+                }
+                
+                HStack{
+                    Image(systemName: "bell.circle.fill")
+                        .foregroundColor(.orange)
+                    Text("Erinnerung")
+                        .font(.title3)
+                    Spacer()
+                    Toggle("", isOn: $toggle_show_notification)
+                        .toggleStyle(.switch)
+                }
+                if toggle_show_notification {
+                    DatePicker("",
+                        selection: $notification,
+                               displayedComponents: [.date, .hourAndMinute]
+                    )
+                }
             }
             Spacer()
             Button(title != "" ? "Fertig" : "Abbrechen"){
