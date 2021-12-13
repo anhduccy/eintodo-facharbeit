@@ -12,6 +12,8 @@ struct DetailView: View {
     
     @State var title: String
     @State var deadline: Date
+    @State var notification: Date
+    @State var isDone: Bool
     var body: some View {
         Text(title)
     }
