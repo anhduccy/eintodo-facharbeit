@@ -38,6 +38,7 @@ struct AddView: View {
                         selection: $deadline,
                         displayedComponents: [.date]
                     )
+                        .datePickerStyle(.field)
                 }
                 
                 HStack{
@@ -54,6 +55,7 @@ struct AddView: View {
                         selection: $notification,
                                displayedComponents: [.date, .hourAndMinute]
                     )
+                        .datePickerStyle(.field)
                 }
             }
             Spacer()

@@ -11,7 +11,7 @@ struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
         animation: .default)
     public var todos: FetchedResults<ToDo>
     
