@@ -13,15 +13,53 @@ struct DetailView: View {
 
     @State var todo: ToDo
     @State var title: String
+    @State var deadline: Date
+    @State var notification: Date
+    
+    @State var toggle_show_deadline = false
+    @State var toggle_show_notification = false
     var body: some View {
         VStack{
             TextField("Titel", text: $title)
                 .textFieldStyle(.plain)
                 .font(.title.bold())
+            //Fälligkeitsdatum
+            HStack{
+                Image(systemName: "calendar.circle.fill")
+                    .foregroundColor(.red)
+                Text("Fälligkeitsdatum")
+                    .font(.title3)
+                Spacer()
+                Toggle("", isOn: $toggle_show_deadline)
+                    .toggleStyle(.switch)
+            }
+            if toggle_show_deadline {
+                DatePicker("",
+                    selection: $deadline,
+                    displayedComponents: [.date]
+                )
+                    .datePickerStyle(.field)
+            }
+            //Erinnerung - Notification
+            HStack{
+                Image(systemName: "bell.circle.fill")
+                    .foregroundColor(.orange)
+                Text("Erinnerung")
+                    .font(.title3)
+                Spacer()
+                Toggle("", isOn: $toggle_show_notification)
+                    .toggleStyle(.switch)
+            }
+            if toggle_show_notification {
+                DatePicker("",
+                    selection: $notification,
+                           displayedComponents: [.date, .hourAndMinute]
+                )
+                    .datePickerStyle(.field)
+            }
             Spacer()
         }
         .padding()
-        .frame(width: 400, height: 400)
         .onDisappear(perform: updateToDo)
     }
     

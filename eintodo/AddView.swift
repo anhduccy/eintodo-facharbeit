@@ -20,45 +20,50 @@ struct AddView: View {
     
     var body: some View {
         VStack{
+            
+            //Titel
             TextField("Titel", text: $title)
                 .font(.title.bold())
                 .textFieldStyle(.plain)
-            List{
-                HStack{
-                    Image(systemName: "calendar.circle.fill")
-                        .foregroundColor(.red)
-                    Text("Fälligkeitsdatum")
-                        .font(.title3)
-                    Spacer()
-                    Toggle("", isOn: $toggle_show_deadline)
-                        .toggleStyle(.switch)
-                }
-                if toggle_show_deadline {
-                    DatePicker("",
-                        selection: $deadline,
-                        displayedComponents: [.date]
-                    )
-                        .datePickerStyle(.field)
-                }
-                
-                HStack{
-                    Image(systemName: "bell.circle.fill")
-                        .foregroundColor(.orange)
-                    Text("Erinnerung")
-                        .font(.title3)
-                    Spacer()
-                    Toggle("", isOn: $toggle_show_notification)
-                        .toggleStyle(.switch)
-                }
-                if toggle_show_notification {
-                    DatePicker("",
-                        selection: $notification,
-                               displayedComponents: [.date, .hourAndMinute]
-                    )
-                        .datePickerStyle(.field)
-                }
+            
+            //Deadline
+            HStack{
+                Image(systemName: "calendar.circle.fill")
+                    .foregroundColor(.red)
+                Text("Fälligkeitsdatum")
+                    .font(.title3)
+                Spacer()
+                Toggle("", isOn: $toggle_show_deadline)
+                    .toggleStyle(.switch)
+            }
+            if toggle_show_deadline {
+                DatePicker("",
+                    selection: $deadline,
+                    displayedComponents: [.date]
+                )
+                    .datePickerStyle(.field)
+            }
+            
+            //Notification
+            HStack{
+                Image(systemName: "bell.circle.fill")
+                    .foregroundColor(.orange)
+                Text("Erinnerung")
+                    .font(.title3)
+                Spacer()
+                Toggle("", isOn: $toggle_show_notification)
+                    .toggleStyle(.switch)
+            }
+            if toggle_show_notification {
+                DatePicker("",
+                    selection: $notification,
+                           displayedComponents: [.date, .hourAndMinute]
+                )
+                    .datePickerStyle(.field)
             }
             Spacer()
+            
+            //Button Done / Button Cancel
             HStack{
                 Button("Abbrechen"){
                     showAddView.toggle()
@@ -73,9 +78,9 @@ struct AddView: View {
                         showAddView.toggle()
                         addToDo()
                     }, label: {
-                       Text("Fertig")
+                       Text("Hinzufügen")
                             .foregroundColor(.blue)
-                            .fontWeight(.bold)
+                            .fontWeight(.semibold)
                     })
                     .buttonStyle(.plain)
                 }

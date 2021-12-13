@@ -10,7 +10,6 @@ import SwiftUI
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
 
-
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
         animation: .default)
@@ -20,7 +19,7 @@ struct ListView: View {
         NavigationView{
             List (todos, id: \.self){ todo in
                  NavigationLink(destination:
-                     DetailView(todo: todo, title: todo.title ?? "Error")) {
+                                    DetailView(todo: todo, title: todo.title ?? "Error", deadline: todo.deadline!, notification: todo.notification!)) {
                          Text(todo.title ?? "Error")
                              .buttonStyle(.plain)
                  }
