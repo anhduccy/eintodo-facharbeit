@@ -73,7 +73,6 @@ struct AddView: View {
                 
                 Button("Abbrechen"){
                     showAddView.toggle()
-                        addToDo()
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(.red)
