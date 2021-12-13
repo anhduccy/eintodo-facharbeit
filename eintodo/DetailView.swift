@@ -19,7 +19,7 @@ struct DetailView: View {
                 if(title != ""){
                     Button("Fertig"){
                         showDetailView.toggle()
-                        saveToDo()
+                        updateToDo()
                     }
                     .buttonStyle(.plain)
                     .foregroundColor(.blue)
@@ -38,7 +38,7 @@ struct DetailView: View {
         .padding()
         .frame(width: 400, height: 400)
     }
-    private func saveToDo() { //Update CoreData fehlt
+    private func updateToDo() { //Update CoreData fehlt
         withAnimation {
             do {
                 try viewContext.save()

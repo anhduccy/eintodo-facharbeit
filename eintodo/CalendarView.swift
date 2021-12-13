@@ -18,11 +18,11 @@ struct CalendarView: View {
     var body: some View {
         Text("CalendarView")
         Button("Alles löschen"){
-            deleteItems()
+            deleteAllItems()
         }
     }
     
-    public func deleteItems() {
+    public func deleteAllItems() {
         withAnimation {
             for todo in todos{
                 viewContext.delete(todo)
