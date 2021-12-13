@@ -22,10 +22,13 @@ struct DetailView: View {
     
     var body: some View {
         VStack{
+            
+            //Title
             TextField("Titel", text: $title)
                 .textFieldStyle(.plain)
                 .font(.title.bold())
-            //Fälligkeitsdatum
+            
+            //Deadline
             HStack{
                 Image(systemName: "calendar.circle.fill")
                     .foregroundColor(.red)
@@ -42,7 +45,8 @@ struct DetailView: View {
                 )
                     .datePickerStyle(.field)
             }
-            //Erinnerung - Notification
+            
+            //Notification
             HStack{
                 Image(systemName: "bell.circle.fill")
                     .foregroundColor(.orange)
