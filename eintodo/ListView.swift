@@ -22,6 +22,7 @@ struct ListView: View {
             Button(todo.title ?? "Error"){
                 showDetailView.toggle()
             }
+            .buttonStyle(.plain)
             .sheet(isPresented: $showDetailView){
                 DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error", deadline: todo.deadline ?? Date())
             }
