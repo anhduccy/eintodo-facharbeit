@@ -86,6 +86,7 @@ struct AddView: View {
     private func addToDo() {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
+            newToDo.id = UUID()
             newToDo.title = title
             newToDo.deadline = deadline
             newToDo.notification = notification

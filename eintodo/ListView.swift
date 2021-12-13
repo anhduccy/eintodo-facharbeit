@@ -18,20 +18,16 @@ struct ListView: View {
     @State var showDetailView: Bool = false
 
     var body: some View {
-        List(todos, id: \.self){ todo in
-            Button(todo.title ?? "Error"){
-                showDetailView.toggle()
-            }
-            .buttonStyle(.plain)
-            .sheet(isPresented: $showDetailView){
-                DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error", deadline: todo.deadline, notification: todo.notification, isDone: todo.isDone)
+        List{
+            ForEach(todos, id: \.self){ todo in
+                Button(todo.title ?? "Error"){
+                    showDetailView.toggle()
+                }
+                .buttonStyle(.plain)
+                .sheet(isPresented: $showDetailView){
+                    DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error")
+                }
             }
         }
-    }
-}
-
-struct ListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ListView()
     }
 }
