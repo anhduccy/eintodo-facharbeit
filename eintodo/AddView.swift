@@ -13,7 +13,10 @@ struct AddView: View {
     @Binding var showAddView: Bool
     @State var title: String = ""
     @State var deadline: Date = Date()
+    @State var notification: Date = Date()
     @State var toggle_show_deadline: Bool = true
+    @State var toggle_show_notification: Bool = true
+
     
     var body: some View {
         VStack{
@@ -22,7 +25,10 @@ struct AddView: View {
                 .textFieldStyle(.plain)
             
             HStack{
+                Image(systemName: "calendar.circle.fill")
+                    .foregroundColor(.red)
                 Text("Fälligkeitsdatum")
+                    .font(.headline)
                 Spacer()
                 Toggle("", isOn: $toggle_show_deadline)
                     .toggleStyle(.switch)
@@ -34,6 +40,21 @@ struct AddView: View {
                 )
             }
             
+            HStack{
+                Image(systemName: "bell.circle.fill")
+                    .foregroundColor(.orange)
+                Text("Erinnerung")
+                    .font(.headline)
+                Spacer()
+                Toggle("", isOn: $toggle_show_notification)
+                    .toggleStyle(.switch)
+            }
+            if toggle_show_notification {
+                DatePicker("",
+                    selection: $notification,
+                           displayedComponents: [.date, .hourAndMinute]
+                )
+            }
             Spacer()
             Button(title != "" ? "Fertig" : "Abbrechen"){
                 showAddView.toggle()
