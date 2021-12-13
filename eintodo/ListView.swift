@@ -24,7 +24,7 @@ struct ListView: View {
             }
             .buttonStyle(.plain)
             .sheet(isPresented: $showDetailView){
-                DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error", deadline: todo.deadline ?? Date())
+                DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error", deadline: todo.deadline, notification: todo.notification, isDone: todo.isDone)
             }
         }
     }
