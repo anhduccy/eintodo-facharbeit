@@ -16,8 +16,10 @@ struct DetailView: View {
     @State var deadline: Date
     @State var notification: Date
     
-    @State var toggle_show_deadline = false
-    @State var toggle_show_notification = false
+    @State var toggle_show_deadline = true
+    @State var toggle_show_notification = true
+    
+    
     var body: some View {
         VStack{
             TextField("Titel", text: $title)
@@ -60,6 +62,16 @@ struct DetailView: View {
             Spacer()
         }
         .padding()
+        .onAppear{
+            if deadline == Date(timeIntervalSince1970: 0){
+                toggle_show_deadline = false
+                deadline = Date()
+            }
+            if notification == Date(timeIntervalSince1970: 0){
+                toggle_show_notification = false
+                notification = Date()
+            }
+        }
         .onDisappear(perform: updateToDo)
     }
     

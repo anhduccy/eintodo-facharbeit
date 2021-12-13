@@ -38,7 +38,7 @@ struct AddView: View {
             }
             if toggle_show_deadline {
                 DatePicker("",
-                    selection: $deadline,
+                           selection: $deadline,
                     displayedComponents: [.date]
                 )
                     .datePickerStyle(.field)
@@ -96,8 +96,12 @@ struct AddView: View {
             let newToDo = ToDo(context: viewContext)
             newToDo.id = UUID()
             newToDo.title = title
-            newToDo.deadline = deadline
-            newToDo.notification = notification
+            if toggle_show_deadline{
+                newToDo.deadline = deadline
+            }
+            if toggle_show_notification {
+                newToDo.notification = notification
+            }
             newToDo.isDone = false
 
             do {

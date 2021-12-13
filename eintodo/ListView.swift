@@ -19,7 +19,7 @@ struct ListView: View {
         NavigationView{
             List (todos, id: \.self){ todo in
                  NavigationLink(destination:
-                                    DetailView(todo: todo, title: todo.title ?? "Error", deadline: todo.deadline!, notification: todo.notification!)) {
+                                    DetailView(todo: todo, title: todo.title ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0))) {
                          Text(todo.title ?? "Error")
                              .buttonStyle(.plain)
                  }
@@ -27,3 +27,4 @@ struct ListView: View {
         }
     }
 }
+
