@@ -13,6 +13,6 @@ struct DetailView: View {
     @State var title: String
     @State var deadline: Date
     var body: some View {
-        Text("DetailView")
+        Text(title)
     }
 }
