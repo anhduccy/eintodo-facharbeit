@@ -59,14 +59,26 @@ struct AddView: View {
                 }
             }
             Spacer()
-            Button(title != "" ? "Fertig" : "Abbrechen"){
-                showAddView.toggle()
-                if title != ""{
-                    addToDo()
+            HStack{
+                if(title != ""){
+                    Button("Fertig"){
+                        showAddView.toggle()
+                        addToDo()
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundColor(.blue)
                 }
+                
+                Spacer()
+                
+                Button("Abbrechen"){
+                    showAddView.toggle()
+                        addToDo()
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.red)
+
             }
-            .buttonStyle(.plain)
-            .foregroundColor(title != "" ? .blue : .red)
         }
         .padding()
         .frame(width: 400, height: 400)
