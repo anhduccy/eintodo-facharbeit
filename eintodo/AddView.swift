@@ -77,6 +77,8 @@ struct AddView: View {
             let newToDo = ToDo(context: viewContext)
             newToDo.title = title
             newToDo.deadline = deadline
+            newToDo.notification = notification
+            newToDo.isDone = false
 
             do {
                 try viewContext.save()
