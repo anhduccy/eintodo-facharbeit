@@ -14,19 +14,16 @@ struct ListView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.timestamp, ascending: true)],
         animation: .default)
     public var todos: FetchedResults<ToDo>
+    
+    @State var showDetailView: Bool = false
 
     var body: some View {
-        NavigationView{
-            List(todos, id: \.self){ todo in
-                NavigationLink(destination:
-                {
-                    DetailView()
-                }, label: {
-                    VStack{
-                        Text(todo.title ?? "Error")
-                            .fontWeight(.bold)
-                    }
-                })
+        List(todos, id: \.self){ todo in
+            Button(todo.title ?? "Error"){
+                showDetailView.toggle()
+            }
+            .sheet(isPresented: $showDetailView){
+                DetailView(showDetailView: $showDetailView, title: todo.title ?? "Error", deadline: todo.deadline ?? Date())
             }
         }
     }

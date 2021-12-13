@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct DetailView: View {
+    @Binding var showDetailView: Bool
+    
+    @State var title: String
+    @State var deadline: Date
     var body: some View {
         Text("DetailView")
-    }
-}
-
-struct DetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailView()
     }
 }
