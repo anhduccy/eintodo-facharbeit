@@ -82,6 +82,12 @@ struct DetailView: View {
     private func updateToDo() {
         withAnimation {
             todo.title = title
+            if toggle_show_deadline{
+                todo.deadline = deadline
+            }
+            if toggle_show_deadline{
+                todo.notification = notification
+            }
             do {
                 try viewContext.save()
             } catch {
