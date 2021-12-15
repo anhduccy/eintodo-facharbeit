@@ -19,21 +19,30 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            Text("Hallo")
-            .toolbar {
-                ToolbarItem {
-                    Button(action:{
-                        showAddView.toggle()
-                    }, label: {
-                        Label("Add Item", systemImage: "plus")
-                    })
-                        .sheet(isPresented: $showAddView){
-                            AddView(showAddView: $showAddView)
-                        }
+            List{
+                NavigationLink(destination: CalendarView()){
+                    HStack{
+                        Image(systemName: "calendar")
+                        Text("Kalender")
+                    }
+                    Spacer()
                 }
             }
+            .listStyle(.sidebar)
             CalendarView()
             ListView()
+        }
+        .toolbar {
+            ToolbarItem {
+                Button(action:{
+                    showAddView.toggle()
+                }, label: {
+                    Label("Add Item", systemImage: "plus")
+                })
+                    .sheet(isPresented: $showAddView){
+                        AddView(showAddView: $showAddView)
+                    }
+            }
         }
     }
 
