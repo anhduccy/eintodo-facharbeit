@@ -64,6 +64,13 @@ struct DetailView: View {
                     .datePickerStyle(.compact)
             }
             Spacer()
+            
+            //Delete-Button
+            Button("Löschen"){
+                deleteToDo()
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.red)
         }
         .padding()
         .onAppear{
@@ -99,6 +106,18 @@ struct DetailView: View {
             } catch {
                 let nsError = error as NSError
                 fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
+    private func deleteToDo(){
+        withAnimation {
+            viewContext.delete(todo)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
