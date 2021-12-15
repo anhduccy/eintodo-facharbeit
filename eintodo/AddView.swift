@@ -41,7 +41,7 @@ struct AddView: View {
                            selection: $deadline,
                     displayedComponents: [.date]
                 )
-                    .datePickerStyle(.field)
+                    .datePickerStyle(.compact)
             }
             
             //Notification
@@ -59,7 +59,7 @@ struct AddView: View {
                     selection: $notification,
                            displayedComponents: [.date, .hourAndMinute]
                 )
-                    .datePickerStyle(.field)
+                    .datePickerStyle(.compact)
             }
             Spacer()
             
