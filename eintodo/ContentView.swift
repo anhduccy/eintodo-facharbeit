@@ -29,20 +29,20 @@ struct ContentView: View {
                 }
             }
             .listStyle(.sidebar)
+            .toolbar {
+                ToolbarItem {
+                    Button(action:{
+                        showAddView.toggle()
+                    }, label: {
+                        Label("Add Item", systemImage: "plus")
+                    })
+                        .sheet(isPresented: $showAddView){
+                            AddView(showAddView: $showAddView)
+                        }
+                }
+            }
             CalendarView()
             ListView()
-        }
-        .toolbar {
-            ToolbarItem {
-                Button(action:{
-                    showAddView.toggle()
-                }, label: {
-                    Label("Add Item", systemImage: "plus")
-                })
-                    .sheet(isPresented: $showAddView){
-                        AddView(showAddView: $showAddView)
-                    }
-            }
         }
     }
 
