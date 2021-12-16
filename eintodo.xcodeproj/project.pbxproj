@@ -19,6 +19,7 @@
 		794856092766A59F0086927E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856082766A59F0086927E /* DetailView.swift */; };
 		7948560D2766A8B10086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560C2766A8B10086927E /* AddView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
+		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		794856082766A59F0086927E /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7948560C2766A8B10086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				794856022766996D0086927E /* ListView.swift */,
 				794856082766A59F0086927E /* DetailView.swift */,
 				794855FE276697640086927E /* CoreDataActions.swift */,
+				79BAB9B7276BB205009EB5A3 /* Functions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
 				794855F3276690410086927E /* Persistence.swift */,
 				794855F8276690410086927E /* eintodo.entitlements */,
@@ -167,6 +170,7 @@
 				794856092766A59F0086927E /* DetailView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				7948560D2766A8B10086927E /* AddView.swift in Sources */,
+				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794856072766A4500086927E /* ListView.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,

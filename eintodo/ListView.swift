@@ -22,33 +22,56 @@ struct ListView: View {
                 //List item
                     NavigationLink(destination:
                                         DetailView(todo: todo, title: todo.title ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0))) {
-                        VStack{
-                            HStack{
-                                //Checkmark button
-                                Button(action: {
-                                    todo.isDone.toggle()
-                                    do {
-                                        try viewContext.save()
-                                    } catch {
-                                        let nsError = error as NSError
-                                        fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
+                        HStack{
+                            //Checkmark button
+                            Button(action: {
+                                todo.isDone.toggle()
+                                do {
+                                    try viewContext.save()
+                                } catch {
+                                    let nsError = error as NSError
+                                    fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
+                                }
+                                }, label: {
+                                if(todo.isDone){
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                } else {
+                                    Image(systemName: "circle")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                }
+                            })
+                                .frame(width: 20, height: 20)
+                                .buttonStyle(.plain)
+                                .padding(1)
+                            
+                            //Labelling
+                            VStack{
+                                HStack{
+                                    Text(todo.title ?? "Error")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                }
+                                HStack{
+                                    if todo.deadline != Date(timeIntervalSince1970: 0){
+                                            Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Date(timeIntervalSince1970: 0)))
+                                            .foregroundColor(.gray)
                                     }
-                                    }, label: {
-                                    if(todo.isDone){
-                                        Image(systemName: "checkmark.circle")
-                                    } else {
-                                        Image(systemName: "circle")
+                                    Spacer()
+                                }
+                                HStack{
+                                    if todo.notification != Date(timeIntervalSince1970: 0){
+                                        Text(DateToStringFormatter(date: todo.notification ?? Date(timeIntervalSince1970: 0)))
+                                            .foregroundColor(.gray)
+                                        
                                     }
-                                })
-                               .buttonStyle(.plain)
-                                
-                                VStack{
-                                 Text(todo.title ?? "Error")
+                                    Spacer()
                                 }
                             }
                         }
-                        .padding(.leading, 2.5)
-                        .padding(.trailing, 2.5)
                         .padding(.top, 2)
                         .padding(.bottom, 2)
                     }

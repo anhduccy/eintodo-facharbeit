@@ -95,7 +95,7 @@ struct DetailView: View {
             if !toggle_show_deadline{
                 todo.deadline = Date(timeIntervalSince1970: 0)
             }
-            if toggle_show_deadline{
+            if toggle_show_notification{
                 todo.notification = notification
             }
             if !toggle_show_notification{
