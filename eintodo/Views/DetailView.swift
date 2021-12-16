@@ -30,11 +30,7 @@ struct DetailView: View {
             
             //Deadline
             HStack{
-                Image(systemName: "calendar.circle.fill")
-                    .foregroundColor(.red)
-                Text("Fälligkeitsdatum")
-                    .font(.title3)
-                Spacer()
+                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red)
                 Toggle("", isOn: $toggle_show_deadline)
                     .toggleStyle(.switch)
             }
@@ -48,11 +44,7 @@ struct DetailView: View {
             
             //Notification
             HStack{
-                Image(systemName: "bell.circle.fill")
-                    .foregroundColor(.orange)
-                Text("Erinnerung")
-                    .font(.title3)
-                Spacer()
+                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange)
                 Toggle("", isOn: $toggle_show_notification)
                     .toggleStyle(.switch)
             }

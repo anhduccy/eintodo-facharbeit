@@ -15,11 +15,11 @@
 		794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 794855F5276690410086927E /* eintodo.xcdatamodeld */; };
 		794855FF276697640086927E /* CoreDataActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855FE276697640086927E /* CoreDataActions.swift */; };
 		794856032766996D0086927E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856022766996D0086927E /* ListView.swift */; };
-		794856072766A4500086927E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856062766A4500086927E /* ListView.swift */; };
 		794856092766A59F0086927E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856082766A59F0086927E /* DetailView.swift */; };
 		7948560D2766A8B10086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560C2766A8B10086927E /* AddView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
+		79BAB9BA276BBC3D009EB5A3 /* IconsImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B9276BBC3D009EB5A3 /* IconsImages.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,11 +33,11 @@
 		794855F8276690410086927E /* eintodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = eintodo.entitlements; sourceTree = "<group>"; };
 		794855FE276697640086927E /* CoreDataActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataActions.swift; sourceTree = "<group>"; };
 		794856022766996D0086927E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
-		794856062766A4500086927E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		794856082766A59F0086927E /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7948560C2766A8B10086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		79BAB9B9276BBC3D009EB5A3 /* IconsImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconsImages.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,12 +71,8 @@
 			isa = PBXGroup;
 			children = (
 				794855EA276690410086927E /* eintodoApp.swift */,
-				794855EC276690410086927E /* ContentView.swift */,
-				7948560E2766ABF30086927E /* CalendarView.swift */,
-				794856062766A4500086927E /* ListView.swift */,
-				7948560C2766A8B10086927E /* AddView.swift */,
-				794856022766996D0086927E /* ListView.swift */,
-				794856082766A59F0086927E /* DetailView.swift */,
+				79BAB9BB276BBDDD009EB5A3 /* Views */,
+				79BAB9B9276BBC3D009EB5A3 /* IconsImages.swift */,
 				794855FE276697640086927E /* CoreDataActions.swift */,
 				79BAB9B7276BB205009EB5A3 /* Functions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
@@ -94,6 +90,18 @@
 				794855F1276690410086927E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		79BAB9BB276BBDDD009EB5A3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				794855EC276690410086927E /* ContentView.swift */,
+				7948560C2766A8B10086927E /* AddView.swift */,
+				7948560E2766ABF30086927E /* CalendarView.swift */,
+				794856022766996D0086927E /* ListView.swift */,
+				794856082766A59F0086927E /* DetailView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,7 +179,7 @@
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				7948560D2766A8B10086927E /* AddView.swift in Sources */,
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
-				794856072766A4500086927E /* ListView.swift in Sources */,
+				79BAB9BA276BBC3D009EB5A3 /* IconsImages.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
 				794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */,
