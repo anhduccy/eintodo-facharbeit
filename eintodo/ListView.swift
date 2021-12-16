@@ -17,33 +17,45 @@ struct ListView: View {
     
     var body: some View {
         NavigationView{
-            List (todos, id: \.self){ todo in
+            List{
+                ForEach(todos, id: \.self){ todo in
                 //List item
-                 NavigationLink(destination:
-                                    DetailView(todo: todo, title: todo.title ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0))) {
-                     HStack{
-                         //Checkmark button
-                         Button(action: {
-                             todo.isDone.toggle()
-                             do {
-                                 try viewContext.save()
-                             } catch {
-                                 let nsError = error as NSError
-                                 fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
-                             }
-                             }, label: {
-                             if(todo.isDone){
-                                 Image(systemName: "checkmark.circle")
-                             } else {
-                                 Image(systemName: "circle")
-                             }
-                         })
-                             .buttonStyle(.plain)
-                         
-                         Text(todo.title ?? "Error")
-                     }
-                 }
-             }
+                    NavigationLink(destination:
+                                        DetailView(todo: todo, title: todo.title ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0))) {
+                        VStack{
+                            HStack{
+                                //Checkmark button
+                                Button(action: {
+                                    todo.isDone.toggle()
+                                    do {
+                                        try viewContext.save()
+                                    } catch {
+                                        let nsError = error as NSError
+                                        fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
+                                    }
+                                    }, label: {
+                                    if(todo.isDone){
+                                        Image(systemName: "checkmark.circle")
+                                    } else {
+                                        Image(systemName: "circle")
+                                    }
+                                })
+                               .buttonStyle(.plain)
+                                
+                                VStack{
+                                 Text(todo.title ?? "Error")
+                                }
+                            }
+                        }
+                        .padding(.leading, 2.5)
+                        .padding(.trailing, 2.5)
+                        .padding(.top, 2)
+                        .padding(.bottom, 2)
+                    }
+                }
+            }
+            .listStyle(InsetListStyle())
+            
         }
     }
 }
