@@ -30,7 +30,7 @@ struct DetailView: View {
             
             //Deadline
             HStack{
-                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red)
+                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
                 Toggle("", isOn: $toggle_show_deadline)
                     .toggleStyle(.switch)
             }
@@ -44,7 +44,7 @@ struct DetailView: View {
             
             //Notification
             HStack{
-                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange)
+                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
                 Toggle("", isOn: $toggle_show_notification)
                     .toggleStyle(.switch)
             }
@@ -76,6 +76,15 @@ struct DetailView: View {
             }
         }
         .onDisappear(perform: updateToDo)
+        .onChange(of: title) { newValue in
+            updateToDo()
+        }
+        .onChange(of: deadline) { newValue in
+            updateToDo()
+        }
+        .onChange(of: notification) { newValue in
+            updateToDo()
+        }
     }
     
     private func updateToDo() {

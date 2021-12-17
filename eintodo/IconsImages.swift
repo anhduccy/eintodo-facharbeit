@@ -11,13 +11,22 @@ struct IconsImage: View {
     let title: String
     let image: String
     let color: Color
+    let size: CGFloat
     var body: some View {
-        Image(systemName: image)
-            .resizable()
-            .frame(width: 25, height: 25)
+        SystemImage(image: image, size: size)
             .foregroundColor(color)
         Text(title)
             .font(.title3)
         Spacer()
+    }
+}
+
+struct SystemImage: View{
+    let image: String
+    let size: CGFloat
+    var body: some View {
+        Image(systemName: image)
+            .resizable()
+            .frame(width: size, height: size)
     }
 }

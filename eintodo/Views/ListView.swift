@@ -34,13 +34,10 @@ struct ListView: View {
                                 }
                                 }, label: {
                                 if(todo.isDone){
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
+                                    SystemImage(image: "checkmark.square.fill", size: 15)
                                 } else {
-                                    Image(systemName: "circle")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
+                                    SystemImage(image: "checkmark.square", size: 15)
+                                        
                                 }
                             })
                                 .frame(width: 20, height: 20)
@@ -55,20 +52,19 @@ struct ListView: View {
                                         .fontWeight(.semibold)
                                     Spacer()
                                 }
-                                HStack{
-                                    if todo.deadline != Date(timeIntervalSince1970: 0){
-                                            Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Date(timeIntervalSince1970: 0)))
-                                            .foregroundColor(.gray)
+                                if todo.deadline != Date(timeIntervalSince1970: 0){
+                                    HStack{
+                                        Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Date(timeIntervalSince1970: 0)))
+                                        .foregroundColor(.gray)
+                                        Spacer()
                                     }
-                                    Spacer()
                                 }
-                                HStack{
-                                    if todo.notification != Date(timeIntervalSince1970: 0){
+                                if todo.notification != Date(timeIntervalSince1970: 0){
+                                    HStack{
                                         Text(DateToStringFormatter(date: todo.notification ?? Date(timeIntervalSince1970: 0)))
                                             .foregroundColor(.gray)
-                                        
+                                        Spacer()
                                     }
-                                    Spacer()
                                 }
                             }
                         }

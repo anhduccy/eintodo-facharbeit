@@ -28,7 +28,7 @@ struct AddView: View {
             
             //Deadline
             HStack{
-                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red)
+                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
                 Toggle("", isOn: $toggle_show_deadline)
                     .toggleStyle(.switch)
             }
@@ -42,7 +42,7 @@ struct AddView: View {
             
             //Notification
             HStack{
-                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange)
+                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
                 Toggle("", isOn: $toggle_show_notification)
                     .toggleStyle(.switch)
             }
