@@ -19,7 +19,7 @@
 		7948560D2766A8B10086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560C2766A8B10086927E /* AddView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
-		79BAB9BA276BBC3D009EB5A3 /* IconsImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B9276BBC3D009EB5A3 /* IconsImages.swift */; };
+		79F44343276F649200B558BF /* ViewLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F44342276F649200B558BF /* ViewLibrary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +37,7 @@
 		7948560C2766A8B10086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
-		79BAB9B9276BBC3D009EB5A3 /* IconsImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconsImages.swift; sourceTree = "<group>"; };
+		79F44342276F649200B558BF /* ViewLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +72,7 @@
 			children = (
 				794855EA276690410086927E /* eintodoApp.swift */,
 				79BAB9BB276BBDDD009EB5A3 /* Views */,
-				79BAB9B9276BBC3D009EB5A3 /* IconsImages.swift */,
+				79F44342276F649200B558BF /* ViewLibrary.swift */,
 				794855FE276697640086927E /* CoreDataActions.swift */,
 				79BAB9B7276BB205009EB5A3 /* Functions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
@@ -178,8 +178,8 @@
 				794856092766A59F0086927E /* DetailView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				7948560D2766A8B10086927E /* AddView.swift in Sources */,
+				79F44343276F649200B558BF /* ViewLibrary.swift in Sources */,
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
-				79BAB9BA276BBC3D009EB5A3 /* IconsImages.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
 				794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */,

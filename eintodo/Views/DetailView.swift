@@ -19,10 +19,12 @@ struct DetailView: View {
     @State var toggle_show_deadline = true
     @State var toggle_show_notification = true
     
+    @Binding var isPresented: Bool
+    
+    
     
     var body: some View {
         VStack{
-            
             //Title
             TextField("Titel", text: $title)
                 .textFieldStyle(.plain)
@@ -57,12 +59,30 @@ struct DetailView: View {
             }
             Spacer()
             
-            //Delete-Button
-            Button("Löschen"){
-                deleteToDo()
+            //Buttons
+            HStack{
+                Button("Löschen"){
+                    deleteToDo()
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.red)
+                
+                Button("Abbrechen"){
+                    isPresented.toggle()
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.red)
+                
+                Button("Fertig"){
+                    updateToDo()
+                    isPresented.toggle()
+                }
+                .font(.headline.bold())
+                .buttonStyle(.plain)
+                .foregroundColor(.blue)
+                
+                
             }
-            .buttonStyle(.plain)
-            .foregroundColor(.red)
         }
         .padding()
         .onAppear{
