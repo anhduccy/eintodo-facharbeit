@@ -7,14 +7,14 @@
 
 import SwiftUI
 
+//Images
 struct IconsImage: View {
     let title: String
     let image: String
     let color: Color
     let size: CGFloat
     var body: some View {
-        SystemImage(image: image, size: size)
-            .foregroundColor(color)
+        SystemImage(image: image, size: size, color: color)
         Text(title)
             .font(.title3)
         Spacer()
@@ -24,16 +24,22 @@ struct IconsImage: View {
 struct SystemImage: View{
     let image: String
     let size: CGFloat
+    let color: Color
     var body: some View {
         Image(systemName: image)
             .resizable()
             .frame(width: size, height: size)
+            .foregroundColor(color)
     }
 }
+
+//Buttons
 
 struct SheetButton: View {
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false
+    
+    let text_color: Color = .white
 
     init(_ todo: ToDo) {
         self.todo = todo
@@ -50,25 +56,28 @@ struct SheetButton: View {
                         Text(todo.title ?? "Error")
                             .font(.headline)
                             .fontWeight(.semibold)
+                            .foregroundColor(text_color)
                         Spacer()
                     }
                     if todo.deadline != Date(timeIntervalSince1970: 0){
                         HStack{
                             Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Date(timeIntervalSince1970: 0)))
-                            .foregroundColor(.gray)
+                            .foregroundColor(text_color)
+                            .fontWeight(.light)
                             Spacer()
                         }
                     }
                     if todo.notification != Date(timeIntervalSince1970: 0){
                         HStack{
                             Text(DateToStringFormatter(date: todo.notification ?? Date(timeIntervalSince1970: 0)))
-                                .foregroundColor(.gray)
+                                .foregroundColor(text_color)
+                                .fontWeight(.light)
                             Spacer()
                         }
                     }
                 }
-                .padding(.top, 2)
-                .padding(.bottom, 2)
+                .padding(.top, 5)
+                .padding(.bottom, 5)
             })
                 .buttonStyle(.plain)
         }

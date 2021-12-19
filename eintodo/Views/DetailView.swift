@@ -57,27 +57,29 @@ struct DetailView: View {
                 )
                     .datePickerStyle(.compact)
             }
+            
+            Button("Löschen"){
+                deleteToDo()
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.red)
+            
             Spacer()
             
             //Buttons
             HStack{
-                Button("Löschen"){
-                    deleteToDo()
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(.red)
-                
                 Button("Abbrechen"){
                     isPresented.toggle()
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(.red)
                 
+                Spacer()
+                
                 Button("Fertig"){
                     updateToDo()
                     isPresented.toggle()
                 }
-                .font(.headline.bold())
                 .buttonStyle(.plain)
                 .foregroundColor(.blue)
                 
@@ -85,6 +87,7 @@ struct DetailView: View {
             }
         }
         .padding()
+        .frame(width: 400, height: 400)
         .onAppear{
             if deadline == Date(timeIntervalSince1970: 0){
                 toggle_show_deadline = false
