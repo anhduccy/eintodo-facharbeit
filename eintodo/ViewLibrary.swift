@@ -62,7 +62,7 @@ struct SheetButton: View {
                     if todo.deadline != Date(timeIntervalSince1970: 0){
                         HStack{
                             Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Date(timeIntervalSince1970: 0)))
-                            .foregroundColor(text_color)
+                                .foregroundColor(text_color)
                             .fontWeight(.light)
                             Spacer()
                         }

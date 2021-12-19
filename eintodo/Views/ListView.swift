@@ -35,7 +35,7 @@ struct ListView: View {
                         if(todo.isDone){
                             SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white)
                         } else {
-                            SystemImage(image: "checkmark.square", size: SystemImageSize, color: .white)
+                            SystemImage(image: "square", size: SystemImageSize, color: .white)
                         }
                     })
                         .frame(width: SystemImageSize, height: SystemImageSize)
@@ -46,7 +46,7 @@ struct ListView: View {
                     SheetButton(todo)
                 }
                 .padding(5)
-                .background(.blue)
+                .background(missedDeadlineOfToDo(date: todo.deadline ?? Date(timeIntervalSince1970: 0), defaultColor: .indigo))
                 .cornerRadius(8.5)
             }
         }
