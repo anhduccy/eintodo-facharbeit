@@ -90,9 +90,13 @@ struct AddView: View {
             newToDo.title = title
             if toggle_show_deadline{
                 newToDo.deadline = deadline
+            } else {
+                newToDo.deadline = Date(timeIntervalSince1970: 0)
             }
             if toggle_show_notification {
                 newToDo.notification = notification
+            } else {
+                newToDo.notification = Date(timeIntervalSince1970: 0)
             }
             newToDo.isDone = false
 

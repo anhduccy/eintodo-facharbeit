@@ -49,6 +49,7 @@ struct SheetButton: View {
         HStack{
             //Labelling
             Button(action: {
+                print(todo.deadline)
                 isPresented.toggle()
             }, label: {
                 VStack{
