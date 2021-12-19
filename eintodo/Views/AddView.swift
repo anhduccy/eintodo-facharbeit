@@ -17,76 +17,106 @@ struct AddView: View {
     @State var notification: Date = Date()
     @State var toggle_show_deadline: Bool = true
     @State var toggle_show_notification: Bool = true
+    
+    @Environment(\.colorScheme) public var colorScheme
+    let primaryColor: Color = .indigo
+    let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
+    let backgroundColor: Color = Color(red: 230/255, green: 230/255, blue: 250/255)
 
     
     var body: some View {
-        VStack{
-            
-            //Title
-            TextField("Titel", text: $title)
-                .font(.title.bold())
-                .textFieldStyle(.plain)
-            
-            //Notes
-            TextField("Notizen", text: $notes)
-                .font(.body)
-                .textFieldStyle(.plain)
-                .foregroundColor(.gray)
-            
-            //Deadline
-            HStack{
-                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
-                Toggle("", isOn: $toggle_show_deadline)
-                    .toggleStyle(.switch)
-            }
-            if toggle_show_deadline {
-                DatePicker("",
-                           selection: $deadline,
-                    displayedComponents: [.date]
-                )
-                    .datePickerStyle(.compact)
-            }
-            
-            //Notification
-            HStack{
-                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
-                Toggle("", isOn: $toggle_show_notification)
-                    .toggleStyle(.switch)
-            }
-            if toggle_show_notification {
-                DatePicker("",
-                    selection: $notification,
-                           displayedComponents: [.date, .hourAndMinute]
-                )
-                    .datePickerStyle(.compact)
-            }
-            Spacer()
-            
-            //Button Done / Button Cancel
-            HStack{
-                Button("Abbrechen"){
-                    showAddView.toggle()
+        ZStack{
+            VStack(spacing: 20){
+                VStack(spacing: 2){
+                    //Title
+                    TextField("Titel", text: $title)
+                        .textFieldStyle(.plain)
+                        .font(.title.bold())
+                        .foregroundColor(colorScheme == .dark ? .white : primaryColor)
+                    
+                    //Notes
+                    TextField("Notizen", text: $notes)
+                        .font(.body)
+                        .textFieldStyle(.plain)
+                        .foregroundColor(colorScheme == .dark ? .white : primaryColor)
                 }
-                .buttonStyle(.plain)
-                .foregroundColor(.red)
                 
+                    //Deadline
+                VStack{
+                    VStack{
+                        HStack{
+                            IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
+                            Toggle("", isOn: $toggle_show_deadline)
+                                .toggleStyle(.switch)
+                                .tint(colorScheme == .dark ? .blue : .green)
+                        }
+                        if toggle_show_deadline {
+                            DatePicker("",
+                                selection: $deadline,
+                                displayedComponents: [.date]
+                            )
+                                .datePickerStyle(.compact)
+                        }
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .padding(.leading, 0)
+                    .padding(.trailing, 0)
+                    //Notification
+                    VStack{
+                        HStack{
+                            IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
+                            Toggle("", isOn: $toggle_show_notification)
+                                .toggleStyle(.switch)
+                                .tint(colorScheme == .dark ? .blue : .green)
+                        }
+                        if toggle_show_notification {
+                            DatePicker("",
+                                selection: $notification,
+                                       displayedComponents: [.date, .hourAndMinute]
+                            )
+                                .datePickerStyle(.compact)
+                        }
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .padding(.leading, 0)
+                    .padding(.trailing, 0)
+                }
+                .padding()
+                .background(colorScheme == .dark ? secondaryColor : primaryColor)
+                .cornerRadius(10)
+
                 Spacer()
                 
-                if(title != ""){
-                    Button(action: {
+                //Buttons
+                HStack{
+                    Button("Abbrechen"){
                         showAddView.toggle()
-                        addToDo()
-                    }, label: {
-                       Text("Hinzufügen")
-                            .foregroundColor(.blue)
-                            .fontWeight(.semibold)
-                    })
+                    }
                     .buttonStyle(.plain)
-                }
+                    .foregroundColor(secondaryColor)
+                    
+                    Spacer()
+                    
+                    if(title != ""){
+                        Button(action: {
+                            addToDo()
+                            showAddView.toggle()
+                        }, label: {
+                            Text("Fertig")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .foregroundColor(colorScheme == .dark ? .white : primaryColor)
 
+                        })
+                        .buttonStyle(.plain)
+                    }
+                }
             }
+            .padding()
         }
-        .padding()
+        .background(colorScheme == .dark ? primaryColor : backgroundColor)
         .frame(width: 400, height: 400)
     }
     

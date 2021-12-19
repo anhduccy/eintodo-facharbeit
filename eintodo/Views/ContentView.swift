@@ -10,6 +10,8 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @Environment(\.colorScheme) public var colorScheme
+
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],

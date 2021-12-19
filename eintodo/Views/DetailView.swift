@@ -10,6 +10,9 @@ import SwiftUI
 struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.colorScheme) public var colorScheme
+
+
 
     @State var todo: ToDo
     @State var title: String
@@ -22,78 +25,109 @@ struct DetailView: View {
     
     @Binding var isPresented: Bool
     
+    let primaryColor: Color = .indigo
+    let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
+    let backgroundColor: Color = Color(red: 230/255, green: 230/255, blue: 250/255)
+    
     
     
     var body: some View {
-        VStack{
-            //Title
-            TextField("Titel", text: $title)
-                .textFieldStyle(.plain)
-                .font(.title.bold())
-            
-            //Notes
-            TextField("Notizen", text: $notes)
-                .font(.body)
-                .textFieldStyle(.plain)
-                .foregroundColor(.gray)
-            
-            //Deadline
-            HStack{
-                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
-                Toggle("", isOn: $toggle_show_deadline)
-                    .toggleStyle(.switch)
-            }
-            if toggle_show_deadline {
-                DatePicker("",
-                    selection: $deadline,
-                    displayedComponents: [.date]
-                )
-                    .datePickerStyle(.compact)
-            }
-            
-            //Notification
-            HStack{
-                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
-                Toggle("", isOn: $toggle_show_notification)
-                    .toggleStyle(.switch)
-            }
-            if toggle_show_notification {
-                DatePicker("",
-                    selection: $notification,
-                           displayedComponents: [.date, .hourAndMinute]
-                )
-                    .datePickerStyle(.compact)
-            }
-            
-            Button("Löschen"){
-                deleteToDo()
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(.red)
-            
-            Spacer()
-            
-            //Buttons
-            HStack{
-                Button("Abbrechen"){
-                    isPresented.toggle()
+        ZStack{
+            VStack(spacing: 20){
+                VStack(spacing: 2){
+                    //Title
+                    TextField("Titel", text: $title)
+                        .textFieldStyle(.plain)
+                        .font(.title.bold())
+                        .foregroundColor(colorScheme == .dark ? .white : primaryColor)
+                    
+                    //Notes
+                    TextField("Notizen", text: $notes)
+                        .font(.body)
+                        .textFieldStyle(.plain)
+                        .foregroundColor(colorScheme == .dark ? .white : primaryColor)
                 }
-                .buttonStyle(.plain)
-                .foregroundColor(.red)
+                
+                    //Deadline
+                VStack{
+                    VStack{
+                        HStack{
+                            IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
+                            Toggle("", isOn: $toggle_show_deadline)
+                                .toggleStyle(.switch)
+                                .tint(colorScheme == .dark ? .blue : .green)
+                        }
+                        if toggle_show_deadline {
+                            DatePicker("",
+                                selection: $deadline,
+                                displayedComponents: [.date]
+                            )
+                                .datePickerStyle(.compact)
+                        }
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .padding(.leading, 0)
+                    .padding(.trailing, 0)
+                    //Notification
+                    VStack{
+                        HStack{
+                            IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
+                            Toggle("", isOn: $toggle_show_notification)
+                                .toggleStyle(.switch)
+                                .tint(colorScheme == .dark ? .blue : .green)
+                        }
+                        if toggle_show_notification {
+                            DatePicker("",
+                                selection: $notification,
+                                       displayedComponents: [.date, .hourAndMinute]
+                            )
+                                .datePickerStyle(.compact)
+                        }
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .padding(.leading, 0)
+                    .padding(.trailing, 0)
+                }
+                .padding()
+                .background(colorScheme == .dark ? secondaryColor : primaryColor)
+                .cornerRadius(10)
+                
+                Button("Erinnerung löschen"){
+                    deleteToDo()
+                }
+                .buttonStyle(DeleteButton())
+                
                 
                 Spacer()
                 
-                Button("Fertig"){
-                    updateToDo()
-                    isPresented.toggle()
+                //Buttons
+                HStack{
+                    Button("Abbrechen"){
+                        isPresented.toggle()
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundColor(secondaryColor)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        updateToDo()
+                        isPresented.toggle()
+                    }, label: {
+                        Text("Fertig")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .foregroundColor(colorScheme == .dark ? .white : primaryColor)
+
+                    })
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-                .foregroundColor(.blue)
-                
-                
             }
+            .padding()
         }
-        .padding()
+        .background(colorScheme == .dark ? primaryColor : backgroundColor)
         .frame(width: 400, height: 400)
         .onAppear{
             if deadline == Date(timeIntervalSince1970: 0){
