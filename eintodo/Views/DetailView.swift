@@ -13,6 +13,7 @@ struct DetailView: View {
 
     @State var todo: ToDo
     @State var title: String
+    @State var notes: String
     @State var deadline: Date
     @State var notification: Date
     
@@ -29,6 +30,12 @@ struct DetailView: View {
             TextField("Titel", text: $title)
                 .textFieldStyle(.plain)
                 .font(.title.bold())
+            
+            //Notes
+            TextField("Notizen", text: $notes)
+                .font(.body)
+                .textFieldStyle(.plain)
+                .foregroundColor(.gray)
             
             //Deadline
             HStack{
@@ -102,6 +109,9 @@ struct DetailView: View {
         .onChange(of: title) { newValue in
             updateToDo()
         }
+        .onChange(of: notes) { newValue in
+            updateToDo()
+        }
         .onChange(of: deadline) { newValue in
             updateToDo()
         }
@@ -113,6 +123,7 @@ struct DetailView: View {
     private func updateToDo() {
         withAnimation {
             todo.title = title
+            todo.notes = notes
             if toggle_show_deadline{
                 todo.deadline = deadline
             }

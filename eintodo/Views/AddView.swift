@@ -12,6 +12,7 @@ struct AddView: View {
     
     @Binding var showAddView: Bool
     @State var title: String = ""
+    @State var notes: String = ""
     @State var deadline: Date = Date()
     @State var notification: Date = Date()
     @State var toggle_show_deadline: Bool = true
@@ -21,10 +22,16 @@ struct AddView: View {
     var body: some View {
         VStack{
             
-            //Titel
+            //Title
             TextField("Titel", text: $title)
                 .font(.title.bold())
                 .textFieldStyle(.plain)
+            
+            //Notes
+            TextField("Notizen", text: $notes)
+                .font(.body)
+                .textFieldStyle(.plain)
+                .foregroundColor(.gray)
             
             //Deadline
             HStack{
@@ -88,6 +95,7 @@ struct AddView: View {
             let newToDo = ToDo(context: viewContext)
             newToDo.id = UUID()
             newToDo.title = title
+            newToDo.notes = notes
             if toggle_show_deadline{
                 newToDo.deadline = deadline
             } else {
