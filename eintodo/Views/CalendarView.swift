@@ -21,25 +21,4 @@ struct CalendarView: View {
             deleteAllItems()
         }
     }
-    
-    public func deleteAllItems() {
-        withAnimation {
-            for todo in todos{
-                viewContext.delete(todo)
-            }
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-    
-}
-
-struct CalendarView_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarView()
-    }
 }

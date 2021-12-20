@@ -200,45 +200,4 @@ struct DetailView: View {
             updateToDo()
         }
     }
-    
-    private func updateToDo() {
-        withAnimation {
-            todo.title = title
-            todo.notes = notes
-            if showDeadline{
-                todo.deadline = deadline
-            }
-            if !showDeadline{
-                todo.deadline = Date(timeIntervalSince1970: 0)
-            }
-            if showNotification{
-                todo.notification = notification
-            }
-            if !showNotification{
-                todo.notification = Date(timeIntervalSince1970: 0)
-            }
-            
-            todo.isMarked = isMarked
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-    
-    private func deleteToDo(){
-        withAnimation {
-            viewContext.delete(todo)
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-    
-    
 }

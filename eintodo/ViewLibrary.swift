@@ -18,31 +18,6 @@ struct Colors {
     static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
 }
 
-//ButtonStyles
-struct DeleteButton: ButtonStyle {
-    @Environment(\.colorScheme) public var colorScheme
-
-    @State private var backgroundColor: Color = .indigo
-    @State private var overButton = false
-    
-    let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
-    
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(minWidth: 0, maxWidth: 367)
-            .padding(11.5)
-            .background(colorScheme == .dark ? (overButton ? .red : secondaryColor) : (overButton ? .red : backgroundColor))
-            .foregroundColor(.white)
-            .cornerRadius(10)
-            .font(.body)
-            .onHover { over in
-                withAnimation{
-                    overButton = over
-                }
-            }
-    }
-}
-
 //Images
 struct IconImage: View {
     let image: String

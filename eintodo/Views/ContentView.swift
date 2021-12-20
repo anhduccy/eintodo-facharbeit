@@ -9,14 +9,6 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) public var viewContext
-    @Environment(\.colorScheme) public var colorScheme
-
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
-        animation: .default)
-    public var items: FetchedResults<ToDo>
     @State var showAddView: Bool = false
     @State var showSettings: Bool = false
 
@@ -59,7 +51,6 @@ struct ContentView: View {
             ListView()
         }
     }
-
 }
 
 private let itemFormatter: DateFormatter = {

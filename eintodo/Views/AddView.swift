@@ -153,33 +153,5 @@ struct AddView: View {
         .padding()
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
     }
-    
-    private func addToDo() {
-        withAnimation {
-            let newToDo = ToDo(context: viewContext)
-            newToDo.id = UUID()
-            newToDo.title = title
-            newToDo.notes = notes
-            if showDeadline{
-                newToDo.deadline = deadline
-            } else {
-                newToDo.deadline = Date(timeIntervalSince1970: 0)
-            }
-            if showNotification {
-                newToDo.notification = notification
-            } else {
-                newToDo.notification = Date(timeIntervalSince1970: 0)
-            }
-            newToDo.isDone = false
-            newToDo.isMarked = false
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
 }
 

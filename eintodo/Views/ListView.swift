@@ -81,12 +81,4 @@ struct ListView: View {
             }
         }
     }
-    private func updateToDo(){
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
-        }
-    }
 }
