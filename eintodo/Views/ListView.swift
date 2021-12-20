@@ -49,9 +49,6 @@ struct ListView: View {
                         //Labelling
                         SheetButton(todo)
                         Spacer()
-                        if(todo.notes != ""){
-                            SystemImage(image: "note.text", size: 15, color: .white)
-                        }
                         Button(action: {
                             todo.isMarked.toggle()
                             updateToDo()
