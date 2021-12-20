@@ -40,16 +40,13 @@ struct IconsImage: View {
     let color: Color
     let size: CGFloat
     var body: some View {
+        
         ZStack{
             Circle()
                 .fill(.white)
                 .frame(width: size-1, height: size-1)
             SystemImage(image: image, size: size, color: color)
         }
-        Text(title)
-            .font(.title3)
-            .foregroundColor(.white)
-        Spacer()
     }
 }
 

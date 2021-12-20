@@ -30,117 +30,143 @@ struct DetailView: View {
     let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
     let backgroundColor: Color = Color(red: 230/255, green: 230/255, blue: 250/255)
     
-    
-    
     var body: some View {
         ZStack{
-            ScrollView{
-                VStack(spacing: 20){
-                    //Buttons
-                    HStack{
-                        Button("Abbrechen"){
-                            isPresented.toggle()
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundColor(secondaryColor)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            updateToDo()
-                            isPresented.toggle()
-                        }, label: {
-                            Text("Fertig")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                                .foregroundColor(colorScheme == .dark ? .white : primaryColor)
+            VStack(spacing: 20){
 
-                        })
-                        .buttonStyle(.plain)
-                    }
-                    
-                    //Title & Notes
-                    VStack(spacing: 2){
-                        TextField("Titel", text: $title)
-                            .textFieldStyle(.plain)
-                            .font(.title.bold())
-                            .foregroundColor(colorScheme == .dark ? .white : primaryColor)
-                        
-                        TextField("Notizen", text: $notes)
-                            .font(.body)
-                            .textFieldStyle(.plain)
-                            .foregroundColor(colorScheme == .dark ? .white : primaryColor)
-                    }
-                    
-                    //Card - Deadline & Notification
+                //Group - Title & Notes
+                VStack(spacing: 2){
+                    TextField("Titel", text: $title)
+                        .font(.title.bold())
+                        .textFieldStyle(.plain)
+                    TextField("Notizen", text: $notes)
+                        .font(.body)
+                        .textFieldStyle(.plain)
+                        .foregroundColor(.gray)
+                }
+                
+                Divider()
+                
+                //Group - Deadline, Notifications & isMarked
+                VStack{
+                    //Deadline
                     VStack{
-                        VStack{
+                        HStack{
                             HStack{
-                                IconsImage(title: "Fälligkeitsdatum", image: "calendar.circle.fill", color: .red, size: 25)
-                                Toggle("", isOn: $toggle_show_deadline)
-                                    .toggleStyle(.switch)
-                                    .tint(colorScheme == .dark ? .blue : .green)
+                                Button(action: {
+                                    toggle_show_deadline.toggle()
+                                }, label: {
+                                    if(toggle_show_deadline){
+                                        IconsImage(title: "Fällig am", image: "calendar.circle.fill", color: .indigo, size: 25)
+                                    } else {
+                                        IconsImage(title: "Fällig am", image: "calendar.circle.fill", color: .gray, size: 25)
+                                    }
+                                })
+                                    .buttonStyle(.plain)
+                                
+                                Text("Fällig am")
+                                    .font(.body)
+                                Spacer()
                             }
+                            .frame(width: 125)
                             if toggle_show_deadline {
                                 DatePicker("",
                                     selection: $deadline,
                                     displayedComponents: [.date]
                                 )
                                     .datePickerStyle(.compact)
+                            } else {
+                                Spacer()
                             }
                         }
-                        .padding(.top, 5)
-                        .padding(.bottom, 5)
-                        .padding(.leading, 0)
-                        .padding(.trailing, 0)
-                        VStack{
+                    }
+                    
+                    //Notifications
+                    VStack{
+                        HStack{
                             HStack{
-                                IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .orange, size: 25)
-                                Toggle("", isOn: $toggle_show_notification)
-                                    .toggleStyle(.switch)
-                                    .tint(colorScheme == .dark ? .blue : .green)
+                                Button(action: {
+                                    toggle_show_notification.toggle()
+                                }, label: {
+                                    if(toggle_show_notification){
+                                        IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .indigo, size: 25)
+                                    } else {
+                                        IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .gray, size: 25)
+                                    }
+                                })
+                                    .buttonStyle(.plain)
+                                
+                                Text("Erinnerung")
+                                    .font(.body)
+                                Spacer()
                             }
+                            .frame(width: 125)
                             if toggle_show_notification {
                                 DatePicker("",
                                     selection: $notification,
                                            displayedComponents: [.date, .hourAndMinute]
                                 )
                                     .datePickerStyle(.compact)
+                            } else{
+                                Spacer()
                             }
                         }
-                        .padding(.top, 5)
-                        .padding(.bottom, 5)
-                        .padding(.leading, 0)
-                        .padding(.trailing, 0)
                     }
-                    .padding()
-                    .background(colorScheme == .dark ? secondaryColor : primaryColor)
-                    .cornerRadius(10)
                     
-                    //Card - Markiert
-                    VStack{
-                        HStack{
-                            IconsImage(title: "Markiert", image: "star.circle.fill", color: .yellow, size: 25)
-                            Toggle("", isOn: $isMarked)
-                                .toggleStyle(.switch)
-                                .tint(colorScheme == .dark ? .blue : .green)
+                    //IsMarked
+                    HStack{
+                        Button(action: {
+                            isMarked.toggle()
+                        }, label: {
+                            if(isMarked){
+                                IconsImage(title: "Markiert", image: "star.circle.fill", color: .indigo, size: 25)
+                            } else {
+                                IconsImage(title: "Markiert", image: "star.circle.fill", color: .gray, size: 25)
+                            }
+                        })
+                            .buttonStyle(.plain)
+                        Text("Markiert")
+                            .font(.body)
+                        Spacer()
+                    }
+                    Spacer()
+                    
+                    //Group - Submit button
+                    HStack{
+                        Button("Abbrechen"){
+                            isPresented.toggle()
+                        }
+                        .foregroundColor(secondaryColor)
+                        .buttonStyle(.plain)
+                        Spacer()
+                        if(title != ""){
+                            Button(action: {
+                                updateToDo()
+                                isPresented.toggle()
+                            }, label: {
+                                Text("Fertig")
+                                    .font(.body)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(colorScheme == .dark ? secondaryColor : .indigo)
+                            })
+                            .buttonStyle(.plain)
+                        } else {
+                            Button(action: {
+                                isPresented.toggle()
+                            }, label: {
+                                Text("Fertig")
+                                    .font(.body)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.gray)
+                            })
+                            .buttonStyle(.plain)
                         }
                     }
-                    .padding()
-                    .background(colorScheme == .dark ? secondaryColor : primaryColor)
-                    .cornerRadius(10)
-                    
-                    Button("Erinnerung löschen"){
-                        deleteToDo()
-                    }
-                    .buttonStyle(DeleteButton())
-                    
                 }
-                .padding()
             }
         }
-        .background(colorScheme == .dark ? primaryColor : backgroundColor)
-        .frame(width: 400, height: 450)
+        .padding()
+        .frame(width: 400, height: 400)
         .onAppear{
             if deadline == Date(timeIntervalSince1970: 0){
                 toggle_show_deadline = false
