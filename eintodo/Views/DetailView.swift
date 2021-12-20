@@ -12,8 +12,6 @@ struct DetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
 
-
-
     @State var todo: ToDo
     @State var title: String
     @State var notes: String
@@ -27,10 +25,6 @@ struct DetailView: View {
     @State private var overDeleteButton = false
 
     @Binding var isPresented: Bool
-    
-    let primaryColor: Color = .indigo
-    let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
-    let backgroundColor: Color = Color(red: 230/255, green: 230/255, blue: 250/255)
     
     var body: some View {
         ZStack{
@@ -60,7 +54,7 @@ struct DetailView: View {
                                         showDeadline.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "calendar.circle.fill", color: showDeadline ? .indigo : .gray, size: 25)
+                                    IconImage(image: "calendar.circle.fill", color: showDeadline ? Colors.primaryColor : .gray, size: 25)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -90,7 +84,7 @@ struct DetailView: View {
                                         showNotification.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "bell.circle.fill", color: showNotification ? .indigo : .gray, size: 25)
+                                    IconImage(image: "bell.circle.fill", color: showNotification ? Colors.primaryColor : .gray, size: 25)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -118,7 +112,7 @@ struct DetailView: View {
                                 isMarked.toggle()
                             }
                         }, label: {
-                            IconImage(image: "star.circle.fill", color: isMarked ? .indigo : .gray, size: 25)
+                            IconImage(image: "star.circle.fill", color: isMarked ? Colors.primaryColor : .gray, size: 25)
                         })
                             .buttonStyle(.plain)
                         Text("Markiert")
@@ -134,14 +128,14 @@ struct DetailView: View {
                         Button("Abbrechen"){
                             isPresented.toggle()
                         }
-                        .foregroundColor(secondaryColor)
+                        .foregroundColor(Colors.secondaryColor)
                         .buttonStyle(.plain)
                         Spacer()
                         
                         Button(action: {
                             deleteToDo()
                         }, label: {
-                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? .indigo : .red, size: 25)
+                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
                         })
                             .buttonStyle(.plain)
                             .onHover{ over in
@@ -159,7 +153,7 @@ struct DetailView: View {
                                 Text("Fertig")
                                     .font(.body)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(colorScheme == .dark ? secondaryColor : .indigo)
+                                    .foregroundColor(colorScheme == .dark ? Colors.secondaryColor : Colors.primaryColor)
                             })
                             .buttonStyle(.plain)
                         } else {
@@ -178,7 +172,7 @@ struct DetailView: View {
             }
         }
         .padding()
-        .frame(width: 400, height: 400)
+        .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
         .onAppear{
             if deadline == Date(timeIntervalSince1970: 0){
                 showDeadline = false
@@ -245,4 +239,6 @@ struct DetailView: View {
             }
         }
     }
+    
+    
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @Environment(\.colorScheme) public var colorScheme
     
     @Binding var showAddView: Bool
     @State var title: String = ""
@@ -18,12 +19,6 @@ struct AddView: View {
     @State var isMarked: Bool = false
     @State var showDeadline: Bool = true
     @State var showNotification: Bool = true
-    
-    @Environment(\.colorScheme) public var colorScheme
-    let primaryColor: Color = .indigo
-    let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
-    let backgroundColor: Color = Color(red: 230/255, green: 230/255, blue: 250/255)
-
     
     var body: some View {
         ZStack{
@@ -54,7 +49,7 @@ struct AddView: View {
                                         showDeadline.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "calendar.circle.fill", color: showDeadline ? .indigo : .gray, size: 25)
+                                    IconImage(image: "calendar.circle.fill", color: showDeadline ? Colors.primaryColor : .gray, size: 25)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -84,7 +79,7 @@ struct AddView: View {
                                         showNotification.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "bell.circle.fill", color: showNotification ? .indigo : .gray, size: 25)
+                                    IconImage(image: "bell.circle.fill", color: showNotification ? Colors.primaryColor : .gray, size: 25)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -112,7 +107,7 @@ struct AddView: View {
                                 isMarked.toggle()
                             }
                         }, label: {
-                            IconImage(image: "star.circle.fill", color: isMarked ? .indigo : .gray, size: 25)
+                            IconImage(image: "star.circle.fill", color: isMarked ? Colors.primaryColor : .gray, size: 25)
                         })
                             .buttonStyle(.plain)
                         Text("Markiert")
@@ -126,7 +121,7 @@ struct AddView: View {
                         Button("Abbrechen"){
                             showAddView.toggle()
                         }
-                        .foregroundColor(secondaryColor)
+                        .foregroundColor(Colors.secondaryColor)
                         .buttonStyle(.plain)
                         Spacer()
                         if(title != ""){
@@ -137,7 +132,7 @@ struct AddView: View {
                                 Text("Fertig")
                                     .font(.body)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(colorScheme == .dark ? secondaryColor : .indigo)
+                                    .foregroundColor(colorScheme == .dark ? Colors.secondaryColor : Colors.primaryColor)
                             })
                             .buttonStyle(.plain)
                         } else {
@@ -156,7 +151,7 @@ struct AddView: View {
             }
         }
         .padding()
-        .frame(width: 400, height: 400)
+        .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
     }
     
     private func addToDo() {

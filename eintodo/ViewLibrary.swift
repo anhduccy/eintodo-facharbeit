@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+//Structs - Global variables
+struct Sizes {
+    static let defaultSheetWidth: CGFloat = 400
+    static let defaultSheetHeight: CGFloat = 400
+}
+
+struct Colors {
+    static let primaryColor: Color = .indigo
+    static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
+}
 
 //ButtonStyles
 struct DeleteButton: ButtonStyle {

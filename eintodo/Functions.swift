@@ -25,4 +25,5 @@ public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
     } else {
         return defaultColor
     }
+
 }

@@ -18,6 +18,7 @@ struct ContentView: View {
         animation: .default)
     public var items: FetchedResults<ToDo>
     @State var showAddView: Bool = false
+    @State var showSettings: Bool = false
 
     var body: some View {
         NavigationView {
@@ -40,6 +41,17 @@ struct ContentView: View {
                     })
                         .sheet(isPresented: $showAddView){
                             AddView(showAddView: $showAddView)
+                        }
+                }
+                
+                ToolbarItem{
+                    Button(action: {
+                        showSettings.toggle()
+                    }, label:{
+                        Label("Settings", systemImage: "gear")
+                    })
+                        .sheet(isPresented: $showSettings){
+                            SettingsView(showSettings: $showSettings)
                         }
                 }
             }
