@@ -117,7 +117,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0), isPresented: $isPresented)
+            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0), isMarked: todo.isMarked, isPresented: $isPresented)
         }
     }
 }
