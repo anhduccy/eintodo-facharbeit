@@ -21,9 +21,11 @@ struct DetailView: View {
     @State var notification: Date
     @State var isMarked: Bool
     
-    @State var toggle_show_deadline = true
-    @State var toggle_show_notification = true
+    @State var showDeadline = true
+    @State var showNotification = true
     
+    @State private var overDeleteButton = false
+
     @Binding var isPresented: Bool
     
     let primaryColor: Color = .indigo
@@ -54,13 +56,11 @@ struct DetailView: View {
                         HStack{
                             HStack{
                                 Button(action: {
-                                    toggle_show_deadline.toggle()
-                                }, label: {
-                                    if(toggle_show_deadline){
-                                        IconsImage(title: "Fällig am", image: "calendar.circle.fill", color: .indigo, size: 25)
-                                    } else {
-                                        IconsImage(title: "Fällig am", image: "calendar.circle.fill", color: .gray, size: 25)
+                                    withAnimation{
+                                        showDeadline.toggle()
                                     }
+                                }, label: {
+                                    IconImage(image: "calendar.circle.fill", color: showDeadline ? .indigo : .gray, size: 25)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -69,7 +69,7 @@ struct DetailView: View {
                                 Spacer()
                             }
                             .frame(width: 125)
-                            if toggle_show_deadline {
+                            if showDeadline {
                                 DatePicker("",
                                     selection: $deadline,
                                     displayedComponents: [.date]
@@ -86,13 +86,11 @@ struct DetailView: View {
                         HStack{
                             HStack{
                                 Button(action: {
-                                    toggle_show_notification.toggle()
-                                }, label: {
-                                    if(toggle_show_notification){
-                                        IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .indigo, size: 25)
-                                    } else {
-                                        IconsImage(title: "Erinnerung", image: "bell.circle.fill", color: .gray, size: 25)
+                                    withAnimation{
+                                        showNotification.toggle()
                                     }
+                                }, label: {
+                                    IconImage(image: "bell.circle.fill", color: showNotification ? .indigo : .gray, size: 25)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -101,7 +99,7 @@ struct DetailView: View {
                                 Spacer()
                             }
                             .frame(width: 125)
-                            if toggle_show_notification {
+                            if showNotification {
                                 DatePicker("",
                                     selection: $notification,
                                            displayedComponents: [.date, .hourAndMinute]
@@ -116,20 +114,20 @@ struct DetailView: View {
                     //IsMarked
                     HStack{
                         Button(action: {
-                            isMarked.toggle()
-                        }, label: {
-                            if(isMarked){
-                                IconsImage(title: "Markiert", image: "star.circle.fill", color: .indigo, size: 25)
-                            } else {
-                                IconsImage(title: "Markiert", image: "star.circle.fill", color: .gray, size: 25)
+                            withAnimation{
+                                isMarked.toggle()
                             }
+                        }, label: {
+                            IconImage(image: "star.circle.fill", color: isMarked ? .indigo : .gray, size: 25)
                         })
                             .buttonStyle(.plain)
                         Text("Markiert")
                             .font(.body)
                         Spacer()
                     }
+                    
                     Spacer()
+                    
                     
                     //Group - Submit button
                     HStack{
@@ -138,6 +136,20 @@ struct DetailView: View {
                         }
                         .foregroundColor(secondaryColor)
                         .buttonStyle(.plain)
+                        Spacer()
+                        
+                        Button(action: {
+                            deleteToDo()
+                        }, label: {
+                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? .indigo : .red, size: 25)
+                        })
+                            .buttonStyle(.plain)
+                            .onHover{ over in
+                                withAnimation{
+                                    overDeleteButton = over
+                                }
+                            }
+                        
                         Spacer()
                         if(title != ""){
                             Button(action: {
@@ -169,11 +181,11 @@ struct DetailView: View {
         .frame(width: 400, height: 400)
         .onAppear{
             if deadline == Date(timeIntervalSince1970: 0){
-                toggle_show_deadline = false
+                showDeadline = false
                 deadline = Date()
             }
             if notification == Date(timeIntervalSince1970: 0){
-                toggle_show_notification = false
+                showNotification = false
                 notification = Date()
             }
         }
@@ -199,16 +211,16 @@ struct DetailView: View {
         withAnimation {
             todo.title = title
             todo.notes = notes
-            if toggle_show_deadline{
+            if showDeadline{
                 todo.deadline = deadline
             }
-            if !toggle_show_deadline{
+            if !showDeadline{
                 todo.deadline = Date(timeIntervalSince1970: 0)
             }
-            if toggle_show_notification{
+            if showNotification{
                 todo.notification = notification
             }
-            if !toggle_show_notification{
+            if !showNotification{
                 todo.notification = Date(timeIntervalSince1970: 0)
             }
             

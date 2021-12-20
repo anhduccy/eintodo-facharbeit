@@ -20,7 +20,7 @@ struct DeleteButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(minWidth: 0, maxWidth: 367)
-            .padding(12.5)
+            .padding(11.5)
             .background(colorScheme == .dark ? (overButton ? .red : secondaryColor) : (overButton ? .red : backgroundColor))
             .foregroundColor(.white)
             .cornerRadius(10)
@@ -34,13 +34,11 @@ struct DeleteButton: ButtonStyle {
 }
 
 //Images
-struct IconsImage: View {
-    let title: String
+struct IconImage: View {
     let image: String
     let color: Color
     let size: CGFloat
     var body: some View {
-        
         ZStack{
             Circle()
                 .fill(.white)
