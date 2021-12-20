@@ -137,6 +137,7 @@ struct AddView: View {
                 newToDo.notification = Date(timeIntervalSince1970: 0)
             }
             newToDo.isDone = false
+            newToDo.isMarked = false
 
             do {
                 try viewContext.save()

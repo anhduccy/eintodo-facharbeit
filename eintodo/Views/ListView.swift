@@ -34,12 +34,7 @@ struct ListView: View {
                         //Checkmark button
                         Button(action: {
                             todo.isDone.toggle()
-                            do {
-                                try viewContext.save()
-                            } catch {
-                                let nsError = error as NSError
-                                fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
-                            }
+                            updateToDo()
                             }, label: {
                             if(todo.isDone){
                                 SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white)
@@ -53,6 +48,23 @@ struct ListView: View {
                         
                         //Labelling
                         SheetButton(todo)
+                        Spacer()
+                        if(todo.notes != ""){
+                            SystemImage(image: "note.text", size: 15, color: .white)
+                        }
+                        Button(action: {
+                            todo.isMarked.toggle()
+                            updateToDo()
+                        }, label: {
+                            if(todo.isMarked){
+                                SystemImage(image: "star.fill", size: 15, color: .yellow)
+                                    .padding(5)
+                            } else {
+                                SystemImage(image: "star", size: 15, color: .white)
+                                    .padding(5)
+                            }
+                        })
+                            .buttonStyle(.plain)
                     }
                     .padding(5)
                     .background(missedDeadlineOfToDo(date: todo.deadline ?? Date(timeIntervalSince1970: 0), defaultColor: .indigo))
@@ -70,6 +82,14 @@ struct ListView: View {
                 .foregroundColor(.blue)
 
             }
+        }
+    }
+    private func updateToDo(){
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not add CoreData-Entity in AddView \(nsError), \(nsError.userInfo)")
         }
     }
 }
