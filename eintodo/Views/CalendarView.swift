@@ -15,10 +15,22 @@ struct CalendarView: View {
         animation: .default)
     public var todos: FetchedResults<ToDo>
     
+    @State var selectedDate: Date = Date()
+    
     var body: some View {
-        Text("CalendarView")
-        Button("Alles löschen"){
-            deleteAllItems()
+        NavigationView{
+            
+            NavigationLink(destination: ListView(selectedDate: Date(timeIntervalSince1970: 0))){
+                Text("CalendarView")
+            }
+        }
+        .navigationTitle("CalendarView")
+        .toolbar{
+            ToolbarItem{
+                Button("Alles löschen"){
+                    deleteAllItems()
+                }
+            }
         }
     }
 }

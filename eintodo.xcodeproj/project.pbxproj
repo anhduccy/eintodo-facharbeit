@@ -18,8 +18,8 @@
 		7948560D2766A8B10086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560C2766A8B10086927E /* AddView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
 		79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542C2771283B00E935D8 /* SettingsView.swift */; };
-		79AC542F27712F6100E935D8 /* CoreDataFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542E27712F6100E935D8 /* CoreDataFunctions.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
+		79E19F0D2771DDB7006127DC /* CoreDataFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E19F0C2771DDB7006127DC /* CoreDataFunctions.swift */; };
 		79F44343276F649200B558BF /* ViewLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F44342276F649200B558BF /* ViewLibrary.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,8 +37,8 @@
 		7948560C2766A8B10086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		79AC542C2771283B00E935D8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		79AC542E27712F6100E935D8 /* CoreDataFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataFunctions.swift; path = ../../../../../CoreDataFunctions.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		79E19F0C2771DDB7006127DC /* CoreDataFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFunctions.swift; sourceTree = "<group>"; };
 		79F44342276F649200B558BF /* ViewLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,7 +75,7 @@
 				794855EA276690410086927E /* eintodoApp.swift */,
 				79BAB9BB276BBDDD009EB5A3 /* Views */,
 				79F44342276F649200B558BF /* ViewLibrary.swift */,
-				79AC542E27712F6100E935D8 /* CoreDataFunctions.swift */,
+				79E19F0C2771DDB7006127DC /* CoreDataFunctions.swift */,
 				79BAB9B7276BB205009EB5A3 /* Functions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
 				794855F3276690410086927E /* Persistence.swift */,
@@ -185,7 +185,7 @@
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
-				79AC542F27712F6100E935D8 /* CoreDataFunctions.swift in Sources */,
+				79E19F0D2771DDB7006127DC /* CoreDataFunctions.swift in Sources */,
 				794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */,
 				79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */,
 				794855EB276690410086927E /* eintodoApp.swift in Sources */,

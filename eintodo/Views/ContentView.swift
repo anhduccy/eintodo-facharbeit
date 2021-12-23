@@ -47,8 +47,6 @@ struct ContentView: View {
                         }
                 }
             }
-            CalendarView()
-            ListView()
         }
     }
 }

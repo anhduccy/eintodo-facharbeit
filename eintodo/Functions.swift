@@ -27,3 +27,7 @@ public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
     }
 
 }
+
+public func isSameDay(date1: Date, date2: Date) -> Bool {
+    return Calendar.current.isDate(date1, inSameDayAs: date2)
+}

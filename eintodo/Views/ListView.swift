@@ -10,15 +10,28 @@ import Foundation
 
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-            NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-            NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)
-        ],
-        animation: .default)
-    public var todos: FetchedResults<ToDo>
+    
+    init(selectedDate: Date){
+        let calendar = Calendar.current
+        let dateFrom = calendar.startOfDay(for: selectedDate)
+        let dateTo = calendar.date(byAdding: .day, value: 1, to: dateFrom)
+        
+        if(selectedDate != Date(timeIntervalSince1970: 0)){
+            _todos = FetchRequest(
+                sortDescriptors: [
+                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                    predicate: NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg),
+                animation: .default)
+        } else {
+            _todos = FetchRequest(sortDescriptors: [
+                NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
+        }
+    }
+    @FetchRequest var todos: FetchedResults<ToDo>
     
     @State var showDoneToDos: Bool = false
     
