@@ -10,8 +10,10 @@ import Foundation
 
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @FetchRequest var todos: FetchedResults<ToDo>
+    @Binding var showDoneToDos: Bool
     
-    init(selectedDate: Date){
+    init(selectedDate: Date, bool: Binding<Bool>){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: selectedDate)
         let dateTo = calendar.date(byAdding: .day, value: 1, to: dateFrom)
@@ -30,10 +32,8 @@ struct ListView: View {
                 NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
         }
+        _showDoneToDos = bool
     }
-    @FetchRequest var todos: FetchedResults<ToDo>
-    
-    @State var showDoneToDos: Bool = false
     
     let SystemImageSize: CGFloat = 17.5
     
@@ -41,57 +41,47 @@ struct ListView: View {
         List{
             //ListView
             ForEach(todos, id: \.self){ todo in
-                //ListItem
-                if(showDoneToDos || !todo.isDone){
-                    HStack{
-                        //Checkmark button
-                        Button(action: {
-                            todo.isDone.toggle()
-                            updateToDo()
+                    //ListItem
+                    if(showDoneToDos || !todo.isDone){
+                        HStack{
+                            //Checkmark button
+                            Button(action: {
+                                todo.isDone.toggle()
+                                updateToDo()
+                                }, label: {
+                                if(todo.isDone){
+                                    SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white)
+                                } else {
+                                    SystemImage(image: "square", size: SystemImageSize, color: .white)
+                                }
+                            })
+                                .frame(width: SystemImageSize, height: SystemImageSize)
+                                .buttonStyle(.plain)
+                                .padding(.leading, 5)
+                            
+                            //Labelling
+                            SheetButton(todo)
+                            Spacer()
+                            Button(action: {
+                                todo.isMarked.toggle()
+                                updateToDo()
                             }, label: {
-                            if(todo.isDone){
-                                SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white)
-                            } else {
-                                SystemImage(image: "square", size: SystemImageSize, color: .white)
-                            }
-                        })
-                            .frame(width: SystemImageSize, height: SystemImageSize)
-                            .buttonStyle(.plain)
-                            .padding(.leading, 5)
-                        
-                        //Labelling
-                        SheetButton(todo)
-                        Spacer()
-                        Button(action: {
-                            todo.isMarked.toggle()
-                            updateToDo()
-                        }, label: {
-                            if(todo.isMarked){
-                                SystemImage(image: "star.fill", size: 15, color: .yellow)
-                                    .padding(5)
-                            } else {
-                                SystemImage(image: "star", size: 15, color: .white)
-                                    .padding(5)
-                            }
-                        })
-                            .buttonStyle(.plain)
+                                if(todo.isMarked){
+                                    SystemImage(image: "star.fill", size: 15, color: .yellow)
+                                        .padding(5)
+                                } else {
+                                    SystemImage(image: "star", size: 15, color: .white)
+                                        .padding(5)
+                                }
+                            })
+                                .buttonStyle(.plain)
+                        }
+                        .padding(5)
+                        .background(missedDeadlineOfToDo(date: todo.deadline ?? Date(timeIntervalSince1970: 0), defaultColor: Colors.primaryColor))
+                        .cornerRadius(8.5)
                     }
-                    .padding(5)
-                    .background(missedDeadlineOfToDo(date: todo.deadline ?? Date(timeIntervalSince1970: 0), defaultColor: Colors.primaryColor))
-                    .cornerRadius(8.5)
                 }
             }
-        }
         .listStyle(InsetListStyle())
-        .toolbar{
-            ToolbarItem{
-                Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
-                    showDoneToDos.toggle()
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(.blue)
-
-            }
-        }
     }
 }

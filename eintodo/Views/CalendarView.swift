@@ -9,26 +9,44 @@ import SwiftUI
 
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
-
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
         animation: .default)
     public var todos: FetchedResults<ToDo>
     
     @State var selectedDate: Date = Date()
+    @State var showDoneToDos: Bool = false
+    @State var listViewIsActive: Bool = false
+    
+    let day: Int = 3600*24
     
     var body: some View {
         NavigationView{
-            
-            NavigationLink(destination: ListView(selectedDate: Date(timeIntervalSince1970: 0))){
-                Text("CalendarView")
+            VStack{
+                VStack {
+                    NavigationLink(destination: ListView(selectedDate: selectedDate, bool: $showDoneToDos), isActive: $listViewIsActive){ EmptyView() }
+                }.hidden()
+                ForEach(0...7, id: \.self){ dayValue in
+                    Button(action: {
+                        selectedDate = Date().addingTimeInterval(TimeInterval(day*dayValue))
+                        self.listViewIsActive = true
+
+                    }){
+                        Text(DateToStringFormatter(date: Date().addingTimeInterval(TimeInterval(day*dayValue))))
+                    }
+                }
             }
         }
-        .navigationTitle("CalendarView")
+        .navigationTitle("Kalender")
         .toolbar{
             ToolbarItem{
                 Button("Alles löschen"){
                     deleteAllItems()
+                }
+            }
+            ToolbarItem{
+                Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
+                    showDoneToDos.toggle()
                 }
             }
         }
