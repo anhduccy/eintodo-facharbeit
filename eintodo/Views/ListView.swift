@@ -81,7 +81,18 @@ struct ListView: View {
                         .cornerRadius(8.5)
                     }
                 }
+                if(todos.isEmpty){
+                    VStack{
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("Keine Erinnerungen vorhanden")
+                            Spacer()
+                        }
+                    }
+                }
             }
         .listStyle(InsetListStyle())
+        .frame(minWidth: 250)
     }
 }

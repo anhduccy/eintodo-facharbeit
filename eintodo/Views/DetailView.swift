@@ -134,6 +134,7 @@ struct DetailView: View {
                         
                         Button(action: {
                             deleteToDo()
+                            isPresented.toggle()
                         }, label: {
                             IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
                         })
