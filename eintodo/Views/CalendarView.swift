@@ -15,6 +15,7 @@ struct CalendarView: View {
     public var todos: FetchedResults<ToDo>
     
     @State var selectedDate: Date = Date()
+    @State var isSelected: Bool = false
     @State var showDoneToDos: Bool = false
     @State var listViewIsActive: Bool = false
     
@@ -30,9 +31,14 @@ struct CalendarView: View {
                     Button(action: {
                         selectedDate = Date().addingTimeInterval(TimeInterval(day*dayValue))
                         self.listViewIsActive = true
-
+                        self.isSelected = true
                     }){
-                        Text(DateToStringFormatter(date: Date().addingTimeInterval(TimeInterval(day*dayValue))))
+                        if isSameDay(date1: Date(), date2: Date().addingTimeInterval(TimeInterval(day*dayValue))) {
+                            Text(DateToStringFormatter(date: Date().addingTimeInterval(TimeInterval(day*dayValue))))
+                                .foregroundColor(.blue)
+                        } else {
+                            Text(DateToStringFormatter(date: Date().addingTimeInterval(TimeInterval(day*dayValue))))
+                        }
                     }
                 }
             }
