@@ -30,3 +30,15 @@ public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
         return defaultColor
     }
 }
+
+public func missedDeadlineOfToDo(date: Date) -> Bool{
+    if date != Date(timeIntervalSince1970: 0){
+        if date < Date(){
+            return true
+        } else {
+            return false
+        }
+    } else {
+        return false
+    }
+}

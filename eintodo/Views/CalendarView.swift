@@ -62,9 +62,12 @@ struct CalendarView: View {
                                     if(isSameDay(date1: selectedDate, date2: dayValue.date)){
                                         Circle()
                                             .foregroundColor(.blue)
-                                    } else if(!isEmptyOnDate(date: dayValue.date)){
+                                    } else if(!isEmptyOnDate(date: dayValue.date) && !missedDeadlineOfToDo(date: dayValue.date)){
                                         Circle()
                                             .foregroundColor(.indigo)
+                                    } else if(!isEmptyOnDate(date: dayValue.date) && missedDeadlineOfToDo(date: dayValue.date)){
+                                        Circle()
+                                            .foregroundColor(.red)
                                     }
                                     Button(action: {
                                         selectedDate = dayValue.date
