@@ -21,6 +21,7 @@ struct CalendarView: View {
     let day: Int = 3600*24
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
     let weekdays: [String] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    let currentDate: Date = Date()
     
     var body: some View {
         NavigationView{
@@ -57,33 +58,41 @@ struct CalendarView: View {
                         }
                         
                         ForEach(extractDate(), id: \.self){ dayValue in
-                            if(dayValue.day >= 0){
-                                ZStack{
-                                    if(isSameDay(date1: selectedDate, date2: dayValue.date)){
-                                        Circle()
-                                            .foregroundColor(.blue)
-                                    } else if(!isEmptyOnDate(date: dayValue.date) && !missedDeadlineOfToDo(date: dayValue.date)){
-                                        Circle()
-                                            .foregroundColor(.indigo)
-                                    } else if(!isEmptyOnDate(date: dayValue.date) && missedDeadlineOfToDo(date: dayValue.date)){
-                                        Circle()
-                                            .foregroundColor(.red)
-                                    }
-                                    Button(action: {
-                                        selectedDate = dayValue.date
-                                        self.listViewIsActive = true
-                                    }){
-                                        ZStack{
-                                            Circle()
-                                                .hidden()
-                                            Text("\(dayValue.day)")
-                                                .frame(width: 30, height: 30, alignment: .center)
+                            VStack{
+                                if(dayValue.day >= 0){
+                                    ZStack{
+                                        if(isSameDay(date1: selectedDate, date2: dayValue.date)){
+                                            Circle().fill(Color.blue)
+                                        } else{
+                                            if(isSameDay(date1: currentDate, date2: dayValue.date)){
+                                                Circle().hidden()
+                                            } else if(!isEmptyOnDate(date: dayValue.date) && !missedDeadlineOfToDo(date: dayValue.date)){
+                                                Circle().fill(Color.indigo)
+                                            } else if(!isEmptyOnDate(date: dayValue.date) && missedDeadlineOfToDo(date: dayValue.date)){
+                                                Circle().fill(Color.red)
+                                            }
                                         }
+                                        Button(action: {
+                                            selectedDate = dayValue.date
+                                            self.listViewIsActive = true
+                                        }){
+                                            ZStack{
+                                                Circle()
+                                                    .hidden()
+                                                    .frame(width: 30, height: 30, alignment: .center)
+                                                if(isSameDay(date1: currentDate, date2: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date)){
+                                                    Text("\(dayValue.day)")
+                                                        .foregroundColor(Color.blue)
+                                                } else {
+                                                    Text("\(dayValue.day)")
+                                                }
+                                            }
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
+                                } else {
+                                    Text("")
                                 }
-                            } else {
-                                Text("")
                             }
                         }
                     }
