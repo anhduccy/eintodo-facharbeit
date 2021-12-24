@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 //Formatters
-public func DateToStringFormatter(date: Date) -> String{
+public func DateToStringFormatter(date: Date, format: String = "dd.MM.yyyy") -> String{
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd.MM.yyyy"
+    formatter.dateFormat = format
     return formatter.string(from: date)
 }
 

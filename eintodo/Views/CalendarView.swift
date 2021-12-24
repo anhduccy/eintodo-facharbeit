@@ -25,33 +25,39 @@ struct CalendarView: View {
     
     var body: some View {
         NavigationView{
-            VStack{
+            ZStack{
                 VStack{
+                    //Display of current month and year & navigation buttons
                     HStack{
-                        Spacer()
-                        Button(action: {
-                            currentMonth -= 1
-                        }){
-                            Image(systemName: "arrow.left")
+                        VStack{
+                            HStack{
+                                Text(getYear())
+                                Spacer()
+                            }
+                            HStack{
+                                Text(getMonth())
+                                    .font(.title2.bold())
+                                Spacer()
+                            }
                         }
-                        .buttonStyle(.plain)
-                        Button(action: {
-                            currentMonth += 1
-                        }){
-                            Image(systemName: "arrow.right")
+                        HStack{
+                            Spacer()
+                            Button(action: {
+                                currentMonth -= 1
+                            }){
+                                CalendarViewMonthButton(name: "chevron.backward", color: Colors.primaryColor)
+                            }
+                            .buttonStyle(.plain)
+                            Button(action: {
+                                currentMonth += 1
+                            }){
+                                CalendarViewMonthButton(name: "chevron.forward", color: Colors.primaryColor)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
-                    }
-                    HStack{
-                        Text(getYear())
-                        Spacer()
-                    }
-                    HStack{
-                        Text(getMonth())
-                            .font(.title2.bold())
-                        Spacer()
                     }
                     
+                    //Calendar
                     LazyVGrid(columns: columns){
                         ForEach(weekdays, id: \.self){ weekday in
                             Text(weekday)
@@ -67,7 +73,7 @@ struct CalendarView: View {
                                             if(isSameDay(date1: currentDate, date2: dayValue.date)){
                                                 Circle().hidden()
                                             } else if(!isEmptyOnDate(date: dayValue.date) && !missedDeadlineOfToDo(date: dayValue.date)){
-                                                Circle().fill(Color.indigo)
+                                                Circle().fill(Colors.primaryColor)
                                             } else if(!isEmptyOnDate(date: dayValue.date) && missedDeadlineOfToDo(date: dayValue.date)){
                                                 Circle().fill(Color.red)
                                             }
@@ -79,7 +85,6 @@ struct CalendarView: View {
                                             ZStack{
                                                 Circle()
                                                     .hidden()
-                                                    .frame(width: 30, height: 30, alignment: .center)
                                                 if(isSameDay(date1: currentDate, date2: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
@@ -87,6 +92,7 @@ struct CalendarView: View {
                                                     Text("\(dayValue.day)")
                                                 }
                                             }
+                                            .frame(width: 30, height: 30, alignment: .center)
                                         }
                                         .buttonStyle(.plain)
                                     }
@@ -103,16 +109,17 @@ struct CalendarView: View {
                     .onChange(of: currentMonth) { newValue in
                         selectedDate = getCurrentMonth()
                     }
+                    Spacer()
                 }.padding()
                 
+                //Hidden navigation link to navigate between dates
                 VStack {
                     NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
-            
         }
-        .navigationTitle("Kalender")
+        .navigationTitle(DateToStringFormatter(date: selectedDate))
         .toolbar{
             ToolbarItem{
                 Button("Alles löschen"){

@@ -18,7 +18,24 @@ struct Colors {
     static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
 }
 
-//Images
+//Images adn Icons
+
+struct CalendarViewMonthButton: View {
+    let name: String
+    let color: Color
+    let size: CGFloat = 22.5
+    
+    var body: some View{
+        ZStack{
+            Circle().fill(color).opacity(0.1)
+            Image(systemName: name)
+                .foregroundColor(color)
+        }
+        .padding(0)
+        .frame(width: size, height: size)
+    }
+}
+
 struct IconImage: View {
     let image: String
     let color: Color
