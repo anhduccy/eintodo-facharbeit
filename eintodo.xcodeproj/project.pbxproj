@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		79281B132776351700F32528 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79281B122776351700F32528 /* Extensions.swift */; };
+		79281B152776428200F32528 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79281B142776428200F32528 /* Extensions.swift */; };
 		794855EB276690410086927E /* eintodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EA276690410086927E /* eintodoApp.swift */; };
 		794855ED276690410086927E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EC276690410086927E /* ContentView.swift */; };
 		794855EF276690410086927E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 794855EE276690410086927E /* Assets.xcassets */; };
@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		79281B122776351700F32528 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = ../../../../../Extensions.swift; sourceTree = "<group>"; };
+		79281B142776428200F32528 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		794855E7276690410086927E /* eintodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eintodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		794855EA276690410086927E /* eintodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = eintodoApp.swift; sourceTree = "<group>"; };
 		794855EC276690410086927E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 				79BAB9BB276BBDDD009EB5A3 /* Views */,
 				79F44342276F649200B558BF /* ViewLibrary.swift */,
 				79BAB9B7276BB205009EB5A3 /* Functions.swift */,
-				79281B122776351700F32528 /* Extensions.swift */,
+				79281B142776428200F32528 /* Extensions.swift */,
 				794855EE276690410086927E /* Assets.xcassets */,
 				794855F3276690410086927E /* Persistence.swift */,
 				794855F8276690410086927E /* eintodo.entitlements */,
@@ -185,7 +185,7 @@
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
-				79281B132776351700F32528 /* Extensions.swift in Sources */,
+				79281B152776428200F32528 /* Extensions.swift in Sources */,
 				794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */,
 				79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */,
 				794855EB276690410086927E /* eintodoApp.swift in Sources */,
