@@ -11,14 +11,15 @@ import Foundation
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @FetchRequest var todos: FetchedResults<ToDo>
+    @Binding var selectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(selectedDate: Date, bool: Binding<Bool>){
+    init(date: Date, bool: Binding<Bool>, selectedDate: Binding<Date>){
         let calendar = Calendar.current
-        let dateFrom = calendar.startOfDay(for: selectedDate)
+        let dateFrom = calendar.startOfDay(for: date)
         let dateTo = calendar.date(byAdding: .day, value: 1, to: dateFrom)
         
-        if(selectedDate != Date(timeIntervalSince1970: 0)){
+        if(date != Date(timeIntervalSince1970: 0)){
             _todos = FetchRequest(
                 sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
@@ -33,6 +34,7 @@ struct ListView: View {
                 NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
         }
         _showDoneToDos = bool
+        _selectedDate = selectedDate
     }
     
     let SystemImageSize: CGFloat = 17.5
@@ -60,7 +62,7 @@ struct ListView: View {
                                 .padding(.leading, 5)
                             
                             //Labelling
-                            SheetButton(todo)
+                            SheetButton(todo, selectedDate: $selectedDate)
                             Spacer()
                             Button(action: {
                                 todo.isMarked.toggle()

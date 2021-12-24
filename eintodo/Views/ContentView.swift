@@ -11,11 +11,12 @@ import CoreData
 struct ContentView: View {
     @State var showAddView: Bool = false
     @State var showSettings: Bool = false
+    @State var selectedDate: Date = Date()
 
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: CalendarView()){
+                NavigationLink(destination: CalendarView(selectedDate: $selectedDate)){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")
@@ -32,7 +33,7 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     })
                         .sheet(isPresented: $showAddView){
-                            AddView(showAddView: $showAddView)
+                            AddView(showAddView: $showAddView, selectedDate: $selectedDate)
                         }
                 }
                 

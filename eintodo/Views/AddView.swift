@@ -11,7 +11,6 @@ struct AddView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
     
-    @Binding var showAddView: Bool
     @State var title: String = ""
     @State var notes: String = ""
     @State var deadline: Date = Date()
@@ -20,10 +19,12 @@ struct AddView: View {
     @State var showDeadline: Bool = true
     @State var showNotification: Bool = true
     
+    @Binding var showAddView: Bool
+    @Binding var selectedDate: Date
+    
     var body: some View {
         ZStack{
             VStack(spacing: 20){
-
                 //Group - Title, Notes & Cancel-Button
                 VStack(spacing: 2){
                     TextField("Titel", text: $title)
@@ -119,7 +120,7 @@ struct AddView: View {
                     //Group - Submit button
                     HStack{
                         Button("Abbrechen"){
-                            showAddView.toggle()
+                            dismissAddView()
                         }
                         .foregroundColor(Colors.secondaryColor)
                         .buttonStyle(.plain)
@@ -127,7 +128,7 @@ struct AddView: View {
                         if(title != ""){
                             Button(action: {
                                 addToDo()
-                                showAddView.toggle()
+                                dismissAddView()
                             }, label: {
                                 Text("Fertig")
                                     .font(.body)
@@ -137,7 +138,7 @@ struct AddView: View {
                             .buttonStyle(.plain)
                         } else {
                             Button(action: {
-                                showAddView.toggle()
+                                dismissAddView()
                             }, label: {
                                 Text("Fertig")
                                     .font(.body)

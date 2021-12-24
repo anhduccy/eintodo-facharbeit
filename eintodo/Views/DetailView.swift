@@ -12,6 +12,7 @@ struct DetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
 
+    //Values for ToDo
     @State var todo: ToDo
     @State var title: String
     @State var notes: String
@@ -19,12 +20,14 @@ struct DetailView: View {
     @State var notification: Date
     @State var isMarked: Bool
     
+    //Toggles and Conditions for Animtaion
     @State var showDeadline = true
     @State var showNotification = true
-    
     @State private var overDeleteButton = false
 
+    //Coomunication between other views
     @Binding var isPresented: Bool
+    @Binding var selectedDate: Date
     
     var body: some View {
         ZStack{
@@ -126,7 +129,7 @@ struct DetailView: View {
                     //Group - Submit button
                     HStack{
                         Button("Abbrechen"){
-                            isPresented.toggle()
+                            dismissDetailView()
                         }
                         .foregroundColor(Colors.secondaryColor)
                         .buttonStyle(.plain)
@@ -134,7 +137,7 @@ struct DetailView: View {
                         
                         Button(action: {
                             deleteToDo()
-                            isPresented.toggle()
+                            dismissDetailView()
                         }, label: {
                             IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
                         })
@@ -149,7 +152,7 @@ struct DetailView: View {
                         if(title != ""){
                             Button(action: {
                                 updateToDo()
-                                isPresented.toggle()
+                                dismissDetailView()
                             }, label: {
                                 Text("Fertig")
                                     .font(.body)
@@ -159,7 +162,7 @@ struct DetailView: View {
                             .buttonStyle(.plain)
                         } else {
                             Button(action: {
-                                isPresented.toggle()
+                                dismissDetailView()
                             }, label: {
                                 Text("Fertig")
                                     .font(.body)
@@ -184,17 +187,10 @@ struct DetailView: View {
                 notification = Date()
             }
         }
-        .onDisappear(perform: updateToDo)
         .onChange(of: title) { newValue in
             updateToDo()
         }
         .onChange(of: notes) { newValue in
-            updateToDo()
-        }
-        .onChange(of: deadline) { newValue in
-            updateToDo()
-        }
-        .onChange(of: notification) { newValue in
             updateToDo()
         }
         .onChange(of: isMarked){ newValue in

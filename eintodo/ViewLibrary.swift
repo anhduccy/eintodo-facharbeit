@@ -50,11 +50,13 @@ struct SystemImage: View{
 struct SheetButton: View {
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false
+    @Binding var selectedDate: Date
     
     let text_color: Color = .white
 
-    init(_ todo: ToDo) {
+    init(_ todo: ToDo, selectedDate: Binding<Date>) {
         self.todo = todo
+        _selectedDate = selectedDate
     }
 
     var body: some View {
@@ -97,7 +99,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0), isMarked: todo.isMarked, isPresented: $isPresented)
+            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0), isMarked: todo.isMarked, isPresented: $isPresented, selectedDate: $selectedDate)
         }
     }
 }

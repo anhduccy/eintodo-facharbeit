@@ -13,10 +13,10 @@ struct CalendarView: View {
     public var todos: FetchedResults<ToDo>
     
     @State var currentMonth: Int = 0
-    @State var selectedDate: Date = Date()
-    @State var isSelected: Bool = true
     @State var showDoneToDos: Bool = false
     @State var listViewIsActive: Bool = false
+    
+    @Binding var selectedDate: Date
     
     let day: Int = 3600*24
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
@@ -28,13 +28,18 @@ struct CalendarView: View {
                 VStack{
                     HStack{
                         Spacer()
-                        Button("<"){
+                        Button(action: {
                             currentMonth -= 1
+                        }){
+                            Image(systemName: "arrow.left")
                         }
-                        
-                        Button(">"){
+                        .buttonStyle(.plain)
+                        Button(action: {
                             currentMonth += 1
+                        }){
+                            Image(systemName: "arrow.right")
                         }
+                        .buttonStyle(.plain)
                     }
                     HStack{
                         Text(getYear())
@@ -53,29 +58,27 @@ struct CalendarView: View {
                         
                         ForEach(extractDate(), id: \.self){ dayValue in
                             if(dayValue.day >= 0){
-                                Button(action: {
-                                    selectedDate = dayValue.date
-                                    self.listViewIsActive = true
-                                    self.isSelected = true
-                                }){
-                                    ZStack{
-                                        if(!isEmptyOnDate(date: dayValue.date)){
+                                ZStack{
+                                    if(isSameDay(date1: selectedDate, date2: dayValue.date)){
+                                        Circle()
+                                            .foregroundColor(.blue)
+                                    } else if(!isEmptyOnDate(date: dayValue.date)){
+                                        Circle()
+                                            .foregroundColor(.indigo)
+                                    }
+                                    Button(action: {
+                                        selectedDate = dayValue.date
+                                        self.listViewIsActive = true
+                                    }){
+                                        ZStack{
                                             Circle()
-                                                .foregroundColor(dayValue.date == selectedDate ? .blue : .indigo)
-                                            Text("\(dayValue.day)")
-                                                .frame(width: 30, height: 30, alignment: .center)
-                                        } else if dayValue.date == selectedDate{
-                                                Circle()
-                                                .foregroundColor(.blue)
-                                                Text("\(dayValue.day)")
-                                                    .frame(width: 30, height: 30, alignment: .center)
-                                        } else {
+                                                .hidden()
                                             Text("\(dayValue.day)")
                                                 .frame(width: 30, height: 30, alignment: .center)
                                         }
                                     }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
                             } else {
                                 Text("")
                             }
@@ -91,10 +94,11 @@ struct CalendarView: View {
                 }.padding()
                 
                 VStack {
-                    NavigationLink(destination: ListView(selectedDate: selectedDate, bool: $showDoneToDos), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
+            
         }
         .navigationTitle("Kalender")
         .toolbar{
