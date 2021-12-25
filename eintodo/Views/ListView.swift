@@ -88,7 +88,7 @@ struct ListView: View {
                                 .buttonStyle(.plain)
                         }
                         .padding(5)
-                        .background(missedDeadlineOfToDo(date: todo.deadline ?? Date(timeIntervalSince1970: 0), defaultColor: Colors.primaryColor))
+                        .background(missedDeadlineOfToDo(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
                         .cornerRadius(8.5)
                     }
                 }

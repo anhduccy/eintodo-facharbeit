@@ -11,7 +11,7 @@ import CoreData
 struct ContentView: View {
     @State var showAddView: Bool = false
     @State var showSettings: Bool = false
-    @State var selectedDate: Date = Date()
+    @State var selectedDate: Date = Dates.currentDate
     @State var lastSelectedDate: Date = Dates.defaultDate
 
     var body: some View {
@@ -34,7 +34,7 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     })
                         .sheet(isPresented: $showAddView){
-                            DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Date(), notification: Date(), isMarked: false, isPresented: $showAddView, selectedDate: $selectedDate)
+                            DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Dates.currentDate, notification: Dates.currentDate, isMarked: false, isPresented: $showAddView, selectedDate: $selectedDate)
                         }
                 }
                 

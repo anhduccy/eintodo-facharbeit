@@ -24,8 +24,8 @@ public func isCurrentDate(date: Date)->Bool{
 }
 
 public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
-    let currentDate = Calendar.current.startOfDay(for: Date())
-    if date != Date(timeIntervalSince1970: 0){
+    let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)
+    if date != Dates.defaultDate{
         if date < currentDate{
             return .red
         } else {
@@ -35,10 +35,9 @@ public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
         return defaultColor
     }
 }
-
 public func missedDeadlineOfToDo(date: Date) -> Bool{
-    let currentDate = Calendar.current.startOfDay(for: Date())
-    if date != Date(timeIntervalSince1970: 0){
+    let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)
+    if date != Dates.defaultDate{
         if date < currentDate{
             return true
         } else {

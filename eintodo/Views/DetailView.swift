@@ -196,11 +196,11 @@ struct DetailView: View {
             case .display:
                 if deadline == Dates.defaultDate{
                     showDeadline = false
-                    deadline = Date()
+                    deadline = Dates.currentDate
                 }
                 if notification == Dates.defaultDate{
                     showNotification = false
-                    notification = Date()
+                    notification = Dates.currentDate
                 }
             }
         }

@@ -7,33 +7,6 @@
 
 import SwiftUI
 
-//Structs - Global variables
-struct Dates {
-    static let currentDate = Date()
-    static let defaultDate = Date(timeIntervalSince1970: 0)
-}
-
-struct Sizes {
-    static let defaultSheetWidth: CGFloat = 400
-    static let defaultSheetHeight: CGFloat = 400
-}
-
-struct Colors {
-    static let primaryColor: Color = .indigo
-    static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
-}
-
-enum ListViewTypes {
-    case dates
-    case noDates
-    case all
-}
-
-enum DetailViewTypes {
-    case add
-    case display
-}
-
 //Images and Icons
 struct CalendarViewMonthButton: View {
     let name: String
@@ -76,7 +49,6 @@ struct SystemImage: View{
 }
 
 //Buttons
-
 struct SheetButton: View {
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false
@@ -103,17 +75,17 @@ struct SheetButton: View {
                             .foregroundColor(text_color)
                         Spacer()
                     }
-                    if todo.deadline != Date(timeIntervalSince1970: 0){
+                    if todo.deadline != Dates.defaultDate{
                         HStack{
-                            Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Date(timeIntervalSince1970: 0)))
+                            Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Dates.defaultDate))
                                 .foregroundColor(text_color)
                             .fontWeight(.light)
                             Spacer()
                         }
                     }
-                    if todo.notification != Date(timeIntervalSince1970: 0){
+                    if todo.notification != Dates.defaultDate{
                         HStack{
-                            Text(DateToStringFormatter(date: todo.notification ?? Date(timeIntervalSince1970: 0)))
+                            Text(DateToStringFormatter(date: todo.notification ?? Dates.defaultDate))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()

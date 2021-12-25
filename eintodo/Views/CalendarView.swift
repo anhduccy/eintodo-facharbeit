@@ -117,7 +117,7 @@ struct CalendarView: View {
                         }
                     }
                     .onAppear{
-                        selectedDate = Date()
+                        selectedDate = Dates.currentDate
                     }
                     .onChange(of: currentMonth) { newValue in
                         selectedDate = getCurrentMonth()

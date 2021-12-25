@@ -62,30 +62,29 @@ extension CalendarView{
             let calendar = Calendar.current
             
             // Getting Current month date
-            guard let currentMonth = calendar.date(byAdding: .month, value: self.currentMonth, to: Date()) else {
-                return Date()
-            }
-            
+        guard let currentMonth = calendar.date(byAdding: .month, value: self.currentMonth, to: Dates.currentDate) else {
+            return Dates.currentDate
+        }
             return currentMonth
         }
     func extractDate() -> [DateValue] {
             
-            let calendar = Calendar.current
-            
-            // Getting Current month date
-            let currentMonth = getCurrentMonth()
-            
-            var days = currentMonth.getAllDates().compactMap { date -> DateValue in
-                let day = calendar.component(.day, from: date)
-                let dateValue =  DateValue(day: day, date: date)
-                return dateValue
-            }
-            
-            // adding offset days to get exact week day...
-            let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
+        let calendar = Calendar.current
+        
+        // Getting Current month date
+        let currentMonth = getCurrentMonth()
+        
+        var days = currentMonth.getAllDates().compactMap { date -> DateValue in
+            let day = calendar.component(.day, from: date)
+            let dateValue =  DateValue(day: day, date: date)
+            return dateValue
+        }
+        
+        // adding offset days to get exact week day...
+        let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Dates.currentDate)
             
             for _ in 0..<firstWeekday - 1 {
-                days.insert(DateValue(day: -1, date: Date()), at: 0)
+                days.insert(DateValue(day: -1, date: Dates.currentDate), at: 0)
             }
             
             return days
