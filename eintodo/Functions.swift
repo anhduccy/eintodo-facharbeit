@@ -19,6 +19,9 @@ public func DateToStringFormatter(date: Date, format: String = "dd.MM.yyyy") -> 
 public func isSameDay(date1: Date, date2: Date) -> Bool {
     return Calendar.current.isDate(date1, inSameDayAs: date2)
 }
+public func isCurrentDate(date: Date)->Bool{
+    return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate)
+}
 
 public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
     let currentDate = Calendar.current.startOfDay(for: Date())
