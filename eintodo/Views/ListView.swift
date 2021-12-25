@@ -50,6 +50,23 @@ struct ListView: View {
     
     var body: some View {
         List{
+            if(todos.isEmpty){
+                VStack{
+                    HStack{
+                        Spacer()
+                        Text("Keine Erinnerungen vorhanden")
+                        Spacer()
+                    }
+                }
+            } else if isJustDoneToDos(date: selectedDate) && !showDoneToDos{
+                VStack{
+                    HStack{
+                        Spacer()
+                        Text("Alle Erinnerungen für den Tag erledigt")
+                        Spacer()
+                    }
+                }
+            }
             //ListView
             ForEach(todos, id: \.self){ todo in
                 //ListItem
@@ -94,25 +111,6 @@ struct ListView: View {
             }
             .listStyle(InsetListStyle())
             .frame(minWidth: 250)
-            if(todos.isEmpty){
-                VStack{
-                    Spacer()
-                    HStack{
-                        Spacer()
-                        Text("Keine Erinnerungen vorhanden")
-                        Spacer()
-                    }
-                }
-            } else if isJustDoneToDos(date: selectedDate) && !showDoneToDos{
-                VStack{
-                    Spacer()
-                    HStack{
-                        Spacer()
-                        Text("Alle Erinnerungen für den Tag erledigt")
-                        Spacer()
-                    }
-                }
-            }
         }
     }
 }
