@@ -12,17 +12,19 @@ struct CalendarView: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], animation: .default)
     public var todos: FetchedResults<ToDo>
     
+    //ListView attributes
+    @State var listViewIsActive: Bool = true
+    @State var listViewType: ListViewTypes = .dates
+    
+    //Calendar attributes
     @State var currentMonth: Int = 0
     @State var showDoneToDos: Bool = false
-    @State var listViewIsActive: Bool = false
-    @State var listViewNoDatesIsActive: Bool = false
-    
     @Binding var selectedDate: Date
-    
-    let day: Int = 3600*24
+    @Binding var lastSelectedDate: Date
+
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
+    let day: Int = 3600*24 //Day in Seconds
     let weekdays: [String] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-    let currentDate: Date = Date()
     
     var body: some View {
         NavigationView{
@@ -71,7 +73,7 @@ struct CalendarView: View {
                                         if(isSameDay(date1: selectedDate, date2: dayValue.date)){
                                             Circle().fill(Color.blue)
                                         } else{
-                                            if(isSameDay(date1: currentDate, date2: dayValue.date)){
+                                            if(isSameDay(date1: Dates.currentDate, date2: dayValue.date)){
                                                 Circle().hidden()
                                             } else if(!isEmptyOnDate(date: dayValue.date) && !missedDeadlineOfToDo(date: dayValue.date)){
                                                 Circle().fill(Colors.primaryColor)
@@ -81,12 +83,13 @@ struct CalendarView: View {
                                         }
                                         Button(action: {
                                             selectedDate = dayValue.date
-                                            self.listViewIsActive = true
+                                            lastSelectedDate = selectedDate
+                                            self.listViewType = .dates
                                         }){
                                             ZStack{
                                                 Circle()
                                                     .hidden()
-                                                if(isSameDay(date1: currentDate, date2: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date)){
+                                                if(isSameDay(date1: Dates.currentDate, date2: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
                                                 } else if(isSameDay(date1: selectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
@@ -108,16 +111,15 @@ struct CalendarView: View {
                     }
                     .onAppear{
                         selectedDate = Date()
-                        self.listViewIsActive = true
                     }
                     .onChange(of: currentMonth) { newValue in
                         selectedDate = getCurrentMonth()
+                        lastSelectedDate = getCurrentMonth()
                     }
                     
                     Button("Erinnerungen ohne Datum"){
-                        selectedDate = Date(timeIntervalSince1970: 0)
-                        self.listViewNoDatesIsActive = true
-                        self.listViewIsActive = true
+                        selectedDate = Dates.defaultDate
+                        self.listViewType = .noDates
                     }
                     .padding()
                     .foregroundColor(.blue)
@@ -127,12 +129,12 @@ struct CalendarView: View {
                 
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate, showNoSorting: listViewNoDatesIsActive), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, type: listViewType), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
         }
-        .navigationTitle(isSameDay(date1: selectedDate, date2: Date(timeIntervalSince1970: 0)) ? "Erinnerungen" : DateToStringFormatter(date: selectedDate))
+        .navigationTitle(isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? "Erinnerungen" : DateToStringFormatter(date: selectedDate))
         .toolbar{
             ToolbarItem{
                 Button("Alles löschen"){
@@ -144,19 +146,6 @@ struct CalendarView: View {
                     showDoneToDos.toggle()
                 }
             }
-        }
-    }
-}
-
-extension Date {
-    func getAllDates() -> [Date] {
-        let calendar = Calendar.current
-        // geting start date
-        let startDate = calendar.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
-        let range = calendar.range(of: .day, in: .month, for: startDate)
-        // getting date...
-        return range!.compactMap{ day -> Date in
-            return calendar.date(byAdding: .day, value: day - 1 , to: startDate)!
         }
     }
 }

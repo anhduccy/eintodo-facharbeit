@@ -11,15 +11,18 @@ import Foundation
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @FetchRequest var todos: FetchedResults<ToDo>
+    
     @Binding var selectedDate: Date
+    @Binding var lastSelectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(date: Date = Date(timeIntervalSince1970: 0), bool: Binding<Bool>, selectedDate: Binding<Date>, showNoSorting: Bool = false){
+    init(date: Date, bool: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDate: Binding<Date>, type: ListViewTypes = ListViewTypes.dates){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: date)
         let dateTo = calendar.date(byAdding: .day, value: 1, to: dateFrom)
         
-        if(date != Date(timeIntervalSince1970: 0)){
+        switch(type){
+        case .dates:
             _todos = FetchRequest(
                 sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
@@ -27,24 +30,20 @@ struct ListView: View {
                     NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
                     predicate: NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg),
                 animation: .default)
-            print("1", _todos, "\n")
-
-        } else {
-            if(showNoSorting){
-                let defaultDate = Date(timeIntervalSince1970: 0)
-                _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], predicate: NSPredicate(format: "deadline == %@", defaultDate as CVarArg), animation: .default)
-                print("2", _todos, "\n")
-            } else {
-                _todos = FetchRequest(sortDescriptors: [
-                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
-                print("3", _todos, "\n")
-
-            }
+        case .noDates:
+            let defaultDate = Dates.defaultDate
+            _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], predicate: NSPredicate(format: "deadline == %@", defaultDate as CVarArg), animation: .default)
+            print("2", _todos, "\n")
+        
+        case .all:
+            _todos = FetchRequest(sortDescriptors: [
+                NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
         }
         _showDoneToDos = bool
         _selectedDate = selectedDate
+        _lastSelectedDate = lastSelectedDate
     }
     
     let SystemImageSize: CGFloat = 17.5

@@ -12,11 +12,12 @@ struct ContentView: View {
     @State var showAddView: Bool = false
     @State var showSettings: Bool = false
     @State var selectedDate: Date = Date()
+    @State var lastSelectedDate: Date = Dates.defaultDate
 
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: CalendarView(selectedDate: $selectedDate)){
+                NavigationLink(destination: CalendarView(selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate)){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")

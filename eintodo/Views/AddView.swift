@@ -153,6 +153,10 @@ struct AddView: View {
         }
         .padding()
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
+        .onAppear{
+            deadline = selectedDate
+            notification = selectedDate
+        }
     }
 }
 

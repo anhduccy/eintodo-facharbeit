@@ -7,13 +7,26 @@
 
 import SwiftUI
 
+//Date
+extension Date {
+    func getAllDates() -> [Date] {
+        let calendar = Calendar.current
+        // geting start date
+        let startDate = calendar.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+        let range = calendar.range(of: .day, in: .month, for: startDate)
+        // getting date...
+        return range!.compactMap{ day -> Date in
+            return calendar.date(byAdding: .day, value: day - 1 , to: startDate)!
+        }
+    }
+}
+
 //CalendarView
 struct DateValue: Hashable{
     let id = UUID().uuidString
     var day: Int
     var date: Date
 }
-
 extension CalendarView{
     public func deleteAllItems() {
         withAnimation {
@@ -29,19 +42,19 @@ extension CalendarView{
         }
     }
     func getYear() -> String{
+        let last = lastSelectedDate
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY"
-        let year = formatter.string(from: selectedDate)
+        let year = formatter.string(from: isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? last : selectedDate)
         return year
     }
-    
     func getMonth() -> String{
+        let last = lastSelectedDate
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"
-        let month = formatter.string(from: selectedDate)
+        let month = formatter.string(from: isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? last : selectedDate)
         return month
     }
-    
     func getCurrentMonth() -> Date {
             let calendar = Calendar.current
             
@@ -52,7 +65,6 @@ extension CalendarView{
             
             return currentMonth
         }
-    
     func extractDate() -> [DateValue] {
             
             let calendar = Calendar.current
@@ -75,7 +87,6 @@ extension CalendarView{
             
             return days
         }
-    
     func isEmptyOnDate(date: Date)->Bool{
         let dateFrom = Calendar.current.startOfDay(for: date)
         let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
@@ -103,7 +114,6 @@ extension ListView {
             }
         }
     }
-    
     public func updateToDo(){
         do {
             try viewContext.save()
@@ -124,13 +134,13 @@ extension DetailView{
                 todo.deadline = deadline
             }
             if !showDeadline{
-                todo.deadline = Date(timeIntervalSince1970: 0)
+                todo.deadline = Dates.defaultDate
             }
             if showNotification{
                 todo.notification = notification
             }
             if !showNotification{
-                todo.notification = Date(timeIntervalSince1970: 0)
+                todo.notification = Dates.defaultDate
             }
             
             todo.isMarked = isMarked
@@ -142,7 +152,6 @@ extension DetailView{
             }
         }
     }
-    
     public func deleteToDo(){
         withAnimation {
             viewContext.delete(todo)
@@ -154,7 +163,6 @@ extension DetailView{
             }
         }
     }
-    
     public func dismissDetailView(){
         selectedDate = deadline
         isPresented.toggle()
@@ -172,12 +180,12 @@ extension AddView{
             if showDeadline{
                 newToDo.deadline = deadline
             } else {
-                newToDo.deadline = Date(timeIntervalSince1970: 0)
+                newToDo.deadline = Dates.defaultDate
             }
             if showNotification {
                 newToDo.notification = notification
             } else {
-                newToDo.notification = Date(timeIntervalSince1970: 0)
+                newToDo.notification = Dates.defaultDate
             }
             newToDo.isDone = false
             newToDo.isMarked = false

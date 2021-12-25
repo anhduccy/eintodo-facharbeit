@@ -178,11 +178,11 @@ struct DetailView: View {
         .padding()
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
         .onAppear{
-            if deadline == Date(timeIntervalSince1970: 0){
+            if deadline == Dates.defaultDate{
                 showDeadline = false
                 deadline = Date()
             }
-            if notification == Date(timeIntervalSince1970: 0){
+            if notification == Dates.defaultDate{
                 showNotification = false
                 notification = Date()
             }

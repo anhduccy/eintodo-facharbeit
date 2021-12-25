@@ -8,6 +8,11 @@
 import SwiftUI
 
 //Structs - Global variables
+struct Dates {
+    static let currentDate = Date()
+    static let defaultDate = Date(timeIntervalSince1970: 0)
+}
+
 struct Sizes {
     static let defaultSheetWidth: CGFloat = 400
     static let defaultSheetHeight: CGFloat = 400
@@ -18,8 +23,13 @@ struct Colors {
     static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
 }
 
-//Images adn Icons
+enum ListViewTypes {
+    case dates
+    case noDates
+    case all
+}
 
+//Images and Icons
 struct CalendarViewMonthButton: View {
     let name: String
     let color: Color
@@ -31,11 +41,9 @@ struct CalendarViewMonthButton: View {
             Image(systemName: name)
                 .foregroundColor(color)
         }
-        .padding(0)
         .frame(width: size, height: size)
     }
 }
-
 struct IconImage: View {
     let image: String
     let color: Color
@@ -49,7 +57,6 @@ struct IconImage: View {
         }
     }
 }
-
 struct SystemImage: View{
     let image: String
     let size: CGFloat
@@ -116,7 +123,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Date(timeIntervalSince1970: 0), notification: todo.notification ?? Date(timeIntervalSince1970: 0), isMarked: todo.isMarked, isPresented: $isPresented, selectedDate: $selectedDate)
+            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, isPresented: $isPresented, selectedDate: $selectedDate)
         }
     }
 }
