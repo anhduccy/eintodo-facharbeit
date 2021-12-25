@@ -1,5 +1,5 @@
 //
-//  AddView.swift
+//  DetailView.swift
 //  eintodo
 //
 //  Created by anh :) on 12.12.21.
@@ -7,30 +7,37 @@
 
 import SwiftUI
 
-struct AddView: View {
+struct DetailView2: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
+
+    //Values for ToDo
+    @State var todo: ToDo
+    @State var title: String
+    @State var notes: String
+    @State var deadline: Date
+    @State var notification: Date
+    @State var isMarked: Bool
     
-    @State var title: String = ""
-    @State var notes: String = ""
-    @State var deadline: Date = Date()
-    @State var notification: Date = Date()
-    @State var isMarked: Bool = false
-    @State var showDeadline: Bool = true
-    @State var showNotification: Bool = true
-    
-    @Binding var showAddView: Bool
+    //Toggles and Conditions for Animtaion
+    @State var showDeadline = true
+    @State var showNotification = true
+    @State private var overDeleteButton = false
+
+    //Coomunication between other views
+    @Binding var isPresented: Bool
     @Binding var selectedDate: Date
     
     var body: some View {
         ZStack{
             VStack(spacing: 20){
-                //Group - Title, Notes & Cancel-Button
+
+                //Group - Title & Notes
                 VStack(spacing: 2){
                     TextField("Titel", text: $title)
-                        .textFieldStyle(.plain)
                         .font(.title.bold())
-                    
+                        .textFieldStyle(.plain)
                     TextField("Notizen", text: $notes)
                         .font(.body)
                         .textFieldStyle(.plain)
@@ -115,20 +122,37 @@ struct AddView: View {
                             .font(.body)
                         Spacer()
                     }
+                    
                     Spacer()
+                    
                     
                     //Group - Submit button
                     HStack{
                         Button("Abbrechen"){
-                            dismissAddView()
+                            //dismissDetailView()
                         }
                         .foregroundColor(Colors.secondaryColor)
                         .buttonStyle(.plain)
                         Spacer()
+                        
+                        Button(action: {
+                            //deleteToDo()
+                            //dismissDetailView()
+                        }, label: {
+                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
+                        })
+                            .buttonStyle(.plain)
+                            .onHover{ over in
+                                withAnimation{
+                                    overDeleteButton = over
+                                }
+                            }
+                        
+                        Spacer()
                         if(title != ""){
                             Button(action: {
-                                addToDo()
-                                dismissAddView()
+                                //updateToDo()
+                                //dismissDetailView()
                             }, label: {
                                 Text("Fertig")
                                     .font(.body)
@@ -138,7 +162,7 @@ struct AddView: View {
                             .buttonStyle(.plain)
                         } else {
                             Button(action: {
-                                dismissAddView()
+                                //dismissDetailView()
                             }, label: {
                                 Text("Fertig")
                                     .font(.body)
@@ -154,9 +178,23 @@ struct AddView: View {
         .padding()
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
         .onAppear{
-            deadline = selectedDate
-            notification = selectedDate
+            if deadline == Dates.defaultDate{
+                showDeadline = false
+                deadline = Date()
+            }
+            if notification == Dates.defaultDate{
+                showNotification = false
+                notification = Date()
+            }
+        }
+        .onChange(of: title) { newValue in
+            //updateToDo()
+        }
+        .onChange(of: notes) { newValue in
+            //updateToDo()
+        }
+        .onChange(of: isMarked){ newValue in
+            //updateToDo()
         }
     }
 }
-

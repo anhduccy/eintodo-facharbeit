@@ -11,6 +11,8 @@ struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
+    
+    let detailViewType: DetailViewTypes
 
     //Values for ToDo
     @State var todo: ToDo
@@ -133,25 +135,34 @@ struct DetailView: View {
                         }
                         .foregroundColor(Colors.secondaryColor)
                         .buttonStyle(.plain)
-                        Spacer()
-                        
-                        Button(action: {
-                            deleteToDo()
-                            dismissDetailView()
-                        }, label: {
-                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
-                        })
-                            .buttonStyle(.plain)
-                            .onHover{ over in
-                                withAnimation{
-                                    overDeleteButton = over
+                        switch(detailViewType){
+                        case .display:
+                            Spacer()
+                            Button(action: {
+                                deleteToDo()
+                                dismissDetailView()
+                            }, label: {
+                                IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
+                            })
+                                .buttonStyle(.plain)
+                                .onHover{ over in
+                                    withAnimation{
+                                        overDeleteButton = over
+                                    }
                                 }
-                            }
-                        
-                        Spacer()
+                            
+                            Spacer()
+                        case .add:
+                            Spacer()
+                        }
                         if(title != ""){
                             Button(action: {
-                                updateToDo()
+                                switch(detailViewType){
+                                case .display:
+                                    updateToDo()
+                                case .add:
+                                    addToDo()
+                                }
                                 dismissDetailView()
                             }, label: {
                                 Text("Fertig")
@@ -178,23 +189,45 @@ struct DetailView: View {
         .padding()
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
         .onAppear{
-            if deadline == Dates.defaultDate{
-                showDeadline = false
-                deadline = Date()
-            }
-            if notification == Dates.defaultDate{
-                showNotification = false
-                notification = Date()
+            switch(detailViewType){
+            case .add:
+                deadline = selectedDate
+                notification = selectedDate
+                
+            case .display:
+                if deadline == Dates.defaultDate{
+                    showDeadline = false
+                    deadline = Date()
+                    if notification == Dates.defaultDate{
+                        showNotification = false
+                        notification = Date()
+                    }
+                }
             }
         }
         .onChange(of: title) { newValue in
-            updateToDo()
+            switch(detailViewType){
+            case .display:
+                updateToDo()
+            case .add:
+                break
+            }
         }
         .onChange(of: notes) { newValue in
-            updateToDo()
+            switch(detailViewType){
+            case .display:
+                updateToDo()
+            case .add:
+                break
+            }
         }
         .onChange(of: isMarked){ newValue in
-            updateToDo()
+            switch(detailViewType){
+            case .display:
+                updateToDo()
+            case .add:
+                break
+            }
         }
     }
 }
