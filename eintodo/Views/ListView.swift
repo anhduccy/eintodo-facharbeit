@@ -14,7 +14,7 @@ struct ListView: View {
     @Binding var selectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(date: Date, bool: Binding<Bool>, selectedDate: Binding<Date>){
+    init(date: Date = Date(timeIntervalSince1970: 0), bool: Binding<Bool>, selectedDate: Binding<Date>, showNoSorting: Bool = false){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: date)
         let dateTo = calendar.date(byAdding: .day, value: 1, to: dateFrom)
@@ -27,11 +27,21 @@ struct ListView: View {
                     NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
                     predicate: NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg),
                 animation: .default)
+            print("1", _todos, "\n")
+
         } else {
-            _todos = FetchRequest(sortDescriptors: [
-                NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
+            if(showNoSorting){
+                let defaultDate = Date(timeIntervalSince1970: 0)
+                _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], predicate: NSPredicate(format: "deadline == %@", defaultDate as CVarArg), animation: .default)
+                print("2", _todos, "\n")
+            } else {
+                _todos = FetchRequest(sortDescriptors: [
+                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
+                print("3", _todos, "\n")
+
+            }
         }
         _showDoneToDos = bool
         _selectedDate = selectedDate

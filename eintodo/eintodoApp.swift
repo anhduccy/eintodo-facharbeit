@@ -15,7 +15,6 @@ struct eintodoApp: App {
         WindowGroup {
                 ContentView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                    .environment(\.locale, Locale(identifier: "fr"))
         }
     }
 }

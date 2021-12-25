@@ -15,6 +15,7 @@ struct CalendarView: View {
     @State var currentMonth: Int = 0
     @State var showDoneToDos: Bool = false
     @State var listViewIsActive: Bool = false
+    @State var listViewNoDatesIsActive: Bool = false
     
     @Binding var selectedDate: Date
     
@@ -88,6 +89,9 @@ struct CalendarView: View {
                                                 if(isSameDay(date1: currentDate, date2: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
+                                                } else if(isSameDay(date1: selectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
+                                                    Text("\(dayValue.day)")
+                                                        .foregroundColor(Color.white)
                                                 } else {
                                                     Text("\(dayValue.day)")
                                                 }
@@ -109,17 +113,26 @@ struct CalendarView: View {
                     .onChange(of: currentMonth) { newValue in
                         selectedDate = getCurrentMonth()
                     }
+                    
+                    Button("Erinnerungen ohne Datum"){
+                        selectedDate = Date(timeIntervalSince1970: 0)
+                        self.listViewNoDatesIsActive = true
+                        self.listViewIsActive = true
+                    }
+                    .padding()
+                    .foregroundColor(.blue)
+                    .buttonStyle(.plain)
                     Spacer()
                 }.padding()
                 
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate, showNoSorting: listViewNoDatesIsActive), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
         }
-        .navigationTitle(DateToStringFormatter(date: selectedDate))
+        .navigationTitle(isSameDay(date1: selectedDate, date2: Date(timeIntervalSince1970: 0)) ? "Erinnerungen" : DateToStringFormatter(date: selectedDate))
         .toolbar{
             ToolbarItem{
                 Button("Alles löschen"){
