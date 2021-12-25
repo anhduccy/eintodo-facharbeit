@@ -41,6 +41,7 @@ struct CalendarViewMonthButton: View {
             Image(systemName: name)
                 .foregroundColor(color)
         }
+        .padding(0)
         .frame(width: size, height: size)
     }
 }

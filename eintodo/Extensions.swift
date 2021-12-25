@@ -99,6 +99,26 @@ extension CalendarView{
             return false
         }
     }
+    
+    func isJustDoneToDos(date: Date)->Bool{
+        let dateFrom = Calendar.current.startOfDay(for: date)
+        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        let format = "deadline <= %@ && deadline >= %@ && "
+        
+        var predicate = NSPredicate(format: format + "isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        todos.nsPredicate = predicate
+        if todos.isEmpty {
+            predicate = NSPredicate(format: format + "isDone == true", dateTo! as CVarArg, dateFrom as CVarArg)
+            todos.nsPredicate = predicate
+            if todos.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
+    }
 }
 
 //ListView
@@ -178,18 +198,18 @@ extension AddView{
             newToDo.title = title
             newToDo.notes = notes
             if showDeadline{
-                newToDo.deadline = deadline
+                newToDo.deadline = deadline.addingTimeInterval(60*60)
             } else {
                 newToDo.deadline = Dates.defaultDate
             }
             if showNotification {
-                newToDo.notification = notification
+                newToDo.notification = notification.addingTimeInterval(60*60)
             } else {
                 newToDo.notification = Dates.defaultDate
             }
             newToDo.isDone = false
             newToDo.isMarked = false
-
+            print(newToDo)
             do {
                 try viewContext.save()
             } catch {

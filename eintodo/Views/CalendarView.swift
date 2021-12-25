@@ -79,6 +79,8 @@ struct CalendarView: View {
                                                 Circle().fill(Colors.primaryColor)
                                             } else if(!isEmptyOnDate(date: dayValue.date) && missedDeadlineOfToDo(date: dayValue.date)){
                                                 Circle().fill(Color.red)
+                                            } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
+                                                Circle().fill(Color.indigo).opacity(0.2)
                                             }
                                         }
                                         Button(action: {
