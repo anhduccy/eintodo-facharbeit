@@ -52,58 +52,68 @@ struct ListView: View {
         List{
             //ListView
             ForEach(todos, id: \.self){ todo in
-                    //ListItem
-                    if(showDoneToDos || !todo.isDone){
-                        HStack{
-                            //Checkmark button
-                            Button(action: {
-                                todo.isDone.toggle()
-                                updateToDo()
-                                }, label: {
-                                if(todo.isDone){
-                                    SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white)
-                                } else {
-                                    SystemImage(image: "square", size: SystemImageSize, color: .white)
-                                }
-                            })
-                                .frame(width: SystemImageSize, height: SystemImageSize)
-                                .buttonStyle(.plain)
-                                .padding(.leading, 5)
-                            
-                            //Labelling
-                            SheetButton(todo, selectedDate: $selectedDate)
-                            Spacer()
-                            Button(action: {
-                                todo.isMarked.toggle()
-                                updateToDo()
+                //ListItem
+                if(showDoneToDos || !todo.isDone){
+                    HStack{
+                        //Checkmark button
+                        Button(action: {
+                            todo.isDone.toggle()
+                            updateToDo()
                             }, label: {
-                                if(todo.isMarked){
-                                    SystemImage(image: "star.fill", size: 15, color: .yellow)
-                                        .padding(5)
-                                } else {
-                                    SystemImage(image: "star", size: 15, color: .white)
-                                        .padding(5)
-                                }
-                            })
-                                .buttonStyle(.plain)
-                        }
-                        .padding(5)
-                        .background(missedDeadlineOfToDo(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
-                        .cornerRadius(8.5)
+                            if(todo.isDone){
+                                SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white)
+                            } else {
+                                SystemImage(image: "square", size: SystemImageSize, color: .white)
+                            }
+                        })
+                            .frame(width: SystemImageSize, height: SystemImageSize)
+                            .buttonStyle(.plain)
+                            .padding(.leading, 5)
+                        
+                        //Labelling
+                        SheetButton(todo, selectedDate: $selectedDate)
+                        Spacer()
+                        Button(action: {
+                            todo.isMarked.toggle()
+                            updateToDo()
+                        }, label: {
+                            if(todo.isMarked){
+                                SystemImage(image: "star.fill", size: 15, color: .yellow)
+                                    .padding(5)
+                            } else {
+                                SystemImage(image: "star", size: 15, color: .white)
+                                    .padding(5)
+                            }
+                        })
+                            .buttonStyle(.plain)
+                    }
+                    .padding(5)
+                    .background(missedDeadlineOfToDo(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
+                    .cornerRadius(8.5)
+                }
+            }
+            .listStyle(InsetListStyle())
+            .frame(minWidth: 250)
+            if(todos.isEmpty){
+                VStack{
+                    Spacer()
+                    HStack{
+                        Spacer()
+                        Text("Keine Erinnerungen vorhanden")
+                        Spacer()
                     }
                 }
-                if(todos.isEmpty){
-                    VStack{
+            } else if isJustDoneToDos(date: selectedDate) && !showDoneToDos{
+                VStack{
+                    Spacer()
+                    HStack{
                         Spacer()
-                        HStack{
-                            Spacer()
-                            Text("Keine Erinnerungen vorhanden")
-                            Spacer()
-                        }
+                        Text("Alle Erinnerungen für den Tag erledigt")
+                        Spacer()
                     }
                 }
             }
-        .listStyle(InsetListStyle())
-        .frame(minWidth: 250)
+        }
     }
 }
+

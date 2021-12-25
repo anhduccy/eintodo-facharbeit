@@ -144,6 +144,25 @@ extension ListView {
             fatalError("Could not update CoreData-Entity in ListView: \(nsError), \(nsError.userInfo)")
         }
     }
+    public func isJustDoneToDos(date: Date)->Bool{
+        let dateFrom = Calendar.current.startOfDay(for: date)
+        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        let format = "deadline <= %@ && deadline >= %@ && "
+        
+        var predicate = NSPredicate(format: format + "isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        todos.nsPredicate = predicate
+        if todos.isEmpty {
+            predicate = NSPredicate(format: format + "isDone == true", dateTo! as CVarArg, dateFrom as CVarArg)
+            todos.nsPredicate = predicate
+            if todos.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
+    }
 }
 
 //DetailView
