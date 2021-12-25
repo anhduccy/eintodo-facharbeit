@@ -29,6 +29,11 @@ enum ListViewTypes {
     case all
 }
 
+enum DetailViewTypes {
+    case add
+    case display
+}
+
 //Images and Icons
 struct CalendarViewMonthButton: View {
     let name: String
@@ -124,7 +129,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, isPresented: $isPresented, selectedDate: $selectedDate)
+            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, isPresented: $isPresented, selectedDate: $selectedDate)
         }
     }
 }

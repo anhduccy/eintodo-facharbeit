@@ -143,11 +143,6 @@ struct CalendarView: View {
         .navigationTitle(isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? "Erinnerungen" : DateToStringFormatter(date: selectedDate))
         .toolbar{
             ToolbarItem{
-                Button("Alles löschen"){
-                    deleteAllItems()
-                }
-            }
-            ToolbarItem{
                 Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
                     showDoneToDos.toggle()
                 }

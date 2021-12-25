@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+/* DELETE ALL TO-DOS
+public func deleteAllItems() {
+    withAnimation {
+        for todo in todos{
+            viewContext.delete(todo)
+        }
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not delete all CoreData-Entites in CalendarView:  \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+ */
+
 //Date
 extension Date {
     func getAllDates() -> [Date] {
@@ -28,19 +44,6 @@ struct DateValue: Hashable{
     var date: Date
 }
 extension CalendarView{
-    public func deleteAllItems() {
-        withAnimation {
-            for todo in todos{
-                viewContext.delete(todo)
-            }
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Could not delete all CoreData-Entites in CalendarView:  \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
     func getYear() -> String{
         let last = lastSelectedDate
         let formatter = DateFormatter()
@@ -146,6 +149,34 @@ extension ListView {
 
 //DetailView
 extension DetailView{
+    public func addToDo() {
+        withAnimation {
+            let newToDo = ToDo(context: viewContext)
+            newToDo.id = UUID()
+            newToDo.title = title
+            newToDo.notes = notes
+            if showDeadline{
+                newToDo.deadline = deadline.addingTimeInterval(60*60)
+            } else {
+                newToDo.deadline = Dates.defaultDate
+            }
+            if showNotification {
+                newToDo.notification = notification.addingTimeInterval(60*60)
+            } else {
+                newToDo.notification = Dates.defaultDate
+            }
+            newToDo.isMarked = isMarked
+            newToDo.isDone = false
+            print(newToDo)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Could not add CoreData-Entity in AddView: \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
     public func updateToDo() {
         withAnimation {
             todo.title = title
@@ -187,40 +218,5 @@ extension DetailView{
         selectedDate = deadline
         isPresented.toggle()
     }
+    
 }
-
-//AddView
-extension AddView{
-    public func addToDo() {
-        withAnimation {
-            let newToDo = ToDo(context: viewContext)
-            newToDo.id = UUID()
-            newToDo.title = title
-            newToDo.notes = notes
-            if showDeadline{
-                newToDo.deadline = deadline.addingTimeInterval(60*60)
-            } else {
-                newToDo.deadline = Dates.defaultDate
-            }
-            if showNotification {
-                newToDo.notification = notification.addingTimeInterval(60*60)
-            } else {
-                newToDo.notification = Dates.defaultDate
-            }
-            newToDo.isDone = false
-            newToDo.isMarked = false
-            print(newToDo)
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Could not add CoreData-Entity in AddView: \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-    public func dismissAddView(){
-        selectedDate = deadline
-        showAddView.toggle()
-    }
-}
-

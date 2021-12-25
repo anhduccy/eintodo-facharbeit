@@ -34,7 +34,7 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     })
                         .sheet(isPresented: $showAddView){
-                            AddView(showAddView: $showAddView, selectedDate: $selectedDate)
+                            DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Date(), notification: Date(), isMarked: false, isPresented: $showAddView, selectedDate: $selectedDate)
                         }
                 }
                 

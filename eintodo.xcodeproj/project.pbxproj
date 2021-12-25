@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		79281B152776428200F32528 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79281B142776428200F32528 /* Extensions.swift */; };
+		7947DED627778C5A008C999A /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7947DED527778C5A008C999A /* DetailView.swift */; };
 		794855EB276690410086927E /* eintodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EA276690410086927E /* eintodoApp.swift */; };
 		794855ED276690410086927E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EC276690410086927E /* ContentView.swift */; };
 		794855EF276690410086927E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 794855EE276690410086927E /* Assets.xcassets */; };
@@ -15,8 +16,6 @@
 		794855F4276690410086927E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855F3276690410086927E /* Persistence.swift */; };
 		794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 794855F5276690410086927E /* eintodo.xcdatamodeld */; };
 		794856032766996D0086927E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856022766996D0086927E /* ListView.swift */; };
-		794856092766A59F0086927E /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856082766A59F0086927E /* DetailView.swift */; };
-		7948560D2766A8B10086927E /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560C2766A8B10086927E /* AddView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
 		79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542C2771283B00E935D8 /* SettingsView.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
@@ -25,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		79281B142776428200F32528 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		7947DED527778C5A008C999A /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		794855E7276690410086927E /* eintodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eintodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		794855EA276690410086927E /* eintodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = eintodoApp.swift; sourceTree = "<group>"; };
 		794855EC276690410086927E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -34,8 +34,6 @@
 		794855F6276690410086927E /* eintodo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = eintodo.xcdatamodel; sourceTree = "<group>"; };
 		794855F8276690410086927E /* eintodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = eintodo.entitlements; sourceTree = "<group>"; };
 		794856022766996D0086927E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
-		794856082766A59F0086927E /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
-		7948560C2766A8B10086927E /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		79AC542C2771283B00E935D8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
@@ -97,11 +95,10 @@
 		79BAB9BB276BBDDD009EB5A3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7947DED527778C5A008C999A /* DetailView.swift */,
 				794855EC276690410086927E /* ContentView.swift */,
 				7948560E2766ABF30086927E /* CalendarView.swift */,
 				794856022766996D0086927E /* ListView.swift */,
-				794856082766A59F0086927E /* DetailView.swift */,
-				7948560C2766A8B10086927E /* AddView.swift */,
 				79AC542C2771283B00E935D8 /* SettingsView.swift */,
 			);
 			path = Views;
@@ -178,9 +175,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7948560F2766ABF30086927E /* CalendarView.swift in Sources */,
-				794856092766A59F0086927E /* DetailView.swift in Sources */,
+				7947DED627778C5A008C999A /* DetailView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
-				7948560D2766A8B10086927E /* AddView.swift in Sources */,
 				79F44343276F649200B558BF /* ViewLibrary.swift in Sources */,
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
