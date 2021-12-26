@@ -18,7 +18,7 @@ struct CalendarView: View {
     
     //Calendar attributes
     @State var currentMonth: Int = 0
-    @State var showDoneToDos: Bool = false
+    @State var showDoneToDos: Bool = true
     @Binding var selectedDate: Date
     @Binding var lastSelectedDate: Date
 
@@ -71,7 +71,7 @@ struct CalendarView: View {
                                 if(dayValue.day >= 0){
                                     ZStack{
                                         //IF dayValue.date is the same day as selected date -> Circle blue
-                                        if(isSameDay(date1: selectedDate, date2: dayValue.date)){
+                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
                                             Circle().fill(Color.blue)
                                         } else{
                                             //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
@@ -99,7 +99,7 @@ struct CalendarView: View {
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
                                                 // ELSE IF (dayValue.date is selected date) AND (there are todos at dayValue.date), display the text white, because Circle is supported
-                                                } else if(isSameDay(date1: selectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
+                                                } else if(isSameDay(date1: lastSelectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.white)
                                                 } else {
@@ -118,6 +118,7 @@ struct CalendarView: View {
                     }
                     .onAppear{
                         selectedDate = Dates.currentDate
+                        lastSelectedDate = Dates.currentDate
                     }
                     .onChange(of: currentMonth) { newValue in
                         selectedDate = getCurrentMonth()
@@ -135,12 +136,12 @@ struct CalendarView: View {
                 
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(date: selectedDate, bool: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, type: listViewType), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(date: lastSelectedDate, bool: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, type: listViewType), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
         }
-        .navigationTitle(isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? "Erinnerungen" : DateToStringFormatter(date: selectedDate))
+        .navigationTitle("Kalender")
         .toolbar{
             ToolbarItem{
                 Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){

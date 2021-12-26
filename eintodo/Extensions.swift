@@ -45,17 +45,15 @@ struct DateValue: Hashable{
 }
 extension CalendarView{
     func getYear() -> String{
-        let last = lastSelectedDate
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY"
-        let year = formatter.string(from: isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? last : selectedDate)
+        let year = formatter.string(from: lastSelectedDate)
         return year
     }
     func getMonth() -> String{
-        let last = lastSelectedDate
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"
-        let month = formatter.string(from: isSameDay(date1: selectedDate, date2: Dates.defaultDate) ? last : selectedDate)
+        let month = formatter.string(from: lastSelectedDate)
         return month
     }
     func getCurrentMonth() -> Date {
@@ -105,12 +103,12 @@ extension CalendarView{
     func isJustDoneToDos(date: Date)->Bool{
         let dateFrom = Calendar.current.startOfDay(for: date)
         let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
-        let format = "deadline <= %@ && deadline >= %@ && "
+        let format = "deadline <= %@ && deadline >= %@"
         
-        var predicate = NSPredicate(format: format + "isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
         if todos.isEmpty {
-            predicate = NSPredicate(format: format + "isDone == true", dateTo! as CVarArg, dateFrom as CVarArg)
+            predicate = NSPredicate(format: format, dateTo! as CVarArg, dateFrom as CVarArg)
             todos.nsPredicate = predicate
             if todos.isEmpty {
                 return false
@@ -142,25 +140,6 @@ extension ListView {
         } catch {
             let nsError = error as NSError
             fatalError("Could not update CoreData-Entity in ListView: \(nsError), \(nsError.userInfo)")
-        }
-    }
-    public func isJustDoneToDos(date: Date)->Bool{
-        let dateFrom = Calendar.current.startOfDay(for: date)
-        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
-        let format = "deadline <= %@ && deadline >= %@ && "
-        
-        var predicate = NSPredicate(format: format + "isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
-        todos.nsPredicate = predicate
-        if todos.isEmpty {
-            predicate = NSPredicate(format: format + "isDone == true", dateTo! as CVarArg, dateFrom as CVarArg)
-            todos.nsPredicate = predicate
-            if todos.isEmpty {
-                return false
-            } else {
-                return true
-            }
-        } else {
-            return false
         }
     }
 }
