@@ -31,7 +31,6 @@ struct ListView: View {
                         NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
                         predicate: NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg),
                     animation: .default)
-                print("1")
             } else {
                 _todos = FetchRequest(
                     sortDescriptors: [
@@ -40,7 +39,6 @@ struct ListView: View {
                         NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
                         predicate: NSPredicate(format: "deadline <= %@ && deadline >= %@ && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg),
                     animation: .default)
-                print("2")
             }
         case .noDates:
             let defaultDate = Dates.defaultDate

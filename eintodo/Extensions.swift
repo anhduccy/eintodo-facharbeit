@@ -56,15 +56,25 @@ extension CalendarView{
         let month = formatter.string(from: lastSelectedDate)
         return month
     }
-    func getCurrentMonth() -> Date {
-            let calendar = Calendar.current
+    func getCurrentMonth(date: Date = Dates.currentDate) -> Date {
+        let calendar = Calendar.current
+        var resultDate = Date()
+        
+        let inputDay = calendar.dateComponents([.day], from: date).day
+        let currentMonth = calendar.dateComponents([.month], from: Dates.currentDate).month
+        let currentYear = calendar.dateComponents([.year], from: Dates.currentDate).year
+        
+        let dateComponents = DateComponents(calendar: .current, timeZone: calendar.timeZone, year: currentYear, month: currentMonth, day: inputDay, hour: 1)
+        if dateComponents.isValidDate{
+            resultDate = dateComponents.date!
+        }
             
-            // Getting Current month date
-        guard let currentMonth = calendar.date(byAdding: .month, value: self.currentMonth, to: Dates.currentDate) else {
+        // Getting Current month date
+        guard let currentMonth = calendar.date(byAdding: .month, value: self.currentMonth, to: resultDate) else {
             return Dates.currentDate
         }
-            return currentMonth
-        }
+        return currentMonth
+    }
     func extractDate() -> [DateValue] {
             
         let calendar = Calendar.current

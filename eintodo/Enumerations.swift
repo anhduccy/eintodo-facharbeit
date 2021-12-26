@@ -13,6 +13,12 @@ struct Dates {
     static let currentDate = Date()
     static let defaultDate = Date(timeIntervalSince1970: 0)
 }
+struct SecondsCalculated {
+    static let minute: Int = 60
+    static let hour: Int = minute*60
+    static let day: Int = hour*24
+    static let week: Int = day*7
+}
 struct Sizes {
     static let defaultSheetWidth: CGFloat = 400
     static let defaultSheetHeight: CGFloat = 400

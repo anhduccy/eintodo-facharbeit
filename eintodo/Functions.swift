@@ -8,6 +8,16 @@
 import Foundation
 import SwiftUI
 
+//Getter
+func getMonthInterval(from date: Date) -> Int {
+    
+    let interval = Calendar.current.dateComponents([.month], from: Dates.currentDate, to: date).month!
+    print(interval)
+    print(date)
+    print("\n")
+    return interval
+}
+
 //Formatters
 public func DateToStringFormatter(date: Date, format: String = "dd.MM.yyyy") -> String{
     let formatter = DateFormatter()

@@ -21,6 +21,7 @@ struct CalendarView: View {
     @State var showDoneToDos: Bool = true
     @Binding var selectedDate: Date
     @Binding var lastSelectedDate: Date
+    @State var navigateDate : Date = Dates.currentDate
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
     let day: Int = 3600*24 //Day in Seconds
@@ -32,31 +33,36 @@ struct CalendarView: View {
                 VStack{
                     //Display of current month and year & navigation buttons
                     HStack{
-                        VStack{
-                            HStack{
-                                Text(getYear())
-                                Spacer()
+                        Text(getYear())
+                            .font(.title2)
+                        Text(getMonth())
+                            .font(.title2.bold())
+                        DatePicker("", selection: $navigateDate, displayedComponents: [.date])
+                            .datePickerStyle(.field)
+                            .onChange(of: navigateDate){ newValue in
+                                lastSelectedDate = navigateDate
+                                selectedDate = navigateDate
+                                currentMonth = getMonthInterval(from: lastSelectedDate)
                             }
-                            HStack{
-                                Text(getMonth())
-                                    .font(.title2.bold())
-                                Spacer()
-                            }
-                        }
+                        Spacer()
                         HStack{
-                            Spacer()
                             Button(action: {
                                 currentMonth -= 1
+                                selectedDate = getCurrentMonth(date: selectedDate)
+                                lastSelectedDate = getCurrentMonth(date: lastSelectedDate)
                             }){
                                 CalendarViewMonthButton(name: "chevron.backward", color: Colors.primaryColor)
                             }
                             .buttonStyle(.plain)
                             Button(action: {
                                 currentMonth += 1
+                                lastSelectedDate = getCurrentMonth(date: lastSelectedDate)
+                                selectedDate = getCurrentMonth(date: selectedDate)
                             }){
                                 CalendarViewMonthButton(name: "chevron.forward", color: Colors.primaryColor)
                             }
                             .buttonStyle(.plain)
+
                         }
                     }
                     
@@ -120,18 +126,24 @@ struct CalendarView: View {
                         selectedDate = Dates.currentDate
                         lastSelectedDate = Dates.currentDate
                     }
-                    .onChange(of: currentMonth) { newValue in
-                        selectedDate = getCurrentMonth()
-                        lastSelectedDate = getCurrentMonth()
-                    }
-                    Button("Erinnerungen ohne Datum"){
-                        selectedDate = Dates.defaultDate
-                        self.listViewType = .noDates
-                    }
-                    .padding()
-                    .foregroundColor(.blue)
-                    .buttonStyle(.plain)
                     Spacer()
+                    HStack{
+                        Button("Erinnerungen ohne Datum"){
+                            selectedDate = Dates.defaultDate
+                            self.listViewType = .noDates
+                        }
+                        .foregroundColor(Colors.primaryColor)
+                        .buttonStyle(.plain)
+                        Spacer()
+                        Button("Heute"){
+                            navigateDate = Dates.currentDate
+                            lastSelectedDate = Dates.currentDate
+                            selectedDate = lastSelectedDate
+                            currentMonth = 0
+                        }
+                            .buttonStyle(.plain)
+                            .foregroundColor(Colors.primaryColor)
+                    }
                 }.padding()
                 
                 //Hidden navigation link to navigate between dates
