@@ -10,11 +10,12 @@ import SwiftUI
 
 //Getter
 func getMonthInterval(from date: Date) -> Int {
-    
     let interval = Calendar.current.dateComponents([.month], from: Dates.currentDate, to: date).month!
-    print(interval)
-    print(date)
-    print("\n")
+    return interval
+}
+
+func getInterval(from date: Date) -> Int {
+    let interval = Calendar.current.dateComponents([.second], from: Dates.currentDate, to: date).second!
     return interval
 }
 

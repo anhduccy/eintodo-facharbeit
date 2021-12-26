@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
@@ -203,6 +204,15 @@ struct DetailView: View {
                     notification = Dates.currentDate
                 }
             }
+            
+            //Ask user for UserNotification permission
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
+                if success {
+                    print("UserNotification permission allowed")
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
         }
         .onChange(of: title) { newValue in
             switch(detailViewType){
@@ -230,3 +240,93 @@ struct DetailView: View {
         }
     }
 }
+
+extension DetailView{
+    public func addToDo() {
+        withAnimation {
+            let newToDo = ToDo(context: viewContext)
+            newToDo.id = UUID()
+            newToDo.title = title
+            newToDo.notes = notes
+            if showDeadline{
+                newToDo.deadline = deadline.addingTimeInterval(TimeInterval(SecondsCalculated.hour))
+                addUserNotification(date: deadline, text: "Fällig am ")
+
+            } else {
+                newToDo.deadline = Dates.defaultDate
+            }
+            if showNotification {
+                newToDo.notification = notification.addingTimeInterval(TimeInterval(SecondsCalculated.hour))
+                addUserNotification(date: notification)
+            } else {
+                newToDo.notification = Dates.defaultDate
+            }
+            newToDo.isMarked = isMarked
+            newToDo.isDone = false
+            print(newToDo)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Could not add CoreData-Entity in AddView: \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
+    public func updateToDo() {
+        withAnimation {
+            todo.title = title
+            todo.notes = notes
+            if showDeadline{
+                todo.deadline = deadline
+                addUserNotification(date: deadline, text: "Fällig am ")
+            }
+            if !showDeadline{
+                todo.deadline = Dates.defaultDate
+            }
+            if showNotification{
+                todo.notification = notification
+                addUserNotification(date: notification)
+            }
+            if !showNotification{
+                todo.notification = Dates.defaultDate
+            }
+            
+            todo.isMarked = isMarked
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Could not update CoreData-Entity in DetailView: \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    public func deleteToDo(){
+        withAnimation {
+            viewContext.delete(todo)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Could not delete CoreData-Entity in DetailView: \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    public func dismissDetailView(){
+        selectedDate = deadline
+        isPresented.toggle()
+    }
+    public func addUserNotification(date: Date, text: String = ""){
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.subtitle = text + DateToStringFormatter(date: date)
+        content.sound = UNNotificationSound.default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request)
+    }
+}
+
