@@ -19,7 +19,8 @@ struct SelectFilterView: View{
             HStack{
                 Picker("", selection: $filter){
                     Text("Fällig am ").tag(FilterToDo.deadline)
-                    Text("Erinnerung").tag(FilterToDo.notifiation)
+                    Text("Erinnerung").tag(FilterToDo.notification)
+                    //Text("Markiert").tag(FilterToDo.isMarked)
                 }
                 .pickerStyle(.inline)
                 Spacer()
@@ -128,7 +129,7 @@ struct CalendarView: View {
                                         //IF dayValue.date is the same day as selected date -> Circle blue
                                         if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
                                             Circle().fill(Color.blue)
-                                        } else{
+                                        } else {
                                             //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
                                             if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
                                                 Circle().fill(Colors.primaryColor)
@@ -177,8 +178,11 @@ struct CalendarView: View {
                                 case .deadline:
                                     let predicate = NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg)
                                     todos.nsPredicate = predicate
-                                case .notifiation:
+                                case .notification:
                                     let predicate = NSPredicate(format: "notification <= %@ && notification >= %@", dateTo! as CVarArg, dateFrom as CVarArg)
+                                    todos.nsPredicate = predicate
+                                case .isMarked:
+                                    let predicate = NSPredicate(format: "isMarked == true", dateTo! as CVarArg, dateFrom as CVarArg)
                                     todos.nsPredicate = predicate
                                 }
                             }
@@ -295,8 +299,10 @@ extension CalendarView{
         switch(filter){
         case.deadline:
             format = "deadline <= %@ && deadline >= %@"
-        case.notifiation:
+        case.notification:
             format = "notification <= %@ && notification >= %@"
+        case.isMarked:
+            format = "isMarked == true"
         }
         return format
     }

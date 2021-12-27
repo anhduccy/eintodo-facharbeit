@@ -41,5 +41,6 @@ enum DetailViewTypes {
 
 enum FilterToDo {
     case deadline
-    case notifiation
+    case notification
+    case isMarked
 }
