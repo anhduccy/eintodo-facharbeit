@@ -17,7 +17,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: CalendarView(selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate)){
+                NavigationLink(destination: CalendarView(selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, filter: .deadline)){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")

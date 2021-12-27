@@ -15,7 +15,7 @@ struct CalendarViewMonthButton: View {
     
     var body: some View{
         ZStack{
-            Circle().fill(color).opacity(0.1)
+            Circle().fill(color).opacity(0.2)
             Image(systemName: name)
                 .foregroundColor(color)
         }

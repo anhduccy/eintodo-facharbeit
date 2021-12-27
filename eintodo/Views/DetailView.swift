@@ -250,14 +250,14 @@ extension DetailView{
             newToDo.notes = notes
             if showDeadline{
                 newToDo.deadline = deadline.addingTimeInterval(TimeInterval(SecondsCalculated.hour))
-                addUserNotification(date: deadline, text: "Fällig am ")
+                //addUserNotification(date: deadline, text: "Fällig am ")
 
             } else {
                 newToDo.deadline = Dates.defaultDate
             }
             if showNotification {
                 newToDo.notification = notification.addingTimeInterval(TimeInterval(SecondsCalculated.hour))
-                addUserNotification(date: notification)
+                //addUserNotification(date: notification)
             } else {
                 newToDo.notification = Dates.defaultDate
             }
@@ -279,14 +279,14 @@ extension DetailView{
             todo.notes = notes
             if showDeadline{
                 todo.deadline = deadline
-                addUserNotification(date: deadline, text: "Fällig am ")
+                //addUserNotification(date: deadline, text: "Fällig am ")
             }
             if !showDeadline{
                 todo.deadline = Dates.defaultDate
             }
             if showNotification{
                 todo.notification = notification
-                addUserNotification(date: notification)
+                //addUserNotification(date: notification)
             }
             if !showNotification{
                 todo.notification = Dates.defaultDate
@@ -316,6 +316,7 @@ extension DetailView{
         selectedDate = deadline
         isPresented.toggle()
     }
+    /*
     public func addUserNotification(date: Date, text: String = ""){
         let content = UNMutableNotificationContent()
         content.title = title
@@ -328,5 +329,6 @@ extension DetailView{
         
         UNUserNotificationCenter.current().add(request)
     }
+     */
 }
 

@@ -39,3 +39,8 @@ enum DetailViewTypes {
     case add
     case display
 }
+
+enum FilterToDo {
+    case deadline
+    case notifiation
+}

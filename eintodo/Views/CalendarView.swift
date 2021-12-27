@@ -7,6 +7,28 @@
 
 import SwiftUI
 
+struct SelectFilterView: View{
+    @Binding var filter: FilterToDo
+    
+    var body: some View{
+        VStack{
+            HStack{
+                Text("Filter").font(.title2.bold())
+                Spacer()
+            }
+            HStack{
+                Picker("", selection: $filter){
+                    Text("Fällig am ").tag(FilterToDo.deadline)
+                    Text("Erinnerung").tag(FilterToDo.notifiation)
+                }
+                .pickerStyle(.inline)
+                Spacer()
+            }
+        }
+        .padding()
+    }
+}
+
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], animation: .default)
@@ -16,12 +38,16 @@ struct CalendarView: View {
     @State var listViewIsActive: Bool = true
     @State var listViewType: ListViewTypes = .dates
     
-    //Calendar attributes
+    //Date attributes
     @State var currentMonth: Int = 0
-    @State var showDoneToDos: Bool = true
     @Binding var selectedDate: Date
     @Binding var lastSelectedDate: Date
     @State var navigateDate : Date = Dates.currentDate
+    
+    @State var showDoneToDos: Bool = true
+    @State var showFilterSheet = false
+    @State var filter: FilterToDo
+
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
     let day: Int = 3600*24 //Day in Seconds
@@ -64,6 +90,29 @@ struct CalendarView: View {
                             .buttonStyle(.plain)
 
                         }
+                        Button(action: {
+                            showFilterSheet.toggle()
+                        }, label: {
+                            ZStack{
+                                Circle().fill().foregroundColor(Colors.primaryColor).opacity(0.2)
+                                    .frame(width: 24, height: 24, alignment: .center)
+                                if showFilterSheet {
+                                    Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                                        .resizable()
+                                        .frame(width: 15, height: 15, alignment: .center)
+                                        .foregroundColor(Colors.primaryColor)
+                                } else {
+                                    Image(systemName: "line.3.horizontal.decrease.circle")
+                                        .resizable()
+                                        .frame(width: 15, height: 15, alignment: .center)
+                                        .foregroundColor(Colors.primaryColor)
+                                }
+                            }
+                        })
+                            .buttonStyle(.plain)
+                            .popover(isPresented: $showFilterSheet){
+                                SelectFilterView(filter: $filter)
+                            }
                     }
                     
                     //Calendar
@@ -118,6 +167,19 @@ struct CalendarView: View {
                                     }
                                 } else {
                                     Text("")
+                                }
+                            }
+                            .onChange(of: filter){ newValue in
+                                let dateFrom = Calendar.current.startOfDay(for: dayValue.date)
+                                let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+                                
+                                switch(filter){
+                                case .deadline:
+                                    let predicate = NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg)
+                                    todos.nsPredicate = predicate
+                                case .notifiation:
+                                    let predicate = NSPredicate(format: "notification <= %@ && notification >= %@", dateTo! as CVarArg, dateFrom as CVarArg)
+                                    todos.nsPredicate = predicate
                                 }
                             }
                         }
@@ -228,12 +290,24 @@ extension CalendarView{
             return days
         }
     
+    func returnFormatOfFilter()->String{
+        var format = ""
+        switch(filter){
+        case.deadline:
+            format = "deadline <= %@ && deadline >= %@"
+        case.notifiation:
+            format = "notification <= %@ && notification >= %@"
+        }
+        return format
+    }
+    
     //If storage is empty on date at input date, return true
     func isEmptyOnDate(date: Date)->Bool{
         let dateFrom = Calendar.current.startOfDay(for: date)
         let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        let format = returnFormatOfFilter()
         
-        let predicate = NSPredicate(format: "deadline <= %@ && deadline >= %@ && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        let predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
         if todos.isEmpty{
             return true
@@ -246,7 +320,7 @@ extension CalendarView{
     func isJustDoneToDos(date: Date)->Bool{
         let dateFrom = Calendar.current.startOfDay(for: date)
         let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
-        let format = "deadline <= %@ && deadline >= %@"
+        let format = returnFormatOfFilter()
         
         var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
