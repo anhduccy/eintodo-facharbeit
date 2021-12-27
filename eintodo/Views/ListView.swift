@@ -19,7 +19,7 @@ struct ListView: View {
     init(date: Date, bool: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDate: Binding<Date>, type: ListViewTypes = ListViewTypes.dates){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: date)
-        let dateTo = calendar.date(byAdding: .day, value: 1, to: dateFrom)
+        let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         
         switch(type){
         case .dates:

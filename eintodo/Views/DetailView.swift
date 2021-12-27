@@ -197,11 +197,11 @@ struct DetailView: View {
             case .display:
                 if deadline == Dates.defaultDate{
                     showDeadline = false
-                    deadline = Dates.currentDate
+                    deadline = Date()
                 }
                 if notification == Dates.defaultDate{
                     showNotification = false
-                    notification = Dates.currentDate
+                    notification = Date()
                 }
             }
             
@@ -249,21 +249,20 @@ extension DetailView{
             newToDo.title = title
             newToDo.notes = notes
             if showDeadline{
-                newToDo.deadline = deadline.addingTimeInterval(TimeInterval(SecondsCalculated.hour))
+                newToDo.deadline = deadline
                 //addUserNotification(date: deadline, text: "Fällig am ")
 
             } else {
                 newToDo.deadline = Dates.defaultDate
             }
             if showNotification {
-                newToDo.notification = notification.addingTimeInterval(TimeInterval(SecondsCalculated.hour))
+                newToDo.notification = notification
                 //addUserNotification(date: notification)
             } else {
                 newToDo.notification = Dates.defaultDate
             }
             newToDo.isMarked = isMarked
             newToDo.isDone = false
-            print(newToDo)
             do {
                 try viewContext.save()
             } catch {

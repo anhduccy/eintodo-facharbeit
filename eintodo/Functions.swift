@@ -11,13 +11,13 @@ import SwiftUI
 //GETTER
 //Get interval in month between input date and current date
 func getMonthInterval(from date: Date) -> Int {
-    let interval = Calendar.current.dateComponents([.month], from: Dates.currentDate, to: date).month!
+    let interval = Calendar.current.dateComponents([.month], from: Date(), to: date).month!
     return interval
 }
 
 //Get interval in sconds between input date and current date
 func getInterval(from date: Date) -> Int {
-    let interval = Calendar.current.dateComponents([.second], from: Dates.currentDate, to: date).second!
+    let interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
     return interval
 }
 
@@ -25,24 +25,27 @@ func getInterval(from date: Date) -> Int {
 //Format Date into String
 public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String) -> String{
     let timeFormatter = DateFormatter()
+    timeFormatter.dateFormat = ", HH:mm"
     let formatter = DateFormatter()
     formatter.dateFormat = format
     var output = ""
     
     if(type == "deadline"){ // Type is deadline
-        if(isTomorrowDate(date: date)){
-            output = "Morgen fällig"
-        } else if (isYesterdayDate(date: date)){
-            output = "Gestern fällig"
+        if(isTomorrow(date: date)){
+            output = "Morgen fällig" + timeFormatter.string(from: date)
+        } else if (isToday(date: date)){
+            output = "Heute fällig" + timeFormatter.string(from: date)
+        } else if (isYesterday(date: date)){
+            output = "Gestern fällig" + timeFormatter.string(from: date)
         } else {
-            output = "Fällig am " + formatter.string(from: date)
+            output = "Fällig am " + formatter.string(from: date) + timeFormatter.string(from: date)
         }
     } else if(type == "notification"){ // Type is notification
-        timeFormatter.dateFormat = ", HH:mm"
-        
-        if(isTomorrowDate(date: date)){
+        if(isTomorrow(date: date)){
             output = "Morgen" + timeFormatter.string(from: date)
-        } else if (isYesterdayDate(date: date)){
+        } else if (isToday(date: date)){
+            output = "Heute" + timeFormatter.string(from: date)
+        } else if (isYesterday(date: date)){
             output = "Gestern" + timeFormatter.string(from: date)
         } else {
             output = formatter.string(from: date) + timeFormatter.string(from: date)
@@ -61,23 +64,23 @@ public func isSameDay(date1: Date, date2: Date) -> Bool {
 }
 
 //If input date is equal as the yesterday's date, return true
-public func isYesterdayDate(date: Date)->Bool{
-    return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate.addingTimeInterval(-TimeInterval(SecondsCalculated.day)))
+public func isYesterday(date: Date)->Bool{
+    return Calendar.current.isDate(date, inSameDayAs: Date().addingTimeInterval(-TimeInterval(SecondsCalculated.day)))
 }
 
 //If input date is current date, return true
-public func isCurrentDate(date: Date)->Bool{
-    return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate)
+public func isToday(date: Date)->Bool{
+    return Calendar.current.isDate(date, inSameDayAs: Date())
 }
 
 //If input date is equal as the tomorrow date, return true
-public func isTomorrowDate(date: Date)->Bool{
-    return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate.addingTimeInterval(TimeInterval(SecondsCalculated.day)))
+public func isTomorrow(date: Date)->Bool{
+    return Calendar.current.isDate(date, inSameDayAs: Date().addingTimeInterval(TimeInterval(SecondsCalculated.day)))
 }
 
 //If input date is before the current date, return a color
 public func isDateInPast(date: Date, defaultColor: Color)->Color{
-    let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)
+    let currentDate = Calendar.current.startOfDay(for: Date())
     if date != Dates.defaultDate{
         if date < currentDate{
             return .red
@@ -90,7 +93,7 @@ public func isDateInPast(date: Date, defaultColor: Color)->Color{
 }
 //If input date is before the current date, return true
 public func isDateInPast(date: Date) -> Bool{
-    let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)
+    let currentDate = Calendar.current.startOfDay(for: Date())
     if date != Dates.defaultDate{
         if date < currentDate{
             return true

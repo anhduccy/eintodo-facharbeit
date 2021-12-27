@@ -10,7 +10,6 @@ import SwiftUI
 
 //Structs - Global variables
 struct Dates {
-    static let currentDate = Date()
     static let defaultDate = Date(timeIntervalSince1970: 0)
 }
 struct SecondsCalculated {

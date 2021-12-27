@@ -42,7 +42,7 @@ struct CalendarView: View {
     @State var currentMonth: Int = 0
     @Binding var selectedDate: Date
     @Binding var lastSelectedDate: Date
-    @State var navigateDate : Date = Dates.currentDate
+    @State var navigateDate : Date = Date()
     
     @State var showDoneToDos: Bool = true
     @State var showFilterSheet = false
@@ -150,7 +150,7 @@ struct CalendarView: View {
                                                 Circle()
                                                     .hidden()
                                                 //IF (dayValue.date is current date) AND (dayValue.date is not selected date) AND (there are none to-dos at dayValue.date), display the text blue
-                                                if(isCurrentDate(date: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
+                                                if(isToday(date: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
                                                 // ELSE IF (dayValue.date is selected date) AND (there are todos at dayValue.date), display the text white, because Circle is supported
@@ -171,7 +171,7 @@ struct CalendarView: View {
                             }
                             .onChange(of: filter){ newValue in
                                 let dateFrom = Calendar.current.startOfDay(for: dayValue.date)
-                                let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+                                let dateTo = Calendar.current.date(byAdding: .minute, value: 1439, to: dateFrom)
                                 
                                 switch(filter){
                                 case .deadline:
@@ -185,8 +185,8 @@ struct CalendarView: View {
                         }
                     }
                     .onAppear{
-                        selectedDate = Dates.currentDate
-                        lastSelectedDate = Dates.currentDate
+                        selectedDate = Date()
+                        lastSelectedDate = Date()
                     }
                     Spacer()
                     HStack{
@@ -198,8 +198,8 @@ struct CalendarView: View {
                         .buttonStyle(.plain)
                         Spacer()
                         Button("Heute"){
-                            navigateDate = Dates.currentDate
-                            lastSelectedDate = Dates.currentDate
+                            navigateDate = Date()
+                            lastSelectedDate = Date()
                             selectedDate = lastSelectedDate
                             currentMonth = 0
                         }
@@ -250,13 +250,13 @@ extension CalendarView{
     }
     
     //Get the selected month
-    func getCurrentMonth(date: Date = Dates.currentDate) -> Date {
+    func getCurrentMonth(date: Date = Date()) -> Date {
         let calendar = Calendar.current
         var resultDate = Date()
         
         let inputDay = calendar.dateComponents([.day], from: date).day
-        let currentMonth = calendar.dateComponents([.month], from: Dates.currentDate).month
-        let currentYear = calendar.dateComponents([.year], from: Dates.currentDate).year
+        let currentMonth = calendar.dateComponents([.month], from: Date()).month
+        let currentYear = calendar.dateComponents([.year], from: Date()).year
         
         let dateComponents = DateComponents(calendar: .current, timeZone: calendar.timeZone, year: currentYear, month: currentMonth, day: inputDay, hour: 1)
         if dateComponents.isValidDate{
@@ -265,7 +265,7 @@ extension CalendarView{
             
         // Getting Current month date
         guard let currentMonth = calendar.date(byAdding: .month, value: self.currentMonth, to: resultDate) else {
-            return Dates.currentDate
+            return Date()
         }
         return currentMonth
     }
@@ -283,9 +283,9 @@ extension CalendarView{
         }
         
         // adding offset days to get exact week day...
-        let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Dates.currentDate)
+        let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
             for _ in 0..<firstWeekday - 1 {
-                days.insert(DateValue(day: -1, date: Dates.currentDate), at: 0)
+                days.insert(DateValue(day: -1, date: Date()), at: 0)
             }
             return days
         }
@@ -303,8 +303,9 @@ extension CalendarView{
     
     //If storage is empty on date at input date, return true
     func isEmptyOnDate(date: Date)->Bool{
-        let dateFrom = Calendar.current.startOfDay(for: date)
-        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        let calendar = Calendar.current
+        let dateFrom = calendar.startOfDay(for: date)
+        let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let format = returnFormatOfFilter()
         
         let predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
@@ -318,8 +319,9 @@ extension CalendarView{
     
     //If storage just has done to-dos at input date, return true
     func isJustDoneToDos(date: Date)->Bool{
-        let dateFrom = Calendar.current.startOfDay(for: date)
-        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        let calendar = Calendar.current
+        let dateFrom = calendar.startOfDay(for: date)
+        let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let format = returnFormatOfFilter()
         
         var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
