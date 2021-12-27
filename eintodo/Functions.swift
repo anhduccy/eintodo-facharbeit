@@ -32,13 +32,13 @@ public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String
     
     if(type == "deadline"){ // Type is deadline
         if(isTomorrow(date: date)){
-            output = "Morgen fällig" + timeFormatter.string(from: date)
+            output = "Morgen fällig"
         } else if (isToday(date: date)){
-            output = "Heute fällig" + timeFormatter.string(from: date)
+            output = "Heute fällig"
         } else if (isYesterday(date: date)){
-            output = "Gestern fällig" + timeFormatter.string(from: date)
+            output = "Gestern fällig"
         } else {
-            output = "Fällig am " + formatter.string(from: date) + timeFormatter.string(from: date)
+            output = "Fällig am " + formatter.string(from: date)
         }
     } else if(type == "notification"){ // Type is notification
         if(isTomorrow(date: date)){
