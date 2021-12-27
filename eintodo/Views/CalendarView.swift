@@ -20,7 +20,7 @@ struct SelectFilterView: View{
                 Picker("", selection: $filter){
                     Text("Fällig am ").tag(FilterToDo.deadline)
                     Text("Erinnerung").tag(FilterToDo.notification)
-                    //Text("Markiert").tag(FilterToDo.isMarked)
+                    Text("Markiert").tag(FilterToDo.isMarked)
                 }
                 .pickerStyle(.inline)
                 Spacer()
@@ -126,20 +126,31 @@ struct CalendarView: View {
                             VStack{
                                 if(dayValue.day >= 0){
                                     ZStack{
-                                        //IF dayValue.date is the same day as selected date -> Circle blue
-                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
-                                            Circle().fill(Color.blue)
-                                        } else {
-                                            //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
-                                            if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
-                                                Circle().fill(Colors.primaryColor)
-                                            
-                                            //IF (there are todos at dayValue.date) AND (there are some which overpass the deadline) -> Circle red
-                                            } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
-                                                Circle().fill(Color.red)
-                                            //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
-                                            } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
-                                                Circle().fill(Colors.primaryColor).opacity(0.2)
+                                        switch(filter){
+                                        case .deadline, .notification:
+                                            //IF dayValue.date is the same day as selected date -> Circle blue
+                                            if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
+                                                Circle().fill(Color.blue)
+                                            } else {
+                                                //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
+                                                if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
+                                                    Circle().fill(Colors.primaryColor)
+                                                
+                                                //IF (there are todos at dayValue.date) AND (there are some which overpass the deadline) -> Circle red
+                                                } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
+                                                    Circle().fill(Color.red)
+                                                //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
+                                                } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
+                                                    Circle().fill(Colors.primaryColor).opacity(0.2)
+                                                }
+                                            }
+                                        case .isMarked:
+                                            if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
+                                                Circle().fill(Color.blue)
+                                            } else if(!isEmptyOnDate(date: dayValue.date)){
+                                                Circle().fill(Color.yellow)
+                                            } else if(isJustDoneToDos(date: dayValue.date)){
+                                                Circle().fill(Color.yellow).opacity(0.2)
                                             }
                                         }
                                         Button(action: {
@@ -176,13 +187,13 @@ struct CalendarView: View {
                                 
                                 switch(filter){
                                 case .deadline:
-                                    let predicate = NSPredicate(format: "deadline <= %@ && deadline >= %@", dateTo! as CVarArg, dateFrom as CVarArg)
+                                    let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
                                     todos.nsPredicate = predicate
                                 case .notification:
-                                    let predicate = NSPredicate(format: "notification <= %@ && notification >= %@", dateTo! as CVarArg, dateFrom as CVarArg)
+                                    let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
                                     todos.nsPredicate = predicate
                                 case .isMarked:
-                                    let predicate = NSPredicate(format: "isMarked == true", dateTo! as CVarArg, dateFrom as CVarArg)
+                                    let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
                                     todos.nsPredicate = predicate
                                 }
                             }
@@ -302,7 +313,7 @@ extension CalendarView{
         case.notification:
             format = "notification <= %@ && notification >= %@"
         case.isMarked:
-            format = "isMarked == true"
+            format = "((deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)) && isMarked == true"
         }
         return format
     }
@@ -314,7 +325,7 @@ extension CalendarView{
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let format = returnFormatOfFilter()
         
-        let predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        let predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
         if todos.isEmpty{
             return true
@@ -330,10 +341,10 @@ extension CalendarView{
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let format = returnFormatOfFilter()
         
-        var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
         if todos.isEmpty {
-            predicate = NSPredicate(format: format, dateTo! as CVarArg, dateFrom as CVarArg)
+            predicate = NSPredicate(format: format, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
             todos.nsPredicate = predicate
             if todos.isEmpty {
                 return false
