@@ -23,10 +23,35 @@ func getInterval(from date: Date) -> Int {
 
 //Formatters
 //Format Date into String
-public func DateInString(date: Date, format: String = "dd.MM.yyyy") -> String{
+public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String) -> String{
+    let timeFormatter = DateFormatter()
     let formatter = DateFormatter()
     formatter.dateFormat = format
-    return formatter.string(from: date)
+    var output = ""
+    
+    if(type == "deadline"){ // Type is deadline
+        if(isTomorrowDate(date: date)){
+            output = "Morgen fällig"
+        } else if (isYesterdayDate(date: date)){
+            output = "Gestern fällig"
+        } else {
+            output = "Fällig am " + formatter.string(from: date)
+        }
+    } else if(type == "notification"){ // Type is notification
+        timeFormatter.dateFormat = ", HH:mm"
+        
+        if(isTomorrowDate(date: date)){
+            output = "Morgen" + timeFormatter.string(from: date)
+        } else if (isYesterdayDate(date: date)){
+            output = "Gestern" + timeFormatter.string(from: date)
+        } else {
+            output = formatter.string(from: date) + timeFormatter.string(from: date)
+        }
+    } else {
+        output = "Error"
+    }
+    
+    return output
 }
 
 //Comparisons
@@ -34,10 +59,22 @@ public func DateInString(date: Date, format: String = "dd.MM.yyyy") -> String{
 public func isSameDay(date1: Date, date2: Date) -> Bool {
     return Calendar.current.isDate(date1, inSameDayAs: date2)
 }
+
+//If input date is equal as the yesterday's date, return true
+public func isYesterdayDate(date: Date)->Bool{
+    return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate.addingTimeInterval(-TimeInterval(SecondsCalculated.day)))
+}
+
 //If input date is current date, return true
 public func isCurrentDate(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate)
 }
+
+//If input date is equal as the tomorrow date, return true
+public func isTomorrowDate(date: Date)->Bool{
+    return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate.addingTimeInterval(TimeInterval(SecondsCalculated.day)))
+}
+
 //If input date is before the current date, return a color
 public func isDateInPast(date: Date, defaultColor: Color)->Color{
     let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)

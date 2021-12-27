@@ -77,15 +77,15 @@ struct SheetButton: View {
                     }
                     if todo.deadline != Dates.defaultDate{
                         HStack{
-                            Text("Fällig am " + DateInString(date: todo.deadline ?? Dates.defaultDate))
+                            Text(DateInString(date: todo.deadline ?? Dates.defaultDate, type: "deadline"))
                                 .foregroundColor(text_color)
-                            .fontWeight(.light)
+                                .fontWeight(.light)
                             Spacer()
                         }
                     }
                     if todo.notification != Dates.defaultDate{
                         HStack{
-                            Text(DateInString(date: todo.notification ?? Dates.defaultDate))
+                            Text(DateInString(date: todo.notification ?? Dates.defaultDate, type: "notification"))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()
