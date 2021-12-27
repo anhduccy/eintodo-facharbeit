@@ -77,7 +77,7 @@ struct SheetButton: View {
                     }
                     if todo.deadline != Dates.defaultDate{
                         HStack{
-                            Text("Fällig am " + DateToStringFormatter(date: todo.deadline ?? Dates.defaultDate))
+                            Text("Fällig am " + DateInString(date: todo.deadline ?? Dates.defaultDate))
                                 .foregroundColor(text_color)
                             .fontWeight(.light)
                             Spacer()
@@ -85,7 +85,7 @@ struct SheetButton: View {
                     }
                     if todo.notification != Dates.defaultDate{
                         HStack{
-                            Text(DateToStringFormatter(date: todo.notification ?? Dates.defaultDate))
+                            Text(DateInString(date: todo.notification ?? Dates.defaultDate))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()

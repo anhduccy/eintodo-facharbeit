@@ -62,7 +62,7 @@ struct ListView: View {
                 VStack{
                     HStack{
                         Spacer()
-                        Text("Keine Erinnerungen vorhanden")
+                        Text("Keine Erinnerungen ausgewählt")
                         Spacer()
                     }
                 }
@@ -104,11 +104,34 @@ struct ListView: View {
                         .buttonStyle(.plain)
                 }
                 .padding(5)
-                .background(missedDeadlineOfToDo(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
+                .background(isDateInPast(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
                 .cornerRadius(8.5)
             }
             .listStyle(InsetListStyle())
             .frame(minWidth: 250)
+        }
+    }
+}
+
+//ListView
+extension ListView {
+    public func deleteItems(offsets: IndexSet) {
+        withAnimation {
+            offsets.map { todos[$0] }.forEach(viewContext.delete)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Could not delete ListItem as CoreData-Entity in ListView \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    public func updateToDo(){
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not update CoreData-Entity in ListView: \(nsError), \(nsError.userInfo)")
         }
     }
 }

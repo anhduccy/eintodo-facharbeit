@@ -319,7 +319,7 @@ extension DetailView{
     public func addUserNotification(date: Date, text: String = ""){
         let content = UNMutableNotificationContent()
         content.title = title
-        content.subtitle = text + DateToStringFormatter(date: date)
+        content.subtitle = text + DateInString(date: date)
         content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)

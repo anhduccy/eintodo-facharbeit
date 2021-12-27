@@ -8,33 +8,38 @@
 import Foundation
 import SwiftUI
 
-//Getter
+//GETTER
+//Get interval in month between input date and current date
 func getMonthInterval(from date: Date) -> Int {
     let interval = Calendar.current.dateComponents([.month], from: Dates.currentDate, to: date).month!
     return interval
 }
 
+//Get interval in sconds between input date and current date
 func getInterval(from date: Date) -> Int {
     let interval = Calendar.current.dateComponents([.second], from: Dates.currentDate, to: date).second!
     return interval
 }
 
 //Formatters
-public func DateToStringFormatter(date: Date, format: String = "dd.MM.yyyy") -> String{
+//Format Date into String
+public func DateInString(date: Date, format: String = "dd.MM.yyyy") -> String{
     let formatter = DateFormatter()
     formatter.dateFormat = format
     return formatter.string(from: date)
 }
 
 //Comparisons
+//Compare two dates and return true if it is the same
 public func isSameDay(date1: Date, date2: Date) -> Bool {
     return Calendar.current.isDate(date1, inSameDayAs: date2)
 }
+//If input date is current date, return true
 public func isCurrentDate(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Dates.currentDate)
 }
-
-public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
+//If input date is before the current date, return a color
+public func isDateInPast(date: Date, defaultColor: Color)->Color{
     let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)
     if date != Dates.defaultDate{
         if date < currentDate{
@@ -46,7 +51,8 @@ public func missedDeadlineOfToDo(date: Date, defaultColor: Color)->Color{
         return defaultColor
     }
 }
-public func missedDeadlineOfToDo(date: Date) -> Bool{
+//If input date is before the current date, return true
+public func isDateInPast(date: Date) -> Bool{
     let currentDate = Calendar.current.startOfDay(for: Dates.currentDate)
     if date != Dates.defaultDate{
         if date < currentDate{

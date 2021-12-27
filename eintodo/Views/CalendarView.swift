@@ -81,11 +81,11 @@ struct CalendarView: View {
                                             Circle().fill(Color.blue)
                                         } else{
                                             //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
-                                            if(!isEmptyOnDate(date: dayValue.date) && !missedDeadlineOfToDo(date: dayValue.date)){
+                                            if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
                                                 Circle().fill(Colors.primaryColor)
                                             
                                             //IF (there are todos at dayValue.date) AND (there are some which overpass the deadline) -> Circle red
-                                            } else if(!isEmptyOnDate(date: dayValue.date) && missedDeadlineOfToDo(date: dayValue.date)){
+                                            } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
                                                 Circle().fill(Color.red)
                                             //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
                                             } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
@@ -163,3 +163,104 @@ struct CalendarView: View {
         }
     }
 }
+
+//EXTENSIONS
+struct DateValue: Hashable{
+    let id = UUID().uuidString
+    var day: Int
+    var date: Date
+}
+extension CalendarView{
+    //Display the selected year
+    func getYear() -> String{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY"
+        let year = formatter.string(from: lastSelectedDate)
+        return year
+    }
+    
+    //Display the selected month
+    func getMonth() -> String{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM"
+        let month = formatter.string(from: lastSelectedDate)
+        return month
+    }
+    
+    //Get the selected month
+    func getCurrentMonth(date: Date = Dates.currentDate) -> Date {
+        let calendar = Calendar.current
+        var resultDate = Date()
+        
+        let inputDay = calendar.dateComponents([.day], from: date).day
+        let currentMonth = calendar.dateComponents([.month], from: Dates.currentDate).month
+        let currentYear = calendar.dateComponents([.year], from: Dates.currentDate).year
+        
+        let dateComponents = DateComponents(calendar: .current, timeZone: calendar.timeZone, year: currentYear, month: currentMonth, day: inputDay, hour: 1)
+        if dateComponents.isValidDate{
+            resultDate = dateComponents.date!
+        }
+            
+        // Getting Current month date
+        guard let currentMonth = calendar.date(byAdding: .month, value: self.currentMonth, to: resultDate) else {
+            return Dates.currentDate
+        }
+        return currentMonth
+    }
+    
+    //Extract date for selected month from getAllDates()
+    func extractDate() -> [DateValue] {
+        let calendar = Calendar.current
+        
+        // Getting Current month date
+        let currentMonth = getCurrentMonth()
+        var days = currentMonth.getAllDates().compactMap { date -> DateValue in
+            let day = calendar.component(.day, from: date)
+            let dateValue =  DateValue(day: day, date: date)
+            return dateValue
+        }
+        
+        // adding offset days to get exact week day...
+        let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Dates.currentDate)
+            for _ in 0..<firstWeekday - 1 {
+                days.insert(DateValue(day: -1, date: Dates.currentDate), at: 0)
+            }
+            return days
+        }
+    
+    //If storage is empty on date at input date, return true
+    func isEmptyOnDate(date: Date)->Bool{
+        let dateFrom = Calendar.current.startOfDay(for: date)
+        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        
+        let predicate = NSPredicate(format: "deadline <= %@ && deadline >= %@ && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        todos.nsPredicate = predicate
+        if todos.isEmpty{
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    //If storage just has done to-dos at input date, return true
+    func isJustDoneToDos(date: Date)->Bool{
+        let dateFrom = Calendar.current.startOfDay(for: date)
+        let dateTo = Calendar.current.date(byAdding: .day, value: 1, to: dateFrom)
+        let format = "deadline <= %@ && deadline >= %@"
+        
+        var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg)
+        todos.nsPredicate = predicate
+        if todos.isEmpty {
+            predicate = NSPredicate(format: format, dateTo! as CVarArg, dateFrom as CVarArg)
+            todos.nsPredicate = predicate
+            if todos.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
+    }
+}
+
