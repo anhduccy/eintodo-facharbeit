@@ -49,41 +49,66 @@ struct ToDoListsView: View {
         NavigationView{
             ZStack{
                 List{
-                    HStack{
-                        //Today
-                        Button(action: {
-                            withAnimation{
-                                lastSelectedDate = Date()
-                                selectedDate = Date()
-                                listViewType = .dates
-                                self.listViewIsActive = true
+                    VStack(spacing: 20){
+                        VStack{
+                            HStack{
+                                //Today
+                                Button(action: {
+                                    withAnimation{
+                                        lastSelectedDate = Date()
+                                        selectedDate = Date()
+                                        listViewType = .dates
+                                        self.listViewIsActive = true
+                                    }
+                                }, label: {
+                                    ToDoListsViewMainButtonIcon(title: "Heute", imageName: "calendar.circle.fill", backgroundColor: .indigo)
+                                }).buttonStyle(.plain)
+                                
+                                //In Past and not done
+                                Button(action: {
+                                    withAnimation{
+                                        listViewType = .inPastAndNotDone
+                                        self.listViewIsActive = true
+                                    }
+                                }, label: {
+                                    ToDoListsViewMainButtonIcon(title: "Fällig", imageName: "clock.circle.fill", backgroundColor: .red)
+                                }).buttonStyle(.plain)
                             }
-                        }, label: {
-                            ToDoListsViewMainButtonIcon(title: "Heute", imageName: "calendar.circle.fill", backgroundColor: .indigo)
-                        }).buttonStyle(.plain)
-                        
-                        //In Past and not done
-                        Button(action: {
-                            withAnimation{
-                                listViewType = .inPastAndNotDone
-                                self.listViewIsActive = true
+                            
+                            HStack{
+                                //All To-Dos
+                                Button(action: {
+                                    withAnimation{
+                                        lastSelectedDate = Date()
+                                        selectedDate = Date()
+                                        listViewType = .all
+                                        self.listViewIsActive = true
+                                    }
+                                }, label: {
+                                    ToDoListsViewMainButtonIcon(title: "Alle", imageName: "tray.circle.fill", backgroundColor: .gray)
+                                }).buttonStyle(.plain)
+                                
+                                //All To-Dos
+                                Button(action: {
+                                    withAnimation{
+                                        lastSelectedDate = Date()
+                                        selectedDate = Date()
+                                        listViewType = .marked
+                                        self.listViewIsActive = true
+                                    }
+                                }, label: {
+                                    ToDoListsViewMainButtonIcon(title: "Markiert", imageName: "star.circle.fill", backgroundColor: .orange)
+                                }).buttonStyle(.plain)
                             }
-                        }, label: {
-                            ToDoListsViewMainButtonIcon(title: "Fällig", imageName: "clock.circle.fill", backgroundColor: .red)
-                        }).buttonStyle(.plain)
-                    }
-                    
-                    //All To-Dos
-                    Button(action: {
-                        withAnimation{
-                            lastSelectedDate = Date()
-                            selectedDate = Date()
-                            listViewType = .all
-                            self.listViewIsActive = true
                         }
-                    }, label: {
-                        ToDoListsViewMainButtonIcon(title: "Alle", imageName: "tray.circle.fill", backgroundColor: .gray)
-                    }).buttonStyle(.plain)
+                        HStack{
+                            Text("Listen").font(.title2.bold())
+                            Spacer()
+                        }
+                        VStack{
+                            //ForEach Lists
+                        }
+                    }
                 }
                 
                 VStack{

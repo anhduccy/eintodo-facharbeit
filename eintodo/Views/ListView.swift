@@ -60,7 +60,6 @@ struct ListView: View {
                                            defaultDate as CVarArg, defaultDate as CVarArg),
                     animation: .default)
             }
-            
         case .inPastAndNotDone: //All To-Dos in the past and which has not been done yet
             if(showDoneToDos.wrappedValue == true){
                 _todos = FetchRequest(
@@ -77,6 +76,24 @@ struct ListView: View {
                         NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
                     predicate: NSPredicate(format: "deadline < %@ && deadline != %@ && isDone == false", currentDate as CVarArg, defaultDate as CVarArg),
+                    animation: .default)
+            }
+        case .marked:
+            if(showDoneToDos.wrappedValue == true){
+                _todos = FetchRequest(
+                    sortDescriptors: [
+                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                    predicate: NSPredicate(format: "isMarked == true"),
+                    animation: .default)
+            } else {
+                _todos = FetchRequest(
+                    sortDescriptors: [
+                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                    predicate: NSPredicate(format: "isMarked == true && isDone == false"),
                     animation: .default)
             }
         case .all: //All To-Dos
