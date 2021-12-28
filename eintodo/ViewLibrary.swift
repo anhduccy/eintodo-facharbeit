@@ -24,15 +24,22 @@ struct CalendarViewMonthButton: View {
     }
 }
 struct IconImage: View {
+    init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool){
+        self.image = image
+        self.color = color
+        self.size = size
+        self.isActivated = isActivated
+    }
     let image: String
     let color: Color
     let size: CGFloat
+    let isActivated: Bool
     var body: some View {
         ZStack{
             Circle()
                 .fill(.white)
                 .frame(width: size-1, height: size-1)
-            SystemImage(image: image, size: size, color: color)
+            SystemImage(image: image, size: size, color: color, isActivated: isActivated)
         }
     }
 }
@@ -40,11 +47,20 @@ struct SystemImage: View{
     let image: String
     let size: CGFloat
     let color: Color
+    let isActivated: Bool
     var body: some View {
-        Image(systemName: image)
-            .resizable()
-            .frame(width: size, height: size)
-            .foregroundColor(color)
+        if(isActivated){
+            Image(systemName: image)
+                .resizable()
+                .frame(width: size, height: size)
+                .foregroundColor(color)
+        } else {
+            Image(systemName: image)
+                .resizable()
+                .frame(width: size, height: size)
+                .foregroundColor(.gray)
+                .opacity(1.0/3.0)
+        }
     }
 }
 
@@ -97,11 +113,11 @@ struct SheetButton: View {
             })
                 .buttonStyle(.plain)
             if(todo.notes != ""){
-                SystemImage(image: "note.text", size: 15, color: .white)
+                SystemImage(image: "note.text", size: 15, color: .white, isActivated: true)
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, isPresented: $isPresented, selectedDate: $selectedDate)
+            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), isPresented: $isPresented, selectedDate: $selectedDate)
         }
     }
 }

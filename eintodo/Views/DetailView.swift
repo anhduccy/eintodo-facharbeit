@@ -8,6 +8,26 @@
 import SwiftUI
 import UserNotifications
 
+struct SelectPriorityPopover: View{
+    @Binding var priority: Int
+    var body: some View{
+        VStack{
+            HStack{
+                Text("Priorität").font(.title2.bold())
+                Spacer()
+            }
+            Picker("", selection: $priority){
+                Text("Hoch").tag(3)
+                Text("Mittel").tag(2)
+                Text("Niedrig").tag(1)
+                Text("Keine").tag(0)
+            }
+            .pickerStyle(.inline)
+        }
+        .padding()
+    }
+}
+
 struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -22,10 +42,12 @@ struct DetailView: View {
     @State var deadline: Date
     @State var notification: Date
     @State var isMarked: Bool
+    @State var priority: Int
     
     //Toggles and Conditions for Animtaion
     @State var showDeadline = true
     @State var showNotification = true
+    @State var showPriorityPopover = false
     @State private var overDeleteButton = false
 
     //Coomunication between other views
@@ -60,7 +82,7 @@ struct DetailView: View {
                                         showDeadline.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "calendar.circle.fill", color: showDeadline ? Colors.primaryColor : .gray, size: 25)
+                                    IconImage(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -90,7 +112,7 @@ struct DetailView: View {
                                         showNotification.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "bell.circle.fill", color: showNotification ? Colors.primaryColor : .gray, size: 25)
+                                    IconImage(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
                                 })
                                     .buttonStyle(.plain)
                                 
@@ -118,10 +140,39 @@ struct DetailView: View {
                                 isMarked.toggle()
                             }
                         }, label: {
-                            IconImage(image: "star.circle.fill", color: isMarked ? Colors.primaryColor : .gray, size: 25)
+                            IconImage(image: "star.circle.fill", color: Colors.primaryColor, size: 25, isActivated: isMarked)
                         })
                             .buttonStyle(.plain)
                         Text("Markiert")
+                            .font(.body)
+                        Spacer()
+                    }
+                    
+                    //Priority
+                    HStack{
+                        Button(action: {
+                            withAnimation{
+                                showPriorityPopover.toggle()
+                            }
+                        }, label: {
+                            switch(priority){
+                            case 3:
+                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
+                            case 2:
+                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
+                                    .opacity(1.0/3.0*2)
+                            case 1:
+                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
+                                    .opacity(1.0/3.0)
+                            default:
+                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: false)
+                            }
+                        })
+                            .buttonStyle(.plain)
+                            .popover(isPresented: $showPriorityPopover){
+                                SelectPriorityPopover(priority: $priority)
+                            }
+                        Text("Priorität")
                             .font(.body)
                         Spacer()
                     }
@@ -143,7 +194,7 @@ struct DetailView: View {
                                 deleteToDo()
                                 dismissDetailView()
                             }, label: {
-                                IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25)
+                                IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
                             })
                                 .buttonStyle(.plain)
                                 .onHover{ over in
@@ -230,6 +281,16 @@ extension DetailView{
                 newToDo.notification = Dates.defaultDate
             }
             newToDo.isMarked = isMarked
+            switch(priority){
+            case 3:
+                newToDo.priority = 3
+            case 2:
+                newToDo.priority = 2
+            case 1:
+                newToDo.priority = 1
+            default:
+                newToDo.priority = 0
+            }
             newToDo.isDone = false
             do {
                 try viewContext.save()
@@ -260,8 +321,17 @@ extension DetailView{
             if !showNotification{
                 todo.notification = Dates.defaultDate
             }
-            
             todo.isMarked = isMarked
+            switch(priority){
+            case 3:
+                todo.priority = 3
+            case 2:
+                todo.priority = 2
+            case 1:
+                todo.priority = 1
+            default:
+                todo.priority = 0
+            }
             do {
                 try viewContext.save()
             } catch {

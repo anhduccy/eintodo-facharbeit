@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct SelectFilterView: View{
-    @Binding var filter: FilterToDo
+struct SelectFilterPopover: View{
+    @Binding var filter: FilterToDoType
     
     var body: some View{
         VStack{
@@ -18,9 +18,9 @@ struct SelectFilterView: View{
             }
             HStack{
                 Picker("", selection: $filter){
-                    Text("Fällig am ").tag(FilterToDo.deadline)
-                    Text("Erinnerung").tag(FilterToDo.notification)
-                    Text("Markiert").tag(FilterToDo.isMarked)
+                    Text("Fällig am ").tag(FilterToDoType.deadline)
+                    Text("Erinnerung").tag(FilterToDoType.notification)
+                    Text("Markiert").tag(FilterToDoType.isMarked)
                 }
                 .pickerStyle(.inline)
                 Spacer()
@@ -46,8 +46,8 @@ struct CalendarView: View {
     @State var navigateDate : Date = Date()
     
     @State var showDoneToDos: Bool = true
-    @State var showFilterSheet = false
-    @State var filter: FilterToDo
+    @State var showFilterPopover = false
+    @State var filter: FilterToDoType
 
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
@@ -92,12 +92,12 @@ struct CalendarView: View {
 
                         }
                         Button(action: {
-                            showFilterSheet.toggle()
+                            showFilterPopover.toggle()
                         }, label: {
                             ZStack{
                                 Circle().fill().foregroundColor(Colors.primaryColor).opacity(0.2)
                                     .frame(width: 24, height: 24, alignment: .center)
-                                if showFilterSheet {
+                                if showFilterPopover {
                                     Image(systemName: "line.3.horizontal.decrease.circle.fill")
                                         .resizable()
                                         .frame(width: 15, height: 15, alignment: .center)
@@ -111,8 +111,8 @@ struct CalendarView: View {
                             }
                         })
                             .buttonStyle(.plain)
-                            .popover(isPresented: $showFilterSheet){
-                                SelectFilterView(filter: $filter)
+                            .popover(isPresented: $showFilterPopover){
+                                SelectFilterPopover(filter: $filter)
                             }
                     }
                     

@@ -27,19 +27,19 @@ struct Colors {
     static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
 }
 
-//Enums - View tyoes
+//Enums - View types
 enum ListViewTypes {
     case dates
     case noDates
     case all
 }
-
 enum DetailViewTypes {
     case add
     case display
 }
 
-enum FilterToDo {
+//Enums - Filter types
+enum FilterToDoType {
     case deadline
     case notification
     case isMarked
