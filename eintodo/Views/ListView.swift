@@ -138,9 +138,9 @@ struct ListView: View {
                         updateToDo()
                         }, label: {
                         if(todo.isDone){
-                            SystemImage(image: "checkmark.square.fill", size: SystemImageSize, color: .white, isActivated: true)
+                            SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
                         } else {
-                            SystemImage(image: "square", size: SystemImageSize, color: .white, isActivated: true)
+                            SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
                         }
                     })
                         .frame(width: SystemImageSize, height: SystemImageSize)
@@ -155,10 +155,10 @@ struct ListView: View {
                         updateToDo()
                     }, label: {
                         if(todo.isMarked){
-                            SystemImage(image: "star.fill", size: 15, color: .yellow, isActivated: true)
+                            SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
                                 .padding(5)
                         } else {
-                            SystemImage(image: "star", size: 15, color: .white, isActivated: true)
+                            SystemImage(image: "star", color: .white, size: 15, isActivated: true)
                                 .padding(5)
                         }
                     })

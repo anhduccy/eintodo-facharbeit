@@ -159,11 +159,9 @@ struct DetailView: View {
                             case 3:
                                 IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
                             case 2:
-                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
-                                    .opacity(1.0/3.0*2)
+                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.75)
                             case 1:
-                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
-                                    .opacity(1.0/3.0)
+                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.5)
                             default:
                                 IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: false)
                             }

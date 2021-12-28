@@ -24,37 +24,48 @@ struct CalendarViewMonthButton: View {
     }
 }
 struct IconImage: View {
-    init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool){
+    init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
         self.image = image
         self.color = color
         self.size = size
         self.isActivated = isActivated
+        self.opacity = opacity
     }
     let image: String
     let color: Color
     let size: CGFloat
     let isActivated: Bool
+    let opacity: CGFloat
     var body: some View {
         ZStack{
             Circle()
                 .fill(.white)
                 .frame(width: size-1, height: size-1)
-            SystemImage(image: image, size: size, color: color, isActivated: isActivated)
+            SystemImage(image: image, color: color, size: size, isActivated: isActivated, opacity: opacity)
         }
     }
 }
 struct SystemImage: View{
     @Environment(\.colorScheme) public var colorScheme
     let image: String
-    let size: CGFloat
     let color: Color
+    let size: CGFloat
     let isActivated: Bool
+    let opacity: CGFloat
+    init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
+        self.image = image
+        self.color = color
+        self.size = size
+        self.isActivated = isActivated
+        self.opacity = opacity
+    }
     var body: some View {
         if(isActivated){
             Image(systemName: image)
                 .resizable()
                 .frame(width: size, height: size)
                 .foregroundColor(color)
+                .opacity(opacity)
         } else {
             Image(systemName: image)
                 .resizable()
@@ -114,7 +125,7 @@ struct SheetButton: View {
             })
                 .buttonStyle(.plain)
             if(todo.notes != ""){
-                SystemImage(image: "note.text", size: 15, color: .white, isActivated: true)
+                SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
             }
         }
         .sheet(isPresented: $isPresented) {
