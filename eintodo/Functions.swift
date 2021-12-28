@@ -20,7 +20,7 @@ func getInterval(from date: Date) -> Int {
     let interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
     return interval
 }
-
+ 
 //Formatters
 //Format Date into String
 public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String) -> String{

@@ -183,7 +183,7 @@ struct CalendarView: View {
                                                             Text("\(dayValue.day)")
                                                         }
                                                     }
-                                                }              
+                                                }
                                             }
                                             .frame(width: 30, height: 30, alignment: .center)
                                         }

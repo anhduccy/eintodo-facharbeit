@@ -204,39 +204,7 @@ struct DetailView: View {
                     notification = Date()
                 }
             }
-            
-            //Ask user for UserNotification permission
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
-                if success {
-                    print("UserNotification permission allowed")
-                } else if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        .onChange(of: title) { newValue in
-            switch(detailViewType){
-            case .display:
-                updateToDo()
-            case .add:
-                break
-            }
-        }
-        .onChange(of: notes) { newValue in
-            switch(detailViewType){
-            case .display:
-                updateToDo()
-            case .add:
-                break
-            }
-        }
-        .onChange(of: isMarked){ newValue in
-            switch(detailViewType){
-            case .display:
-                updateToDo()
-            case .add:
-                break
-            }
+            askForUserNotificationPermission()
         }
     }
 }
@@ -250,14 +218,14 @@ extension DetailView{
             newToDo.notes = notes
             if showDeadline{
                 newToDo.deadline = deadline
-                //addUserNotification(date: deadline, text: "Fällig am ")
+                addUserNotification(id: newToDo.id!, date: deadline, type: "deadline")
 
             } else {
                 newToDo.deadline = Dates.defaultDate
             }
             if showNotification {
                 newToDo.notification = notification
-                //addUserNotification(date: notification)
+                addUserNotification(id: newToDo.id!, date: notification, type: "notification")
             } else {
                 newToDo.notification = Dates.defaultDate
             }
@@ -278,14 +246,16 @@ extension DetailView{
             todo.notes = notes
             if showDeadline{
                 todo.deadline = deadline
-                //addUserNotification(date: deadline, text: "Fällig am ")
+                deleteUserNotification(identifier: todo.id!)
+                addUserNotification(id: todo.id!, date: todo.deadline!, type: "deadline")
             }
             if !showDeadline{
                 todo.deadline = Dates.defaultDate
             }
             if showNotification{
                 todo.notification = notification
-                //addUserNotification(date: notification)
+                deleteUserNotification(identifier: todo.id!)
+                addUserNotification(id: todo.id!, date: todo.notification!, type: "notification")
             }
             if !showNotification{
                 todo.notification = Dates.defaultDate
@@ -302,6 +272,7 @@ extension DetailView{
     }
     public func deleteToDo(){
         withAnimation {
+            deleteUserNotification(identifier: todo.id!)
             viewContext.delete(todo)
             do {
                 try viewContext.save()
@@ -315,19 +286,32 @@ extension DetailView{
         selectedDate = deadline
         isPresented.toggle()
     }
-    /*
-    public func addUserNotification(date: Date, text: String = ""){
+    
+    public func askForUserNotificationPermission(){
+        //Ask user for UserNotification permission
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
+            if success {
+            } else if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    public func addUserNotification(id: UUID, date: Date, type: String){
         let content = UNMutableNotificationContent()
         content.title = title
-        content.subtitle = text + DateInString(date: date)
+        content.subtitle = DateInString(date: date, type: type)
         content.sound = UNNotificationSound.default
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
-        
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        
-        UNUserNotificationCenter.current().add(request)
+        if(getInterval(from: date) > 0){
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
+            let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+            print("notification set for ", date, "\n")
+        }
     }
-     */
+    
+    public func deleteUserNotification(identifier: UUID){
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
+    }
 }
-

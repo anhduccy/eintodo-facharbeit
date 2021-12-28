@@ -42,7 +42,7 @@ struct ListView: View {
             }
         case .noDates:
             let defaultDate = Dates.defaultDate
-            _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], predicate: NSPredicate(format: "deadline == %@", defaultDate as CVarArg), animation: .default)
+            _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], predicate: NSPredicate(format: "deadline == %@ && notification == %@", defaultDate as CVarArg,  defaultDate as CVarArg), animation: .default)
         case .all:
             _todos = FetchRequest(sortDescriptors: [
                 NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
