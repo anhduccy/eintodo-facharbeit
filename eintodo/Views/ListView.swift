@@ -16,20 +16,59 @@ struct ListView: View {
     @Binding var lastSelectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(date: Date, bool: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDate: Binding<Date>, type: ListViewTypes = ListViewTypes.dates){
+    init(lastSelectedDate: Date, showDoneToDos: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDateBinding: Binding<Date>, type: ListViewTypes = ListViewTypes.dates){
         let calendar = Calendar.current
-        let dateFrom = calendar.startOfDay(for: date)
+        let dateFrom = calendar.startOfDay(for: lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
+        let defaultDate = Dates.defaultDate
+        let currentDate = Date()
         
         switch(type){
-        case .dates:
-            if(bool.wrappedValue == true){
+        case .dates: //To-Dos with deadline and/or notfication
+            if(showDoneToDos.wrappedValue == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                        predicate: NSPredicate(format: "(deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                    predicate: NSPredicate(format: "(deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                    animation: .default)
+            } else { //To-Dos with deadline and/or notfication and show done to-dos is false
+                _todos = FetchRequest(
+                    sortDescriptors: [
+                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                    predicate: NSPredicate(format: "(deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@) && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                    animation: .default)
+            }
+        
+        case .noDates: //To-Dos without deadline and notification
+            if(showDoneToDos.wrappedValue == true){
+                _todos = FetchRequest(
+                    sortDescriptors: [
+                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
+                    predicate: NSPredicate(format: "deadline == %@ && notification == %@",
+                                           defaultDate as CVarArg,  defaultDate as CVarArg),
+                    animation: .default)
+            } else { //To-Dos without deadline and notfication and show done to-dos is false
+                _todos = FetchRequest(
+                    sortDescriptors: [
+                        NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
+                    predicate: NSPredicate(format: "deadline == %@ && notification == %@ && isDone == false",
+                                           defaultDate as CVarArg, defaultDate as CVarArg),
+                    animation: .default)
+            }
+            
+        case .inPastAndNotDone: //All To-Dos in the past and which has not been done yet
+            if(showDoneToDos.wrappedValue == true){
+                _todos = FetchRequest(
+                    sortDescriptors: [
+                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                    predicate: NSPredicate(format: "deadline < %@ && deadline != %@", currentDate as CVarArg, defaultDate as CVarArg),
                     animation: .default)
             } else {
                 _todos = FetchRequest(
@@ -37,21 +76,26 @@ struct ListView: View {
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                        predicate: NSPredicate(format: "(deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@) && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                    predicate: NSPredicate(format: "deadline < %@ && deadline != %@ && isDone == false", currentDate as CVarArg, defaultDate as CVarArg),
                     animation: .default)
             }
-        case .noDates:
-            let defaultDate = Dates.defaultDate
-            _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], predicate: NSPredicate(format: "deadline == %@ && notification == %@", defaultDate as CVarArg,  defaultDate as CVarArg), animation: .default)
-        case .all:
-            _todos = FetchRequest(sortDescriptors: [
-                NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
+        case .all: //All To-Dos
+            if(showDoneToDos.wrappedValue == true){
+                _todos = FetchRequest(sortDescriptors: [
+                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
+            } else { //All To-Dos which has not been done yet
+                _todos = FetchRequest(sortDescriptors: [
+                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                                      predicate: NSPredicate(format: "isDone == false"), animation: .default)
+            }
         }
-        _showDoneToDos = bool
+        _showDoneToDos = showDoneToDos
         _selectedDate = selectedDate
-        _lastSelectedDate = lastSelectedDate
+        _lastSelectedDate = lastSelectedDateBinding
     }
     
     let SystemImageSize: CGFloat = 17.5
@@ -107,9 +151,9 @@ struct ListView: View {
                 .background(isDateInPast(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
                 .cornerRadius(8.5)
             }
-            .listStyle(InsetListStyle())
-            .frame(minWidth: 250)
         }
+        .listStyle(InsetListStyle())
+        .frame(minWidth: 375)
     }
 }
 

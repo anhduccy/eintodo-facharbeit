@@ -44,6 +44,7 @@ struct IconImage: View {
     }
 }
 struct SystemImage: View{
+    @Environment(\.colorScheme) public var colorScheme
     let image: String
     let size: CGFloat
     let color: Color
@@ -59,7 +60,7 @@ struct SystemImage: View{
                 .resizable()
                 .frame(width: size, height: size)
                 .foregroundColor(.gray)
-                .opacity(1.0/3.0)
+                .opacity(colorScheme == .dark ? 1 : 0.5)
         }
     }
 }

@@ -202,7 +202,6 @@ struct DetailView: View {
                                         overDeleteButton = over
                                     }
                                 }
-                            
                             Spacer()
                         case .add:
                             Spacer()

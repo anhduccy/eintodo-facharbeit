@@ -13,19 +13,28 @@ struct ContentView: View {
     @State var showSettings: Bool = false
     @State var selectedDate: Date = Date()
     @State var lastSelectedDate: Date = Dates.defaultDate
+    @State var showDoneToDos: Bool = false
 
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: CalendarView(selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, filter: .deadline)){
+                NavigationLink(destination: CalendarView(selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, showDoneToDos: $showDoneToDos, filter: .deadline)){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")
                     }
                     Spacer()
                 }
+                NavigationLink(destination: ToDoListsView(showDoneToDos: $showDoneToDos)){
+                    HStack{
+                        Image(systemName: "list.dash")
+                        Text("Alle Listen")
+                    }
+                    Spacer()
+                }
             }
             .listStyle(.sidebar)
+            .frame(minWidth: 210)
             .toolbar {
                 ToolbarItem {
                     Button(action:{
@@ -36,6 +45,7 @@ struct ContentView: View {
                         .sheet(isPresented: $showAddView){
                             DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Date(), notification: Date(), isMarked: false, priority: 0, isPresented: $showAddView, selectedDate: $selectedDate)
                         }
+                        .keyboardShortcut("n", modifiers: [.command])
                 }
                 
                 ToolbarItem{
@@ -60,9 +70,3 @@ private let itemFormatter: DateFormatter = {
     formatter.timeStyle = .medium
     return formatter
 }()
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-}

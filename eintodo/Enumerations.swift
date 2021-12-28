@@ -31,6 +31,7 @@ struct Colors {
 enum ListViewTypes {
     case dates
     case noDates
+    case inPastAndNotDone
     case all
 }
 enum DetailViewTypes {

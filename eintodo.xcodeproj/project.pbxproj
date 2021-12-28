@@ -18,6 +18,7 @@
 		794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 794855F5276690410086927E /* eintodo.xcdatamodeld */; };
 		794856032766996D0086927E /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856022766996D0086927E /* ListView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
+		7999DE71277B7E0D008557EB /* ToDoListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999DE70277B7E0D008557EB /* ToDoListsView.swift */; };
 		79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542C2771283B00E935D8 /* SettingsView.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
 		79F44343276F649200B558BF /* ViewLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F44342276F649200B558BF /* ViewLibrary.swift */; };
@@ -37,6 +38,7 @@
 		794855F8276690410086927E /* eintodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = eintodo.entitlements; sourceTree = "<group>"; };
 		794856022766996D0086927E /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		7999DE70277B7E0D008557EB /* ToDoListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListsView.swift; sourceTree = "<group>"; };
 		79AC542C2771283B00E935D8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		79F44342276F649200B558BF /* ViewLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLibrary.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			children = (
 				794855EC276690410086927E /* ContentView.swift */,
 				7948560E2766ABF30086927E /* CalendarView.swift */,
+				7999DE70277B7E0D008557EB /* ToDoListsView.swift */,
 				794856022766996D0086927E /* ListView.swift */,
 				7947DED527778C5A008C999A /* DetailView.swift */,
 				79AC542C2771283B00E935D8 /* SettingsView.swift */,
@@ -178,6 +181,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7948560F2766ABF30086927E /* CalendarView.swift in Sources */,
+				7999DE71277B7E0D008557EB /* ToDoListsView.swift in Sources */,
 				7947DED627778C5A008C999A /* DetailView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				79F44343276F649200B558BF /* ViewLibrary.swift in Sources */,

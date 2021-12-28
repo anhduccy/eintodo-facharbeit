@@ -45,7 +45,7 @@ struct CalendarView: View {
     @Binding var lastSelectedDate: Date
     @State var navigateDate : Date = Date()
     
-    @State var showDoneToDos: Bool = true
+    @Binding var showDoneToDos: Bool
     @State var showFilterPopover = false
     @State var filter: FilterToDoType
 
@@ -237,7 +237,7 @@ struct CalendarView: View {
                 
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(date: lastSelectedDate, bool: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: $lastSelectedDate, type: listViewType), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(lastSelectedDate: lastSelectedDate, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDateBinding: $lastSelectedDate, type: listViewType), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
