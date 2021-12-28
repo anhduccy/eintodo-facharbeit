@@ -126,31 +126,30 @@ struct CalendarView: View {
                             VStack{
                                 if(dayValue.day >= 0){
                                     ZStack{
-                                        switch(filter){
-                                        case .deadline, .notification:
-                                            //IF dayValue.date is the same day as selected date -> Circle blue
-                                            if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
-                                                Circle().fill(Color.blue)
-                                            } else {
-                                                //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
-                                                if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
-                                                    Circle().fill(Colors.primaryColor)
-                                                
-                                                //IF (there are todos at dayValue.date) AND (there are some which overpass the deadline) -> Circle red
-                                                } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
-                                                    Circle().fill(Color.red)
-                                                //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
-                                                } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
-                                                    Circle().fill(Colors.primaryColor).opacity(0.2)
+                                        //IF dayValue.date is the same day as selected date -> Circle blue
+                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
+                                            Circle().fill(Color.blue)
+                                        } else {
+                                            switch(filter){
+                                            case .deadline, .notification:
+                                                    //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
+                                                    if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
+                                                        Circle().fill(Colors.primaryColor)
+                                                    
+                                                    //IF (there are todos at dayValue.date) AND (there are some which overpass the deadline) -> Circle red
+                                                    } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
+                                                        Circle().fill(Color.red)
+                                                        
+                                                    //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
+                                                    } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
+                                                        Circle().fill(Colors.primaryColor).opacity(0.2)
+                                                    }
+                                            case .isMarked:
+                                                if(!isEmptyOnDate(date: dayValue.date)){
+                                                    Circle().fill(Color.yellow)
+                                                } else if(isJustDoneToDos(date: dayValue.date)){
+                                                    Circle().fill(Color.yellow).opacity(0.2)
                                                 }
-                                            }
-                                        case .isMarked:
-                                            if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
-                                                Circle().fill(Color.blue)
-                                            } else if(!isEmptyOnDate(date: dayValue.date)){
-                                                Circle().fill(Color.yellow)
-                                            } else if(isJustDoneToDos(date: dayValue.date)){
-                                                Circle().fill(Color.yellow).opacity(0.2)
                                             }
                                         }
                                         Button(action: {
@@ -159,19 +158,32 @@ struct CalendarView: View {
                                             self.listViewType = .dates
                                         }){
                                             ZStack{
-                                                Circle()
-                                                    .hidden()
                                                 //IF (dayValue.date is current date) AND (dayValue.date is not selected date) AND (there are none to-dos at dayValue.date), display the text blue
                                                 if(isToday(date: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
-                                                // ELSE IF (dayValue.date is selected date) AND (there are todos at dayValue.date), display the text white, because Circle is supported
-                                                } else if(isSameDay(date1: lastSelectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
-                                                    Text("\(dayValue.day)")
-                                                        .foregroundColor(Color.white)
                                                 } else {
-                                                    Text("\(dayValue.day)")
-                                                }
+                                                    switch(filter){
+                                                    case .deadline, .notification:
+                                                        // ELSE IF (dayValue.date is selected date) AND (there are todos at dayValue.date), display the text white, because Circle is supported
+                                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
+                                                            Text("\(dayValue.day)")
+                                                                .foregroundColor(Color.white)
+                                                        } else {
+                                                            Text("\(dayValue.day)")
+                                                        }
+                                                    case .isMarked:
+                                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
+                                                            Text("\(dayValue.day)")
+                                                            .foregroundColor(Color.white)
+                                                        } else if(!isEmptyOnDate(date: dayValue.date)){
+                                                            Text("\(dayValue.day)")
+                                                            .foregroundColor(Color.black)
+                                                        } else {
+                                                            Text("\(dayValue.day)")
+                                                        }
+                                                    }
+                                                }              
                                             }
                                             .frame(width: 30, height: 30, alignment: .center)
                                         }
