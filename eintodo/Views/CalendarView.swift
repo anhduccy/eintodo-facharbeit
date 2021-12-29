@@ -7,9 +7,23 @@
 
 import SwiftUI
 
+struct DateNavigatorPopover: View{
+    @Binding var navigateDate: Date
+    var body: some View{
+        VStack{
+            HStack{
+                Text("Navigiere zu").font(.title2.bold())
+                Spacer()
+            }
+            DatePicker("", selection: $navigateDate, displayedComponents: [.date])
+                .datePickerStyle(.field)
+        }
+        .padding()
+    }
+}
+
 struct SelectFilterPopover: View{
     @Binding var filter: FilterToDoType
-    
     var body: some View{
         VStack{
             HStack{
@@ -48,6 +62,7 @@ struct CalendarView: View {
     @Binding var showDoneToDos: Bool
     @State var showFilterPopover = false
     @State var filter: FilterToDoType
+    @State var showDateNavigatorPopover = false
 
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
@@ -64,13 +79,6 @@ struct CalendarView: View {
                             .font(.title2)
                         Text(getMonth())
                             .font(.title2.bold())
-                        DatePicker("", selection: $navigateDate, displayedComponents: [.date])
-                            .datePickerStyle(.field)
-                            .onChange(of: navigateDate){ newValue in
-                                lastSelectedDate = navigateDate
-                                selectedDate = navigateDate
-                                currentMonth = getMonthInterval(from: lastSelectedDate)
-                            }
                         Spacer()
                         HStack{
                             Button(action: {
@@ -92,22 +100,34 @@ struct CalendarView: View {
 
                         }
                         Button(action: {
+                            showDateNavigatorPopover.toggle()
+                        }, label: {
+                            ZStack{
+                                Circle().fill().foregroundColor(Colors.primaryColor).opacity(0.2)
+                                    .frame(width: 24, height: 24, alignment: .center)
+                                Image(systemName: "cursorarrow.rays")
+                                    .foregroundColor(Colors.primaryColor)
+                            }
+                        })
+                            .buttonStyle(.plain)
+                            .popover(isPresented: $showDateNavigatorPopover){
+                                DateNavigatorPopover(navigateDate: $navigateDate)
+                                    .onChange(of: navigateDate){ newValue in
+                                        lastSelectedDate = navigateDate
+                                        selectedDate = navigateDate
+                                        currentMonth = getMonthInterval(from: lastSelectedDate)
+                                    }
+                            }
+                        Button(action: {
                             showFilterPopover.toggle()
                         }, label: {
                             ZStack{
                                 Circle().fill().foregroundColor(Colors.primaryColor).opacity(0.2)
                                     .frame(width: 24, height: 24, alignment: .center)
-                                if showFilterPopover {
-                                    Image(systemName: "line.3.horizontal.decrease.circle.fill")
-                                        .resizable()
-                                        .frame(width: 15, height: 15, alignment: .center)
-                                        .foregroundColor(Colors.primaryColor)
-                                } else {
-                                    Image(systemName: "line.3.horizontal.decrease.circle")
-                                        .resizable()
-                                        .frame(width: 15, height: 15, alignment: .center)
-                                        .foregroundColor(Colors.primaryColor)
-                                }
+                                Image(systemName: showFilterPopover ? "line.3.horizontal.decrease.circle.fill" :  "line.3.horizontal.decrease.circle")
+                                    .resizable()
+                                    .frame(width: 15, height: 15, alignment: .center)
+                                    .foregroundColor(Colors.primaryColor)
                             }
                         })
                             .buttonStyle(.plain)
