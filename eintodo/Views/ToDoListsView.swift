@@ -7,92 +7,10 @@
 
 import SwiftUI
 
-struct ToDoListsViewMainButtonIcon: View{
-    let title: String
-    let imageName: String
-    let size: CGFloat
-    let foregroundColor: Color
-    let backgroundColor: Color
-    
-    init(title: String, imageName: String, size: CGFloat = 25, foregroundColor: Color = .white, backgroundColor: Color){
-        self.title = title
-        self.imageName = imageName
-        self.size = size
-        self.foregroundColor = foregroundColor
-        self.backgroundColor = backgroundColor
-    }
-    
-    var body: some View{
-        HStack{
-            Image(systemName: imageName)
-                .resizable()
-                .frame(width: size, height: size)
-                .foregroundColor(foregroundColor)
-            Text(title).font(.headline)
-                .foregroundColor(foregroundColor)
-            Spacer()
-        }
-        .padding(7.5)
-        .background(backgroundColor)
-        .cornerRadius(5)
-    }
-}
-
-struct ToDoListsCreateListView: View{
-    @Binding var showCreateListSheet: Bool
-    @State var title: String = "Liste"
-    @State var selectedColor: Color = .indigo
-    
-    let colors: [Color] = [.red, .pink, .yellow, .green, .blue, .indigo, .purple, .brown, .gray]
-    var body: some View{
-        ZStack{
-            VStack{
-                TextField("Titel", text: $title)
-                    .font(.title.bold())
-                    .textFieldStyle(.plain)
-                    .foregroundColor(selectedColor)
-                HStack{
-                    ForEach(colors, id: \.self){ color in
-                        Button(action: {
-                            withAnimation{
-                                selectedColor = color
-                            }
-                        }, label: {
-                            if(selectedColor == color){
-                                Circle().fill(color)
-                                    .frame(width: 45, height: 45)
-                            } else {
-                                Circle().fill(color)
-                            }
-
-                        })
-                            .buttonStyle(.plain)
-                    }
-                }
-                Spacer()
-                HStack{
-                    Button("Abbrechen"){
-                        
-                    }
-                    .buttonStyle(.plain)
-                    Spacer()
-                    Button(action: {
-                        withAnimation{
-                            showCreateListSheet.toggle()
-                        }
-                    }, label: {
-                        Text("Schließen")
-                    })
-                        .buttonStyle(.plain)
-                }
-            }
-            .padding()
-        }
-        .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
-    }
-}
-
 struct ToDoListsView: View {
+    @Environment(\.managedObjectContext) public var viewContext
+    @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
+    
     @State var selectedDate = Date()
     @State var lastSelectedDate = Date()
     @Binding var showDoneToDos: Bool
@@ -163,7 +81,13 @@ struct ToDoListsView: View {
                                 Spacer()
                             }
                             VStack{
-                                //ForEach Lists
+                                //ForEach
+                                ForEach(lists, id: \.self){ list in
+                                    Text(list.listTitle ?? "Error")
+                                }
+                            }
+                            Button("Alle löschen"){
+                                deleteAllToDoList()
                             }
                             VStack{
                                 Spacer()
@@ -207,6 +131,20 @@ struct ToDoListsView: View {
                     showDoneToDos.toggle()
                 }
             }
+        }
+    }
+}
+
+extension ToDoListsView{
+    public func deleteAllToDoList(){
+        for list in lists{
+            viewContext.delete(list)
+        }
+        do{
+            try viewContext.save()
+        }catch{
+            let nsError = error as NSError
+            fatalError("Could not delete all CoreData-Entities in ToDoListsView: \(nsError), \(nsError.userInfo)")
         }
     }
 }

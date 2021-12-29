@@ -29,6 +29,8 @@ struct SelectPriorityPopover: View{
 }
 
 struct DetailView: View {
+    @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
+
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
@@ -43,11 +45,13 @@ struct DetailView: View {
     @State var notification: Date
     @State var isMarked: Bool
     @State var priority: Int
+    @State var list: String
     
     //Toggles and Conditions for Animtaion
     @State var showDeadline = true
     @State var showNotification = true
     @State var showPriorityPopover = false
+    @State var showListPopover = false
     @State private var overDeleteButton = false
 
     //Coomunication between other views
@@ -175,6 +179,26 @@ struct DetailView: View {
                         Spacer()
                     }
                     
+                    //List
+                    HStack{
+                        Button(action: {
+                            withAnimation{
+                                showListPopover.toggle()
+                            }
+                        }, label: {
+                            IconImage(image: "list.bullet.circle.fill", size: 25, isActivated: true)
+                        })
+                            .buttonStyle(.plain)
+                        Picker("", selection: $list){
+                            ForEach(0..<lists.count){ list in
+                                Text(lists[list].listTitle ?? "Error") //PROBLEM HERE
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        Text("\(list)")
+                        Spacer()
+                    }
+                    
                     Spacer()
                     
                     
@@ -204,7 +228,7 @@ struct DetailView: View {
                         case .add:
                             Spacer()
                         }
-                        if(title != ""){
+                        if(title != "" && list != ""){
                             Button(action: {
                                 switch(detailViewType){
                                 case .display:
@@ -329,6 +353,7 @@ extension DetailView{
             default:
                 todo.priority = 0
             }
+            todo.list = list
             do {
                 try viewContext.save()
             } catch {

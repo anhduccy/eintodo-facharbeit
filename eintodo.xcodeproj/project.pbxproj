@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		79281B152776428200F32528 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79281B142776428200F32528 /* Extensions.swift */; };
+		7940F648277CCE2A001BA7EF /* ToDoListsCreateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7940F647277CCE2A001BA7EF /* ToDoListsCreateListView.swift */; };
 		7947DED627778C5A008C999A /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7947DED527778C5A008C999A /* DetailView.swift */; };
 		7947DED827778EA6008C999A /* Enumerations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7947DED727778EA6008C999A /* Enumerations.swift */; };
 		794855EB276690410086927E /* eintodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EA276690410086927E /* eintodoApp.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		79281B142776428200F32528 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		7940F647277CCE2A001BA7EF /* ToDoListsCreateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListsCreateListView.swift; sourceTree = "<group>"; };
 		7947DED527778C5A008C999A /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7947DED727778EA6008C999A /* Enumerations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enumerations.swift; sourceTree = "<group>"; };
 		794855E7276690410086927E /* eintodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eintodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +105,7 @@
 				794855EC276690410086927E /* ContentView.swift */,
 				7948560E2766ABF30086927E /* CalendarView.swift */,
 				7999DE70277B7E0D008557EB /* ToDoListsView.swift */,
+				7940F647277CCE2A001BA7EF /* ToDoListsCreateListView.swift */,
 				794856022766996D0086927E /* ListView.swift */,
 				7947DED527778C5A008C999A /* DetailView.swift */,
 				79AC542C2771283B00E935D8 /* SettingsView.swift */,
@@ -188,6 +191,7 @@
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
+				7940F648277CCE2A001BA7EF /* ToDoListsCreateListView.swift in Sources */,
 				79281B152776428200F32528 /* Extensions.swift in Sources */,
 				794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */,
 				79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */,

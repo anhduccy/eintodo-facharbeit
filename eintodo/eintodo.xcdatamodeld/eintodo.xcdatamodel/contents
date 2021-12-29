@@ -5,6 +5,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isMarked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="list" optional="YES" attributeType="String"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="notification" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -13,10 +14,11 @@
     <entity name="ToDoList" representedClassName="ToDoList" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
         <attribute name="listDescription" optional="YES" attributeType="String"/>
+        <attribute name="listID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="listTitle" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="ToDo" positionX="-63" positionY="-18" width="128" height="149"/>
-        <element name="ToDoList" positionX="-63" positionY="45" width="128" height="74"/>
+        <element name="ToDo" positionX="-62.1875" positionY="293.953125" width="128" height="178"/>
+        <element name="ToDoList" positionX="-63" positionY="45" width="128" height="103"/>
     </elements>
 </model>

@@ -23,6 +23,36 @@ struct CalendarViewMonthButton: View {
         .frame(width: size, height: size)
     }
 }
+struct ToDoListsViewMainButtonIcon: View{
+    let title: String
+    let imageName: String
+    let size: CGFloat
+    let foregroundColor: Color
+    let backgroundColor: Color
+    
+    init(title: String, imageName: String, size: CGFloat = 25, foregroundColor: Color = .white, backgroundColor: Color){
+        self.title = title
+        self.imageName = imageName
+        self.size = size
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+    }
+    
+    var body: some View{
+        HStack{
+            Image(systemName: imageName)
+                .resizable()
+                .frame(width: size, height: size)
+                .foregroundColor(foregroundColor)
+            Text(title).font(.headline)
+                .foregroundColor(foregroundColor)
+            Spacer()
+        }
+        .padding(7.5)
+        .background(backgroundColor)
+        .cornerRadius(5)
+    }
+}
 struct IconImage: View {
     init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
         self.image = image
@@ -129,7 +159,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), isPresented: $isPresented, selectedDate: $selectedDate)
+            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), list: todo.list ?? "Error", isPresented: $isPresented, selectedDate: $selectedDate)
         }
     }
 }
