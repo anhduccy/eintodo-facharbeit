@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="ToDo" representedClassName="ToDo" syncable="YES" codeGenerationType="class">
+    <entity name="ToDo" representedClassName="ToDo" parentEntity="ToDoList" syncable="YES" codeGenerationType="class">
         <attribute name="deadline" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -10,7 +10,13 @@
         <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="ToDoList" representedClassName="ToDoList" syncable="YES" codeGenerationType="class">
+        <attribute name="color" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="listDescription" optional="YES" attributeType="String"/>
+        <attribute name="listTitle" optional="YES" attributeType="String"/>
+    </entity>
     <elements>
         <element name="ToDo" positionX="-63" positionY="-18" width="128" height="149"/>
+        <element name="ToDoList" positionX="-63" positionY="45" width="128" height="74"/>
     </elements>
 </model>
