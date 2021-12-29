@@ -16,7 +16,7 @@ struct ListView: View {
     @Binding var lastSelectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(lastSelectedDate: Date, showDoneToDos: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDateBinding: Binding<Date>, type: ListViewTypes = ListViewTypes.dates){
+    init(lastSelectedDate: Date, showDoneToDos: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDateBinding: Binding<Date>, type: ListViewTypes = ListViewTypes.dates, list: String = ""){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
@@ -108,6 +108,19 @@ struct ListView: View {
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
                                       predicate: NSPredicate(format: "isDone == false"), animation: .default)
+            }
+        case .list:
+            if(showDoneToDos.wrappedValue == true){
+                _todos = FetchRequest(sortDescriptors: [
+                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], predicate: NSPredicate(format: "list == %@", list), animation: .default)
+            } else { //All To-Dos which has not been done yet
+                _todos = FetchRequest(sortDescriptors: [
+                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
+                                      predicate: NSPredicate(format: "list == %@ && isDone == false", list), animation: .default)
             }
         }
         _showDoneToDos = showDoneToDos

@@ -8,28 +8,8 @@
 import SwiftUI
 import UserNotifications
 
-struct SelectPriorityPopover: View{
-    @Binding var priority: Int
-    var body: some View{
-        VStack{
-            HStack{
-                Text("Priorität").font(.title2.bold())
-                Spacer()
-            }
-            Picker("", selection: $priority){
-                Text("Hoch").tag(3)
-                Text("Mittel").tag(2)
-                Text("Niedrig").tag(1)
-                Text("Keine").tag(0)
-            }
-            .pickerStyle(.inline)
-        }
-        .padding()
-    }
-}
-
 struct DetailView: View {
-    @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -47,11 +27,10 @@ struct DetailView: View {
     @State var priority: Int
     @State var list: String
     
-    //Toggles and Conditions for Animtaion
+    //Toggles and Conditions for Animation
     @State var showDeadline = true
     @State var showNotification = true
     @State var showPriorityPopover = false
-    @State var showListPopover = false
     @State private var overDeleteButton = false
 
     //Coomunication between other views
@@ -181,26 +160,12 @@ struct DetailView: View {
                     
                     //List
                     HStack{
-                        Button(action: {
-                            withAnimation{
-                                showListPopover.toggle()
-                            }
-                        }, label: {
-                            IconImage(image: "list.bullet.circle.fill", size: 25, isActivated: true)
-                        })
-                            .buttonStyle(.plain)
-                        Picker("", selection: $list){
-                            ForEach(0..<lists.count){ list in
-                                Text(lists[list].listTitle ?? "Error") //PROBLEM HERE
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        Text("\(list)")
+                        IconImage(image: "list.bullet.circle.fill", size: 25, isActivated: true)
+                        DetailViewListPicker(listsValueString: $list)
                         Spacer()
                     }
                     
                     Spacer()
-                    
                     
                     //Group - Submit button
                     HStack{
@@ -282,6 +247,7 @@ struct DetailView: View {
 }
 
 extension DetailView{
+    //CORE-DATA - Add, update and delete ToDo
     public func addToDo() {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
@@ -312,6 +278,7 @@ extension DetailView{
             default:
                 newToDo.priority = 0
             }
+            newToDo.list = list
             newToDo.isDone = false
             do {
                 try viewContext.save()
@@ -321,11 +288,12 @@ extension DetailView{
             }
         }
     }
-    
     public func updateToDo() {
         withAnimation {
+            //Text
             todo.title = title
             todo.notes = notes
+            //Deadline
             if showDeadline{
                 todo.deadline = deadline
                 deleteUserNotification(identifier: todo.id!)
@@ -334,6 +302,7 @@ extension DetailView{
             if !showDeadline{
                 todo.deadline = Dates.defaultDate
             }
+            //Notification
             if showNotification{
                 todo.notification = notification
                 deleteUserNotification(identifier: todo.id!)
@@ -342,7 +311,9 @@ extension DetailView{
             if !showNotification{
                 todo.notification = Dates.defaultDate
             }
+            //IsMarked
             todo.isMarked = isMarked
+            //Priorities
             switch(priority){
             case 3:
                 todo.priority = 3
@@ -353,7 +324,9 @@ extension DetailView{
             default:
                 todo.priority = 0
             }
+            //Lists
             todo.list = list
+            //Store in CoreData
             do {
                 try viewContext.save()
             } catch {
@@ -374,11 +347,14 @@ extension DetailView{
             }
         }
     }
+    
+    //DISMISSING DetailView
     public func dismissDetailView(){
         selectedDate = deadline
         isPresented.toggle()
     }
     
+    //USERNOTIFICATION - Ask for permisson, add and delete notification of ToDo.deadline and ToDo.notification
     public func askForUserNotificationPermission(){
         //Ask user for UserNotification permission
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
@@ -388,7 +364,6 @@ extension DetailView{
             }
         }
     }
-    
     public func addUserNotification(id: UUID, date: Date, type: String){
         let content = UNMutableNotificationContent()
         content.title = title
@@ -402,8 +377,59 @@ extension DetailView{
             print("notification set for ", date, "\n")
         }
     }
-    
     public func deleteUserNotification(identifier: UUID){
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
+    }
+}
+
+//Popover to select priority
+struct SelectPriorityPopover: View{
+    @Binding var priority: Int
+    var body: some View{
+        VStack{
+            HStack{
+                Text("Priorität").font(.title2.bold())
+                Spacer()
+            }
+            Picker("", selection: $priority){
+                Text("Hoch").tag(3)
+                Text("Mittel").tag(2)
+                Text("Niedrig").tag(1)
+                Text("Keine").tag(0)
+            }
+            .pickerStyle(.inline)
+        }
+        .padding()
+    }
+}
+
+//ListPicker
+struct DetailViewListPicker: View{
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
+    @Binding var listsValueString: String
+    @State private var listType: Int = 0
+    var body: some View {
+       let binding = Binding<Int>(
+           get: { self.listType },
+           set: {
+               self.listType = $0
+               self.listsValueString = self.lists[self.listType].listTitle!
+           })
+       return Picker(selection: binding, label: Text("")) {
+           ForEach(lists.indices) { list in
+               Text(lists[list].listTitle!).tag(list)
+
+           }
+       }
+       .pickerStyle(.menu)
+       .onAppear{ //Check in which list, ToDo was before
+            var counter = 0
+            for list in lists{
+                if(list.listTitle == listsValueString){
+                    listType = counter
+                }
+                counter += 1
+            }
+        }
     }
 }

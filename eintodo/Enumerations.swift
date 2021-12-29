@@ -33,6 +33,7 @@ enum ListViewTypes {
     case noDates
     case inPastAndNotDone
     case marked
+    case list
     case all
 }
 enum DetailViewTypes {

@@ -9,6 +9,9 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) public var viewContext
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
+
     @State var showAddView: Bool = false
     @State var showSettings: Bool = false
     @State var selectedDate: Date = Date()
@@ -43,7 +46,7 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     })
                         .sheet(isPresented: $showAddView){
-                            DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Date(), notification: Date(), isMarked: false, priority: 0, list: "", isPresented: $showAddView, selectedDate: $selectedDate)
+                            DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Date(), notification: Date(), isMarked: false, priority: 0, list: lists[0].listTitle! , isPresented: $showAddView, selectedDate: $selectedDate)
                         }
                         .keyboardShortcut("n", modifiers: [.command])
                 }
@@ -60,7 +63,20 @@ struct ContentView: View {
                 }
             }
         }
-
+        .onAppear{
+            if lists.isEmpty{
+                let newToDoList = ToDoList(context: viewContext)
+                newToDoList.listID = UUID()
+                newToDoList.listTitle = "Neue Liste"
+                newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
+                do{
+                    try viewContext.save()
+                }catch{
+                    let nsError = error as NSError
+                    fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
+                }
+            }
+        }
     }
 }
 

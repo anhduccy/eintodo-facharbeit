@@ -15,7 +15,8 @@ struct ToDoListsCreateListView: View{
     @State var description: String = ""
     @State var selectedColor: Color = .indigo
     
-    let colors: [Color] = [.red, .pink, .yellow, .green, .blue, .indigo, .purple, .brown, .gray]
+    let colors: [Color] = [.pink, .red, .yellow, .green, .blue, .indigo, .purple, .brown, .gray]
+    let symbols: [String] = ["list.bullet", ]
     var body: some View{
         ZStack{
             VStack{
@@ -23,44 +24,57 @@ struct ToDoListsCreateListView: View{
                     .font(.title.bold())
                     .textFieldStyle(.plain)
                     .foregroundColor(selectedColor)
-                HStack{
-                    ForEach(colors, id: \.self){ color in
-                        Button(action: {
-                            withAnimation{
-                                selectedColor = color
+                Circle().fill(selectedColor).frame(width: 75, height: 75)
+                ScrollView{
+                    VStack(spacing: 0){
+                        HStack{
+                            Text("Farbe").font(.headline.bold())
+                            Spacer()
+                        }
+                        HStack{
+                            ForEach(colors, id: \.self){ color in
+                                Button(action: {
+                                    withAnimation{selectedColor = color}
+                                }, label: {
+                                    if(selectedColor == color){
+                                        Circle().fill(color).frame(width: 45, height: 45)
+                                    } else {
+                                        Circle().fill(color)
+                                    }
+                                }).buttonStyle(.plain)
                             }
-                        }, label: {
-                            if(selectedColor == color){
-                                Circle().fill(color)
-                                    .frame(width: 45, height: 45)
-                            } else {
-                                Circle().fill(color)
+                        }
+                    }
+                    VStack{
+                        HStack{
+                            Text("Symbole").font(.headline.bold())
+                            Spacer()
+                        }
+                        HStack{
+                            ForEach(symbols, id: \.self){ symbol in
+                                ZStack{
+                                    Circle().foregroundColor(.gray)
+                                        .frame(width: 25, height: 25, alignment: .center)
+                                    Image(systemName: symbol)
+                                }
                             }
-
-                        })
-                            .buttonStyle(.plain)
+                        }
                     }
                 }
                 Spacer()
                 HStack{
                     Button("Abbrechen"){
-                        withAnimation{
-                            showCreateListSheet.toggle()
-                        }
-                    }
-                    .buttonStyle(.plain)
+                        withAnimation{showCreateListSheet.toggle()}
+                    }.buttonStyle(.plain)
                     Spacer()
                     Button(action: {
                         if(title != ""){
                             addToDoList()
                         }
-                        withAnimation{
-                            showCreateListSheet.toggle()
-                        }
+                        withAnimation{showCreateListSheet.toggle()}
                     }, label: {
                         Text("Fertig")
-                    })
-                        .buttonStyle(.plain)
+                    }).buttonStyle(.plain)
                 }
             }
             .padding()

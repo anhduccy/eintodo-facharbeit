@@ -159,7 +159,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), list: todo.list ?? "Error", isPresented: $isPresented, selectedDate: $selectedDate)
+            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), list: todo.list!, isPresented: $isPresented, selectedDate: $selectedDate)
         }
     }
 }
