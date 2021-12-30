@@ -8,6 +8,19 @@
 import Foundation
 import SwiftUI
 
+class UserSelected: ObservableObject{
+    @Published var selectedDate: Date
+    @Published var lastSelectedDate: Date
+    @Published var selectedToDoList: String
+
+    init(selectedDate: Date, lastSelectedDate: Date, toDoList: String){
+        self.selectedDate = selectedDate
+        self.lastSelectedDate = lastSelectedDate
+        self.selectedToDoList = toDoList
+        
+    }
+}
+
 //Structs - Global variables
 struct Dates {
     static let defaultDate = Date(timeIntervalSince1970: 0)

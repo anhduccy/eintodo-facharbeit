@@ -108,17 +108,15 @@ struct SystemImage: View{
 
 //Buttons
 struct SheetButton: View {
+    @EnvironmentObject public var userSelected: UserSelected
+    
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false
-    
-    //Communications between Views
-    @Binding var selectedDate: Date
-    
+        
     let text_color: Color = .white
 
-    init(_ todo: ToDo, selectedDate: Binding<Date>) {
+    init(_ todo: ToDo) {
         self.todo = todo
-        _selectedDate = selectedDate
     }
 
     var body: some View {
@@ -161,7 +159,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), list: todo.list!, isPresented: $isPresented, selectedDate: $selectedDate)
+            DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), list: todo.list!, isPresented: $isPresented)
         }
     }
 }

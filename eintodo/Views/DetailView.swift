@@ -14,7 +14,8 @@ struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
-    
+    @EnvironmentObject public var userSelected: UserSelected
+
     let detailViewType: DetailViewTypes
 
     //Values for ToDo
@@ -35,7 +36,6 @@ struct DetailView: View {
 
     //Coomunication between other views
     @Binding var isPresented: Bool
-    @Binding var selectedDate: Date
     
     var body: some View {
         ZStack{
@@ -229,8 +229,8 @@ struct DetailView: View {
         .onAppear{
             switch(detailViewType){
             case .add:
-                deadline = selectedDate
-                notification = selectedDate
+                deadline = userSelected.selectedDate
+                notification = userSelected.selectedDate
             case .display:
                 if deadline == Dates.defaultDate{
                     showDeadline = false
@@ -350,7 +350,7 @@ extension DetailView{
     
     //DISMISSING DetailView
     public func dismissDetailView(){
-        selectedDate = deadline
+        userSelected.selectedDate = deadline
         isPresented.toggle()
     }
     

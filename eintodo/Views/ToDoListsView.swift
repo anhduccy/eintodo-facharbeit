@@ -9,10 +9,8 @@ import SwiftUI
 
 struct ToDoListsView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @EnvironmentObject public var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
-    
-    @State var selectedDate = Date()
-    @State var lastSelectedDate = Date()
     @Binding var showDoneToDos: Bool
     
     @State var listViewType: ListViewTypes = .dates
@@ -32,8 +30,8 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             selectedList = "/ComputerGeneratedListToday/"
-                                            lastSelectedDate = Date()
-                                            selectedDate = Date()
+                                            userSelected.lastSelectedDate = Date()
+                                            userSelected.selectedDate = Date()
                                             listViewType = .dates
                                             self.listViewIsActive = true
                                         }
@@ -58,8 +56,8 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             selectedList = "/ComputerGeneratedListAll/"
-                                            lastSelectedDate = Date()
-                                            selectedDate = Date()
+                                            userSelected.lastSelectedDate = Date()
+                                            userSelected.selectedDate = Date()
                                             listViewType = .all
                                             self.listViewIsActive = true
                                         }
@@ -71,8 +69,8 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             selectedList = "/ComputerGeneratedListMarked/"
-                                            lastSelectedDate = Date()
-                                            selectedDate = Date()
+                                            userSelected.lastSelectedDate = Date()
+                                            userSelected.selectedDate = Date()
                                             listViewType = .marked
                                             self.listViewIsActive = true
                                         }
@@ -155,7 +153,7 @@ struct ToDoListsView: View {
                 }
                 
                 VStack{
-                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: lastSelectedDate, lastSelectedDateBinding: $lastSelectedDate, list: selectedList), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, list: selectedList, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 275)

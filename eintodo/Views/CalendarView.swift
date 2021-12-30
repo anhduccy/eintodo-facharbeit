@@ -46,6 +46,7 @@ struct SelectFilterPopover: View{
 
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @EnvironmentObject public var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], animation: .default)
     public var todos: FetchedResults<ToDo>
     
@@ -55,8 +56,6 @@ struct CalendarView: View {
     
     //Date attributes
     @State var currentMonth: Int = 0
-    @Binding var selectedDate: Date
-    @Binding var lastSelectedDate: Date
     @State var navigateDate : Date = Date()
     
     @Binding var showDoneToDos: Bool
@@ -83,16 +82,16 @@ struct CalendarView: View {
                         HStack{
                             Button(action: {
                                 currentMonth -= 1
-                                selectedDate = getCurrentMonth(date: selectedDate)
-                                lastSelectedDate = getCurrentMonth(date: lastSelectedDate)
+                                userSelected.selectedDate = getCurrentMonth(date: userSelected.selectedDate)
+                                userSelected.lastSelectedDate = getCurrentMonth(date: userSelected.lastSelectedDate)
                             }){
                                 CalendarViewMonthButton(name: "chevron.backward", color: Colors.primaryColor)
                             }
                             .buttonStyle(.plain)
                             Button(action: {
                                 currentMonth += 1
-                                lastSelectedDate = getCurrentMonth(date: lastSelectedDate)
-                                selectedDate = getCurrentMonth(date: selectedDate)
+                                userSelected.lastSelectedDate = getCurrentMonth(date: userSelected.lastSelectedDate)
+                                userSelected.selectedDate = getCurrentMonth(date: userSelected.selectedDate)
                             }){
                                 CalendarViewMonthButton(name: "chevron.forward", color: Colors.primaryColor)
                             }
@@ -113,9 +112,9 @@ struct CalendarView: View {
                             .popover(isPresented: $showDateNavigatorPopover){
                                 DateNavigatorPopover(navigateDate: $navigateDate)
                                     .onChange(of: navigateDate){ newValue in
-                                        lastSelectedDate = navigateDate
-                                        selectedDate = navigateDate
-                                        currentMonth = getMonthInterval(from: lastSelectedDate)
+                                        userSelected.lastSelectedDate = navigateDate
+                                        userSelected.selectedDate = navigateDate
+                                        currentMonth = getMonthInterval(from: userSelected.lastSelectedDate)
                                     }
                             }
                         Button(action: {
@@ -147,7 +146,7 @@ struct CalendarView: View {
                                 if(dayValue.day >= 0){
                                     ZStack{
                                         //IF dayValue.date is the same day as selected date -> Circle blue
-                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
+                                        if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date)){
                                             Circle().fill(Color.blue)
                                         } else {
                                             switch(filter){
@@ -173,27 +172,27 @@ struct CalendarView: View {
                                             }
                                         }
                                         Button(action: {
-                                            selectedDate = dayValue.date
-                                            lastSelectedDate = selectedDate
+                                            userSelected.selectedDate = dayValue.date
+                                            userSelected.lastSelectedDate = userSelected.selectedDate
                                             self.listViewType = .dates
                                         }){
                                             ZStack{
                                                 //IF (dayValue.date is current date) AND (dayValue.date is not selected date) AND (there are none to-dos at dayValue.date), display the text blue
-                                                if(isToday(date: dayValue.date) && !isSameDay(date1: selectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
+                                                if(isToday(date: dayValue.date) && !isSameDay(date1: userSelected.selectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
                                                 } else {
                                                     switch(filter){
                                                     case .deadline, .notification:
                                                         // ELSE IF (dayValue.date is selected date) AND (there are todos at dayValue.date), display the text white, because Circle is supported
-                                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
+                                                        if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
                                                             Text("\(dayValue.day)")
                                                                 .foregroundColor(Color.white)
                                                         } else {
                                                             Text("\(dayValue.day)")
                                                         }
                                                     case .isMarked:
-                                                        if(isSameDay(date1: lastSelectedDate, date2: dayValue.date)){
+                                                        if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date)){
                                                             Text("\(dayValue.day)")
                                                             .foregroundColor(Color.white)
                                                         } else if(!isEmptyOnDate(date: dayValue.date)){
@@ -214,31 +213,18 @@ struct CalendarView: View {
                                 }
                             }
                             .onChange(of: filter){ newValue in
-                                let dateFrom = Calendar.current.startOfDay(for: dayValue.date)
-                                let dateTo = Calendar.current.date(byAdding: .minute, value: 1439, to: dateFrom)
-                                
-                                switch(filter){
-                                case .deadline:
-                                    let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
-                                    todos.nsPredicate = predicate
-                                case .notification:
-                                    let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
-                                    todos.nsPredicate = predicate
-                                case .isMarked:
-                                    let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
-                                    todos.nsPredicate = predicate
-                                }
+                                predicateList(date: dayValue.date)
                             }
                         }
                     }
                     .onAppear{
-                        selectedDate = Date()
-                        lastSelectedDate = Date()
+                        userSelected.selectedDate = Date()
+                        userSelected.lastSelectedDate = Date()
                     }
                     Spacer()
                     HStack{
                         Button("Erinnerungen ohne Datum"){
-                            selectedDate = Dates.defaultDate
+                            userSelected.selectedDate = Dates.defaultDate
                             self.listViewType = .noDates
                         }
                         .foregroundColor(Colors.primaryColor)
@@ -246,8 +232,8 @@ struct CalendarView: View {
                         Spacer()
                         Button("Heute"){
                             navigateDate = Date()
-                            lastSelectedDate = Date()
-                            selectedDate = lastSelectedDate
+                            userSelected.lastSelectedDate = Date()
+                            userSelected.selectedDate = userSelected.lastSelectedDate
                             currentMonth = 0
                         }
                             .buttonStyle(.plain)
@@ -257,7 +243,9 @@ struct CalendarView: View {
                 
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: lastSelectedDate, lastSelectedDateBinding: $lastSelectedDate), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination:
+                                    ListView(type: listViewType, showDoneToDos: $showDoneToDos, list: "", userSelected: userSelected), isActive: $listViewIsActive)
+                    { EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
@@ -284,7 +272,7 @@ extension CalendarView{
     func getYear() -> String{
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY"
-        let year = formatter.string(from: lastSelectedDate)
+        let year = formatter.string(from: userSelected.lastSelectedDate)
         return year
     }
     
@@ -292,7 +280,7 @@ extension CalendarView{
     func getMonth() -> String{
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"
-        let month = formatter.string(from: lastSelectedDate)
+        let month = formatter.string(from: userSelected.lastSelectedDate)
         return month
     }
     
@@ -385,6 +373,23 @@ extension CalendarView{
             }
         } else {
             return false
+        }
+    }
+    
+    func predicateList(date: Date){
+        let dateFrom = Calendar.current.startOfDay(for: date)
+        let dateTo = Calendar.current.date(byAdding: .minute, value: 1439, to: dateFrom)
+        
+        switch(filter){
+        case .deadline:
+            let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
+            todos.nsPredicate = predicate
+        case .notification:
+            let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
+            todos.nsPredicate = predicate
+        case .isMarked:
+            let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
+            todos.nsPredicate = predicate
         }
     }
 }

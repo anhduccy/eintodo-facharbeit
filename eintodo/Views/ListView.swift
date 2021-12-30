@@ -10,16 +10,17 @@ import Foundation
 
 struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var todos: FetchedResults<ToDo>
     
     //Communication between views
-    @Binding var selectedDate: Date
-    @Binding var lastSelectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDate: Date = Date(), lastSelectedDateBinding: Binding<Date>, list: String = ""){
+    init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, list: String = "", userSelected: UserSelected){
+        
+
         let calendar = Calendar.current
-        let dateFrom = calendar.startOfDay(for: lastSelectedDate)
+        let dateFrom = calendar.startOfDay(for: userSelected.lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let defaultDate = Dates.defaultDate
         let currentDate = Date()
@@ -125,8 +126,6 @@ struct ListView: View {
             }
         }
         _showDoneToDos = showDoneToDos
-        _selectedDate = selectedDate
-        _lastSelectedDate = lastSelectedDateBinding
     }
     
     let SystemImageSize: CGFloat = 17.5
@@ -162,7 +161,7 @@ struct ListView: View {
                         .padding(.leading, 5)
                     
                     //Labelling
-                    SheetButton(todo, selectedDate: $selectedDate)
+                    SheetButton(todo)
                     Spacer()
                     Button(action: {
                         todo.isMarked.toggle()
