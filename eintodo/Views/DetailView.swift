@@ -20,12 +20,12 @@ struct DetailView: View {
 
     //Values for ToDo
     @State var todo: ToDo
-    @State var title: String
-    @State var notes: String
-    @State var deadline: Date
-    @State var notification: Date
-    @State var isMarked: Bool
-    @State var priority: Int
+    @State var title: String = ""
+    @State var notes: String = ""
+    @State var deadline: Date = Date()
+    @State var notification: Date = Date()
+    @State var isMarked: Bool = false
+    @State var priority: Int = 0
     @State var list: String
     
     //Toggles and Conditions for Animation
@@ -231,15 +231,23 @@ struct DetailView: View {
             case .add:
                 deadline = userSelected.selectedDate
                 notification = userSelected.selectedDate
-            case .display:
+            case .display: //Value assignment of CoreData storage, if type is display
+                title = todo.title ?? "Error"
+                notes = todo.notes ?? "Error"
+                deadline = todo.deadline ?? Dates.defaultDate
                 if deadline == Dates.defaultDate{
                     showDeadline = false
                     deadline = Date()
                 }
+                notification = todo.notification ?? Dates.defaultDate
                 if notification == Dates.defaultDate{
                     showNotification = false
                     notification = Date()
+                } else {
+                    notification = todo.notification!
                 }
+                isMarked = todo.isMarked
+                priority = Int(todo.priority)
             }
             askForUserNotificationPermission()
         }
@@ -382,6 +390,8 @@ extension DetailView{
     }
 }
 
+
+//VIEWS
 //Popover to select priority
 struct SelectPriorityPopover: View{
     @Binding var priority: Int
@@ -418,7 +428,6 @@ struct DetailViewListPicker: View{
        return Picker(selection: binding, label: Text("")) {
            ForEach(lists.indices) { list in
                Text(lists[list].listTitle!).tag(list)
-
            }
        }
        .pickerStyle(.menu)

@@ -47,7 +47,7 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     })
                         .sheet(isPresented: $showAddView){
-                            DetailView(detailViewType: .add, todo: ToDo(), title: "", notes: "", deadline: Date(), notification: Date(), isMarked: false, priority: 0, list: lists[0].listTitle! , isPresented: $showAddView)
+                            DetailView(detailViewType: .add, todo: ToDo(), list: lists[0].listTitle! , isPresented: $showAddView)
                         }
                         .keyboardShortcut("n", modifiers: [.command])
                 }
