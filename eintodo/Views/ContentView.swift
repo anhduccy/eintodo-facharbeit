@@ -32,7 +32,7 @@ struct ContentView: View {
                 NavigationLink(destination: ToDoListsView(showDoneToDos: $showDoneToDos)){
                     HStack{
                         Image(systemName: "list.dash")
-                        Text("Alle Listen")
+                        Text("Listen")
                     }
                     Spacer()
                 }

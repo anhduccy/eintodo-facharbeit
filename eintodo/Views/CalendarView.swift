@@ -223,6 +223,9 @@ struct CalendarView: View {
                         userSelected.selectedDate = Date()
                         userSelected.lastSelectedDate = Date()
                     }
+                    .onChange(of: userSelected.lastSelectedDate){ newValue in
+                        navigateDate = userSelected.lastSelectedDate
+                    }
                     Spacer()
                     HStack{
                         Button("Erinnerungen ohne Datum"){
