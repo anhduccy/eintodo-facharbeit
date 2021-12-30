@@ -20,6 +20,22 @@ func getInterval(from date: Date) -> Int {
     let interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
     return interval
 }
+
+//Return a color from a string
+public func getColorFromString(string: String)->Color{
+    switch(string){
+        case "red": return Color.red
+        case "pink": return Color.pink
+        case "yellow": return Color.yellow
+        case "green": return Color.green
+        case "blue": return Color.blue
+        case "indigo": return Color.indigo
+        case "purple": return Color.purple
+        case "brown": return Color.brown
+        case "gray": return Color.gray
+        default: return Color.indigo
+    }
+}
  
 //Formatters
 //Format Date into String

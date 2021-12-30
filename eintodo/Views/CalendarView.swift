@@ -257,7 +257,7 @@ struct CalendarView: View {
                 
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(lastSelectedDate: lastSelectedDate, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDateBinding: $lastSelectedDate, type: listViewType), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: lastSelectedDate, lastSelectedDateBinding: $lastSelectedDate), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)

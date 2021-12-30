@@ -17,7 +17,7 @@ struct ToDoListsView: View {
     
     @State var listViewType: ListViewTypes = .dates
     @State var listViewIsActive: Bool = false
-    @State var showCreateListSheet: Bool = false
+    @State var showToDoListsDetailView: Bool = false
     @State var selectedList: String = ""
 
     var body: some View {
@@ -31,6 +31,7 @@ struct ToDoListsView: View {
                                     //Today
                                     Button(action: {
                                         withAnimation{
+                                            selectedList = "/ComputerGeneratedListToday/"
                                             lastSelectedDate = Date()
                                             selectedDate = Date()
                                             listViewType = .dates
@@ -43,6 +44,7 @@ struct ToDoListsView: View {
                                     //In Past and not done
                                     Button(action: {
                                         withAnimation{
+                                            selectedList = "/ComputerGeneratedListInPastAndNotDone/"
                                             listViewType = .inPastAndNotDone
                                             self.listViewIsActive = true
                                         }
@@ -55,6 +57,7 @@ struct ToDoListsView: View {
                                     //All To-Dos
                                     Button(action: {
                                         withAnimation{
+                                            selectedList = "/ComputerGeneratedListAll/"
                                             lastSelectedDate = Date()
                                             selectedDate = Date()
                                             listViewType = .all
@@ -64,9 +67,10 @@ struct ToDoListsView: View {
                                         ToDoListsViewMainButtonIcon(title: "Alle", imageName: "tray.circle.fill", backgroundColor: .gray)
                                     }).buttonStyle(.plain)
                                     
-                                    //All To-Dos
+                                    //Marked
                                     Button(action: {
                                         withAnimation{
+                                            selectedList = "/ComputerGeneratedListMarked/"
                                             lastSelectedDate = Date()
                                             selectedDate = Date()
                                             listViewType = .marked
@@ -89,29 +93,36 @@ struct ToDoListsView: View {
                                 VStack(spacing: 0){
                                     ForEach(lists, id: \.self){ list in
                                         HStack{
-                                            Image(systemName: "list.bullet.circle.fill")
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
+                                            //ListRowItem
                                             Button(action: {
-                                                selectedList = list.listTitle!
-                                                self.listViewType = .list
-                                                self.listViewIsActive = true
+                                                withAnimation{
+                                                    selectedList = list.listTitle!
+                                                    self.listViewType = .list
+                                                    self.listViewIsActive = true
+                                                }
                                             }, label: {
+                                                ZStack{
+                                                    Circle().fill(getColorFromString(string: list.color ?? "indigo"))
+                                                        .frame(width: 25, height: 25)
+                                                    Image(systemName: list.symbol ?? "list.bullet")
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 12.5, height: 12.5)
+                                                        .foregroundColor(.white)
+                                                }
                                                 Text(list.listTitle!).font(.body)
+                                                    .foregroundColor(selectedList == list.listTitle! ? .white : .primary)
+                                                Spacer()
                                             }).buttonStyle(.plain)
-                                            Spacer()
-                                            Button(action: {
-                                                
-                                            }, label: {
-                                                Image(systemName: "info.circle")
-                                                    .foregroundColor(selectedList == list.listTitle! ? .white : Colors.primaryColor)
-                                            }).buttonStyle(.plain)
+                                            
+                                            //Info button
+                                            SheetButtonToDoList(list: list, selectedList: $selectedList)
                                         }
                                         .padding(.top, 6.5)
                                         .padding(.bottom, 6.5)
                                         .padding(.leading, 5)
                                         .padding(.trailing, 5)
-                                        .background(selectedList == list.listTitle! ? .indigo : .clear)
+                                        .background(selectedList == list.listTitle! ? .blue : .clear)
                                         .cornerRadius(5)
                                     }
                                 }
@@ -121,7 +132,7 @@ struct ToDoListsView: View {
                     Spacer()
                     HStack{
                         Button(action: {
-                            showCreateListSheet.toggle()
+                            showToDoListsDetailView.toggle()
                         }, label: {
                             HStack{
                                 Image(systemName: "plus.circle.fill")
@@ -133,8 +144,8 @@ struct ToDoListsView: View {
                             }
                         })
                             .buttonStyle(.plain)
-                            .sheet(isPresented: $showCreateListSheet){
-                                ToDoListsCreateListView(showCreateListSheet: $showCreateListSheet)
+                            .sheet(isPresented: $showToDoListsDetailView){
+                                ToDoListDetailView(type: .add, isPresented: $showToDoListsDetailView, toDoList: ToDoList())
                             }
                     }
                     .padding(.leading, 10)
@@ -144,7 +155,7 @@ struct ToDoListsView: View {
                 }
                 
                 VStack{
-                    NavigationLink(destination: ListView(lastSelectedDate: lastSelectedDate, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDateBinding: $lastSelectedDate, type: listViewType, list: selectedList), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, selectedDate: $selectedDate, lastSelectedDate: lastSelectedDate, lastSelectedDateBinding: $lastSelectedDate, list: selectedList), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 275)
@@ -156,7 +167,6 @@ struct ToDoListsView: View {
                     showDoneToDos.toggle()
                 }
             }
-            
             ToolbarItem{
                 Button("Alle löschen"){
                     deleteAllToDoList()
@@ -164,6 +174,8 @@ struct ToDoListsView: View {
                     newToDoList.listID = UUID()
                     newToDoList.listTitle = "Neue Liste"
                     newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
+                    newToDoList.color = "indigo"
+                    newToDoList.symbol = "list.bullet"
                     do{
                         try viewContext.save()
                     }catch{

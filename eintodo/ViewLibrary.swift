@@ -110,6 +110,8 @@ struct SystemImage: View{
 struct SheetButton: View {
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false
+    
+    //Communications between Views
     @Binding var selectedDate: Date
     
     let text_color: Color = .white
@@ -161,5 +163,23 @@ struct SheetButton: View {
         .sheet(isPresented: $isPresented) {
             DetailView(detailViewType: .display, todo: todo, title: todo.title ?? "Error", notes: todo.notes ?? "Error", deadline: todo.deadline ?? Dates.defaultDate, notification: todo.notification ?? Dates.defaultDate, isMarked: todo.isMarked, priority: Int(todo.priority), list: todo.list!, isPresented: $isPresented, selectedDate: $selectedDate)
         }
+    }
+}
+
+struct SheetButtonToDoList: View{
+    @ObservedObject var list: ToDoList
+    @State var showToDoListsDetailView: Bool = false
+    @Binding var selectedList: String
+    
+    var body: some View{
+        Button(action: {
+            showToDoListsDetailView.toggle()
+        }, label: {
+            Image(systemName: "info.circle")
+                .foregroundColor(selectedList == list.listTitle ?? "Error" ? .white : Colors.primaryColor)
+        }).buttonStyle(.plain)
+            .sheet(isPresented: $showToDoListsDetailView){
+                ToDoListDetailView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
+            }
     }
 }

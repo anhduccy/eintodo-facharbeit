@@ -14,6 +14,8 @@ struct ContentView: View {
 
     @State var showAddView: Bool = false
     @State var showSettings: Bool = false
+    
+    //Communication between Views
     @State var selectedDate: Date = Date()
     @State var lastSelectedDate: Date = Dates.defaultDate
     @State var showDoneToDos: Bool = false
@@ -69,6 +71,8 @@ struct ContentView: View {
                 newToDoList.listID = UUID()
                 newToDoList.listTitle = "Neue Liste"
                 newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
+                newToDoList.color = "indigo"
+                newToDoList.symbol = "list.bullet"
                 do{
                     try viewContext.save()
                 }catch{

@@ -12,11 +12,12 @@ struct ListView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @FetchRequest var todos: FetchedResults<ToDo>
     
+    //Communication between views
     @Binding var selectedDate: Date
     @Binding var lastSelectedDate: Date
     @Binding var showDoneToDos: Bool
     
-    init(lastSelectedDate: Date, showDoneToDos: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDateBinding: Binding<Date>, type: ListViewTypes = ListViewTypes.dates, list: String = ""){
+    init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, selectedDate: Binding<Date>, lastSelectedDate: Date = Date(), lastSelectedDateBinding: Binding<Date>, list: String = ""){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
