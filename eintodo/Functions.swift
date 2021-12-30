@@ -9,9 +9,18 @@ import Foundation
 import SwiftUI
 
 //GETTER
-//Get interval in month between input date and current date
+//Get the start of month
+func getStartOfMonth() -> Date {
+    return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: Date())))!
+}
+//Get difference of month between input date and current date (not interval)
 func getMonthInterval(from date: Date) -> Int {
-    let interval = Calendar.current.dateComponents([.month], from: Date(), to: date).month!
+    var interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
+    if(interval > 0){
+        interval = Calendar.current.dateComponents([.month], from: getStartOfMonth(), to: date).month!
+    } else {
+        interval = Calendar.current.dateComponents([.month], from: Date(), to: date).month!
+    }
     return interval
 }
 

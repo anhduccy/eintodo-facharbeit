@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct DateNavigatorPopover: View{
+    @EnvironmentObject private var userSelected: UserSelected
+    @Binding var currentMonth: Int
     @Binding var navigateDate: Date
     var body: some View{
         VStack{
@@ -17,6 +19,11 @@ struct DateNavigatorPopover: View{
             }
             DatePicker("", selection: $navigateDate, displayedComponents: [.date])
                 .datePickerStyle(.field)
+                .onChange(of: navigateDate){ newValue in
+                    userSelected.lastSelectedDate = navigateDate
+                    userSelected.selectedDate = navigateDate
+                    currentMonth = getMonthInterval(from: userSelected.selectedDate)
+                }
         }
         .padding()
     }
@@ -110,12 +117,7 @@ struct CalendarView: View {
                         })
                             .buttonStyle(.plain)
                             .popover(isPresented: $showDateNavigatorPopover){
-                                DateNavigatorPopover(navigateDate: $navigateDate)
-                                    .onChange(of: navigateDate){ newValue in
-                                        userSelected.lastSelectedDate = navigateDate
-                                        userSelected.selectedDate = navigateDate
-                                        currentMonth = getMonthInterval(from: userSelected.lastSelectedDate)
-                                    }
+                                DateNavigatorPopover(currentMonth: $currentMonth, navigateDate: $navigateDate)
                             }
                         Button(action: {
                             showFilterPopover.toggle()
