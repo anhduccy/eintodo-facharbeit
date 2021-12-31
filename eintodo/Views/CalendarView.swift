@@ -249,7 +249,7 @@ struct CalendarView: View {
                 //Hidden navigation link to navigate between dates
                 VStack {
                     NavigationLink(destination:
-                                    ListView(type: listViewType, showDoneToDos: $showDoneToDos, list: "", userSelected: userSelected), isActive: $listViewIsActive)
+                                    ListView(type: listViewType, showDoneToDos: $showDoneToDos, userSelected: userSelected), isActive: $listViewIsActive)
                     { EmptyView() }
                 }.hidden()
             }
@@ -298,7 +298,7 @@ extension CalendarView{
         let currentMonth = calendar.dateComponents([.month], from: Date()).month
         let currentYear = calendar.dateComponents([.year], from: Date()).year
         
-        let dateComponents = DateComponents(calendar: .current, timeZone: calendar.timeZone, year: currentYear, month: currentMonth, day: inputDay, hour: 1)
+        let dateComponents = DateComponents(calendar: .current, timeZone: calendar.timeZone, year: currentYear, month: currentMonth, day: inputDay)
         if dateComponents.isValidDate{
             resultDate = dateComponents.date!
         }
@@ -324,7 +324,8 @@ extension CalendarView{
         
         // adding offset days to get exact week day...
         let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
-            for _ in 0..<firstWeekday - 1 {
+        print(firstWeekday)
+            for _ in 0..<firstWeekday + 5 {
                 days.insert(DateValue(day: -1, date: Date()), at: 0)
             }
             return days

@@ -166,15 +166,15 @@ struct SheetButton: View {
 
 struct SheetButtonToDoList: View{
     @ObservedObject var list: ToDoList
+    @EnvironmentObject private var userSelected: UserSelected
     @State var showToDoListsDetailView: Bool = false
-    @Binding var selectedList: String
     
     var body: some View{
         Button(action: {
             showToDoListsDetailView.toggle()
         }, label: {
             Image(systemName: "info.circle")
-                .foregroundColor(selectedList == list.listTitle ?? "Error" ? .white : Colors.primaryColor)
+                .foregroundColor(userSelected.selectedToDoList == list.listTitle ?? "Error" ? .white : Colors.primaryColor)
         }).buttonStyle(.plain)
             .sheet(isPresented: $showToDoListsDetailView){
                 ToDoListDetailView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)

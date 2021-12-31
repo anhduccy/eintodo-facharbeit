@@ -16,7 +16,6 @@ struct ToDoListsView: View {
     @State var listViewType: ListViewTypes = .dates
     @State var listViewIsActive: Bool = false
     @State var showToDoListsDetailView: Bool = false
-    @State var selectedList: String = ""
 
     var body: some View {
         NavigationView{
@@ -29,7 +28,7 @@ struct ToDoListsView: View {
                                     //Today
                                     Button(action: {
                                         withAnimation{
-                                            selectedList = "/ComputerGeneratedListToday/"
+                                            userSelected.selectedToDoList = "/ComputerGeneratedListToday/"
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .dates
@@ -42,7 +41,7 @@ struct ToDoListsView: View {
                                     //In Past and not done
                                     Button(action: {
                                         withAnimation{
-                                            selectedList = "/ComputerGeneratedListInPastAndNotDone/"
+                                            userSelected.selectedToDoList = "/ComputerGeneratedListInPastAndNotDone/"
                                             listViewType = .inPastAndNotDone
                                             self.listViewIsActive = true
                                         }
@@ -55,7 +54,7 @@ struct ToDoListsView: View {
                                     //All To-Dos
                                     Button(action: {
                                         withAnimation{
-                                            selectedList = "/ComputerGeneratedListAll/"
+                                            userSelected.selectedToDoList = "/ComputerGeneratedListAll/"
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .all
@@ -68,7 +67,7 @@ struct ToDoListsView: View {
                                     //Marked
                                     Button(action: {
                                         withAnimation{
-                                            selectedList = "/ComputerGeneratedListMarked/"
+                                            userSelected.selectedToDoList = "/ComputerGeneratedListMarked/"
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .marked
@@ -94,7 +93,7 @@ struct ToDoListsView: View {
                                             //ListRowItem
                                             Button(action: {
                                                 withAnimation{
-                                                    selectedList = list.listTitle!
+                                                    userSelected.selectedToDoList = list.listTitle!
                                                     self.listViewType = .list
                                                     self.listViewIsActive = true
                                                 }
@@ -109,18 +108,18 @@ struct ToDoListsView: View {
                                                         .foregroundColor(.white)
                                                 }
                                                 Text(list.listTitle!).font(.body)
-                                                    .foregroundColor(selectedList == list.listTitle! ? .white : .primary)
+                                                    .foregroundColor(userSelected.selectedToDoList == list.listTitle! ? .white : .primary)
                                                 Spacer()
                                             }).buttonStyle(.plain)
                                             
                                             //Info button
-                                            SheetButtonToDoList(list: list, selectedList: $selectedList)
+                                            SheetButtonToDoList(list: list)
                                         }
                                         .padding(.top, 6.5)
                                         .padding(.bottom, 6.5)
                                         .padding(.leading, 5)
                                         .padding(.trailing, 5)
-                                        .background(selectedList == list.listTitle! ? .blue : .clear)
+                                        .background(userSelected.selectedToDoList == list.listTitle! ? .blue : .clear)
                                         .cornerRadius(5)
                                     }
                                 }
@@ -153,7 +152,7 @@ struct ToDoListsView: View {
                 }
                 
                 VStack{
-                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, list: selectedList, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 275)

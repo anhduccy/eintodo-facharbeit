@@ -16,7 +16,7 @@ struct ListView: View {
     //Communication between views
     @Binding var showDoneToDos: Bool
     
-    init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, list: String = "", userSelected: UserSelected){
+    init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, userSelected: UserSelected){
         
 
         let calendar = Calendar.current
@@ -116,13 +116,13 @@ struct ListView: View {
                 _todos = FetchRequest(sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], predicate: NSPredicate(format: "list == %@", list), animation: .default)
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], predicate: NSPredicate(format: "list == %@", userSelected.selectedToDoList), animation: .default)
             } else { //All To-Dos which has not been done yet
                 _todos = FetchRequest(sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                                      predicate: NSPredicate(format: "list == %@ && isDone == false", list), animation: .default)
+                                      predicate: NSPredicate(format: "list == %@ && isDone == false", userSelected.selectedToDoList), animation: .default)
             }
         }
         _showDoneToDos = showDoneToDos

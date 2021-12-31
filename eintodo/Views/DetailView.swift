@@ -9,8 +9,7 @@ import SwiftUI
 import UserNotifications
 
 struct DetailView: View {
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
-
+    @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
@@ -36,6 +35,7 @@ struct DetailView: View {
 
     //Coomunication between other views
     @Binding var isPresented: Bool
+    @State var showListPicker: Bool = false
     
     var body: some View {
         ZStack{
@@ -159,11 +159,34 @@ struct DetailView: View {
                     }
                     
                     //List
-                    HStack{
-                        IconImage(image: "list.bullet.circle.fill", size: 25, isActivated: true)
-                        DetailViewListPicker(listsValueString: $list)
-                        Spacer()
-                    }
+                    Button(action: {
+                        showListPicker.toggle()
+                    }, label: {
+                        HStack{
+                            switch(detailViewType){
+                            case .add:
+                                IconImage(image: "list.bullet.circle.fill", size: 25, isActivated: true)
+                            case .display:
+                                ZStack{
+                                    Circle()
+                                        .fill(getColorFromString(string: getToDoList(with: list)[2]))
+                                        .frame(width: 25, height: 25)
+                                    Image(systemName: getToDoList(with: list)[3])
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            Text("Ausgewählte Liste - " + list)
+                            Spacer()
+                        }
+                    })
+                    .popover(isPresented: $showListPicker){
+                        VStack{
+                            Text("Liste auswählen").font(.title2.bold())
+                            DetailViewListPicker(listsValueString: $list)
+                        }
+                        .padding()
+                    }.buttonStyle(.plain)
+                    Spacer()
                     
                     Spacer()
                     
@@ -193,7 +216,7 @@ struct DetailView: View {
                         case .add:
                             Spacer()
                         }
-                        if(title != "" && list != ""){
+                        if(title != ""){
                             Button(action: {
                                 switch(detailViewType){
                                 case .display:
@@ -231,6 +254,7 @@ struct DetailView: View {
             case .add:
                 deadline = userSelected.selectedDate
                 notification = userSelected.selectedDate
+                list = userSelected.selectedToDoList
             case .display: //Value assignment of CoreData storage, if type is display
                 title = todo.title ?? "Error"
                 notes = todo.notes ?? "Error"
@@ -247,6 +271,7 @@ struct DetailView: View {
                     notification = todo.notification!
                 }
                 isMarked = todo.isMarked
+                list = todo.list!
                 priority = Int(todo.priority)
             }
             askForUserNotificationPermission()
@@ -255,6 +280,18 @@ struct DetailView: View {
 }
 
 extension DetailView{
+    public func getToDoList(with: String) -> [String]{
+        lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
+        var array: [String] = []
+        for list in lists{
+            array.append(list.listTitle!)
+            array.append(list.listDescription!)
+            array.append(list.color!)
+            array.append(list.symbol!)
+        }
+        return array
+    }
+    
     //CORE-DATA - Add, update and delete ToDo
     public func addToDo() {
         withAnimation {
