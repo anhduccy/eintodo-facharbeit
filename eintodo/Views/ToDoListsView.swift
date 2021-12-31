@@ -27,7 +27,7 @@ struct ToDoListsView: View {
                                     //Today
                                     Button(action: {
                                         withAnimation{
-                                            userSelected.selectedToDoList = "/ComputerGeneratedListToday/"
+                                            userSelected.selectedToDoList = "Heute"
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .dates
@@ -40,7 +40,7 @@ struct ToDoListsView: View {
                                     //In Past and not done
                                     Button(action: {
                                         withAnimation{
-                                            userSelected.selectedToDoList = "/ComputerGeneratedListInPastAndNotDone/"
+                                            userSelected.selectedToDoList = "Fällig"
                                             listViewType = .inPastAndNotDone
                                             self.listViewIsActive = true
                                         }
@@ -53,7 +53,7 @@ struct ToDoListsView: View {
                                     //All To-Dos
                                     Button(action: {
                                         withAnimation{
-                                            userSelected.selectedToDoList = "/ComputerGeneratedListAll/"
+                                            userSelected.selectedToDoList = "Alle"
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .all
@@ -66,7 +66,7 @@ struct ToDoListsView: View {
                                     //Marked
                                     Button(action: {
                                         withAnimation{
-                                            userSelected.selectedToDoList = "/ComputerGeneratedListMarked/"
+                                            userSelected.selectedToDoList = "Markiert"
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .marked
@@ -155,8 +155,17 @@ struct ToDoListsView: View {
                 }.hidden()
             }
             .frame(minWidth: 275)
+            .onAppear{
+                withAnimation{
+                    userSelected.selectedToDoList = "Heute"
+                    userSelected.lastSelectedDate = Date()
+                    userSelected.selectedDate = Date()
+                    listViewType = .dates
+                    self.listViewIsActive = true
+                }
+            }
         }
-        .navigationTitle("Listen")
+        .navigationTitle(userSelected.selectedToDoList)
         .toolbar{
             ToolbarItem{
                 Button("Alle löschen"){

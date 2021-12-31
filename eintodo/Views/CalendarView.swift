@@ -204,9 +204,9 @@ struct CalendarView: View {
                     NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
-            .frame(minWidth: 400)
+            .frame(minWidth: 375)
         }
-        .navigationTitle("Kalender")
+        .navigationTitle(DateInString(date: userSelected.lastSelectedDate, type: "display"))
         .toolbar{
             ToolbarItem{
                 Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){

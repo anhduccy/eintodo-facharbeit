@@ -75,6 +75,16 @@ public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String
         } else {
             output = formatter.string(from: date) + timeFormatter.string(from: date)
         }
+    } else if (type == "display"){ // Type is display
+        if(isTomorrow(date: date)){
+            output = "Morgen"
+        } else if (isToday(date: date)){
+            output = "Heute"
+        } else if (isYesterday(date: date)){
+            output = "Gestern"
+        } else {
+            output = formatter.string(from: date)
+        }
     } else {
         output = "Error"
     }
