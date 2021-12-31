@@ -14,9 +14,8 @@ struct ListView: View {
     @FetchRequest var todos: FetchedResults<ToDo>
     
     //Communication between views
-    @Binding var showDoneToDos: Bool
     
-    init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, userSelected: UserSelected){
+    init(type: ListViewTypes = ListViewTypes.dates, userSelected: UserSelected){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: userSelected.lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
@@ -25,7 +24,7 @@ struct ListView: View {
         
         switch(type){
         case .dates: //To-Dos with deadline and/or notfication
-            if(showDoneToDos.wrappedValue == true){
+            if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
@@ -43,7 +42,7 @@ struct ListView: View {
                     animation: .default)
             }
         case .noDates: //To-Dos without deadline and notification
-            if(showDoneToDos.wrappedValue == true){
+            if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
@@ -60,7 +59,7 @@ struct ListView: View {
                     animation: .default)
             }
         case .inPastAndNotDone: //All To-Dos in the past and which has not been done yet
-            if(showDoneToDos.wrappedValue == true){
+            if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
@@ -78,7 +77,7 @@ struct ListView: View {
                     animation: .default)
             }
         case .marked:
-            if(showDoneToDos.wrappedValue == true){
+            if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
@@ -96,7 +95,7 @@ struct ListView: View {
                     animation: .default)
             }
         case .all: //All To-Dos
-            if(showDoneToDos.wrappedValue == true){
+            if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
@@ -109,7 +108,7 @@ struct ListView: View {
                                       predicate: NSPredicate(format: "isDone == false"), animation: .default)
             }
         case .list:
-            if(showDoneToDos.wrappedValue == true){
+            if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
@@ -122,7 +121,6 @@ struct ListView: View {
                                       predicate: NSPredicate(format: "list == %@ && isDone == false", userSelected.selectedToDoList), animation: .default)
             }
         }
-        _showDoneToDos = showDoneToDos
     }
     
     let SystemImageSize: CGFloat = 17.5

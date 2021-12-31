@@ -65,7 +65,6 @@ struct CalendarView: View {
     @State var currentMonth: Int = 0
     @State var navigateDate: Date = Date()
     
-    @Binding var showDoneToDos: Bool
     @State var showFilterPopover = false
     @State var filter: FilterToDoType
     @State var showDateNavigatorPopover = false
@@ -161,7 +160,7 @@ struct CalendarView: View {
                                                         Circle().fill(Color.red)
                                                         
                                                     //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
-                                                    } else if(isJustDoneToDos(date: dayValue.date) && showDoneToDos){
+                                                    } else if(isJustDoneToDos(date: dayValue.date) && userSelected.showDoneToDos){
                                                         Circle().fill(Colors.primaryColor).opacity(0.2)
                                                     }
                                             case .isMarked:
@@ -246,7 +245,7 @@ struct CalendarView: View {
                 }.padding()
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
@@ -254,8 +253,8 @@ struct CalendarView: View {
         .navigationTitle("Kalender")
         .toolbar{
             ToolbarItem{
-                Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
-                    showDoneToDos.toggle()
+                Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
+                    userSelected.showDoneToDos.toggle()
                 }
             }
         }

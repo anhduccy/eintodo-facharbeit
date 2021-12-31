@@ -17,19 +17,18 @@ struct ContentView: View {
     
     //Communication between Views
     @EnvironmentObject public var userSelected: UserSelected
-    @State var showDoneToDos: Bool = false
 
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: CalendarView(showDoneToDos: $showDoneToDos, filter: .deadline)){
+                NavigationLink(destination: CalendarView(filter: .deadline)){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")
                     }
                     Spacer()
                 }
-                NavigationLink(destination: ToDoListsView(showDoneToDos: $showDoneToDos)){
+                NavigationLink(destination: ToDoListsView()){
                     HStack{
                         Image(systemName: "list.dash")
                         Text("Listen")

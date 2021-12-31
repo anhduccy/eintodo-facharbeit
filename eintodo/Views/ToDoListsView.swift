@@ -11,7 +11,6 @@ struct ToDoListsView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @EnvironmentObject public var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
-    @Binding var showDoneToDos: Bool
     
     @State var listViewType: ListViewTypes = .dates
     @State var listViewIsActive: Bool = false
@@ -152,7 +151,7 @@ struct ToDoListsView: View {
                 }
                 
                 VStack{
-                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 275)
@@ -177,8 +176,8 @@ struct ToDoListsView: View {
                 }
             }
             ToolbarItem{
-                Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
-                    showDoneToDos.toggle()
+                Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
+                    userSelected.showDoneToDos.toggle()
                 }
             }
         }

@@ -15,7 +15,7 @@ struct eintodoApp: App {
         WindowGroup {
                 ContentView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                    .environmentObject(UserSelected(selectedDate: Date(), lastSelectedDate: Dates.defaultDate, toDoList: ""))
+                    .environmentObject(UserSelected(selectedDate: Date(), lastSelectedDate: Dates.defaultDate, selectedToDoList: "", showDoneToDos: false))
         }
     }
 }
