@@ -21,6 +21,7 @@
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
 		7999DE71277B7E0D008557EB /* ToDoListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999DE70277B7E0D008557EB /* ToDoListsView.swift */; };
 		79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542C2771283B00E935D8 /* SettingsView.swift */; };
+		79B56F46277FB83900D0EC16 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B56F45277FB83900D0EC16 /* Home.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
 		79F44343276F649200B558BF /* ViewLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F44342276F649200B558BF /* ViewLibrary.swift */; };
 /* End PBXBuildFile section */
@@ -42,6 +43,7 @@
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		7999DE70277B7E0D008557EB /* ToDoListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListsView.swift; sourceTree = "<group>"; };
 		79AC542C2771283B00E935D8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		79B56F45277FB83900D0EC16 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		79F44342276F649200B558BF /* ViewLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				794855EC276690410086927E /* ContentView.swift */,
+				79B56F45277FB83900D0EC16 /* Home.swift */,
 				7948560E2766ABF30086927E /* CalendarView.swift */,
 				7999DE70277B7E0D008557EB /* ToDoListsView.swift */,
 				7940F647277CCE2A001BA7EF /* ToDoListsDetailView.swift */,
@@ -190,6 +193,7 @@
 				79F44343276F649200B558BF /* ViewLibrary.swift in Sources */,
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
+				79B56F46277FB83900D0EC16 /* Home.swift in Sources */,
 				794856032766996D0086927E /* ListView.swift in Sources */,
 				7940F648277CCE2A001BA7EF /* ToDoListsDetailView.swift in Sources */,
 				79281B152776428200F32528 /* Extensions.swift in Sources */,

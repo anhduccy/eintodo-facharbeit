@@ -21,20 +21,25 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List{
+                NavigationLink(destination: Home()){
+                    HStack{
+                        Image(systemName: "house")
+                        Text("Start")
+                    }
+                }
                 NavigationLink(destination: CalendarView(filter: .deadline)){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")
                     }
-                    Spacer()
                 }
                 NavigationLink(destination: ToDoListsView()){
                     HStack{
                         Image(systemName: "list.dash")
                         Text("Listen")
                     }
-                    Spacer()
                 }
+                Spacer()
             }
             .listStyle(.sidebar)
             .frame(minWidth: 210)

@@ -7,50 +7,6 @@
 
 import SwiftUI
 
-struct DateNavigatorPopover: View{
-    @EnvironmentObject private var userSelected: UserSelected
-    @Binding var currentMonth: Int
-    @Binding var navigateDate: Date
-    var body: some View{
-        VStack{
-            HStack{
-                Text("Navigiere zu").font(.title2.bold())
-                Spacer()
-            }
-            DatePicker("", selection: $navigateDate, displayedComponents: [.date])
-                .datePickerStyle(.field)
-                .onChange(of: navigateDate){ newValue in
-                    userSelected.lastSelectedDate = navigateDate
-                    userSelected.selectedDate = navigateDate
-                    currentMonth = getMonthInterval(from: userSelected.selectedDate)
-                }
-        }
-        .padding()
-    }
-}
-
-struct SelectFilterPopover: View{
-    @Binding var filter: FilterToDoType
-    var body: some View{
-        VStack{
-            HStack{
-                Text("Filter").font(.title2.bold())
-                Spacer()
-            }
-            HStack{
-                Picker("", selection: $filter){
-                    Text("Fällig am ").tag(FilterToDoType.deadline)
-                    Text("Erinnerung").tag(FilterToDoType.notification)
-                    Text("Markiert").tag(FilterToDoType.isMarked)
-                }
-                .pickerStyle(.inline)
-                Spacer()
-            }
-        }
-        .padding()
-    }
-}
-
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @EnvironmentObject private var userSelected: UserSelected
@@ -391,6 +347,50 @@ extension CalendarView{
             let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
             todos.nsPredicate = predicate
         }
+    }
+}
+
+//SUB-VIEWS OF CALENDARVIEW
+struct DateNavigatorPopover: View{
+    @EnvironmentObject private var userSelected: UserSelected
+    @Binding var currentMonth: Int
+    @Binding var navigateDate: Date
+    var body: some View{
+        VStack{
+            HStack{
+                Text("Navigiere zu").font(.title2.bold())
+                Spacer()
+            }
+            DatePicker("", selection: $navigateDate, displayedComponents: [.date])
+                .datePickerStyle(.field)
+                .onChange(of: navigateDate){ newValue in
+                    userSelected.lastSelectedDate = navigateDate
+                    userSelected.selectedDate = navigateDate
+                    currentMonth = getMonthInterval(from: userSelected.selectedDate)
+                }
+        }
+        .padding()
+    }
+}
+struct SelectFilterPopover: View{
+    @Binding var filter: FilterToDoType
+    var body: some View{
+        VStack{
+            HStack{
+                Text("Filter").font(.title2.bold())
+                Spacer()
+            }
+            HStack{
+                Picker("", selection: $filter){
+                    Text("Fällig am ").tag(FilterToDoType.deadline)
+                    Text("Erinnerung").tag(FilterToDoType.notification)
+                    Text("Markiert").tag(FilterToDoType.isMarked)
+                }
+                .pickerStyle(.inline)
+                Spacer()
+            }
+        }
+        .padding()
     }
 }
 
