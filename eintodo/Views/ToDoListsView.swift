@@ -160,11 +160,6 @@ struct ToDoListsView: View {
         .navigationTitle("Listen")
         .toolbar{
             ToolbarItem{
-                Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
-                    showDoneToDos.toggle()
-                }
-            }
-            ToolbarItem{
                 Button("Alle löschen"){
                     deleteAllToDoList()
                     let newToDoList = ToDoList(context: viewContext)
@@ -179,6 +174,11 @@ struct ToDoListsView: View {
                         let nsError = error as NSError
                         fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
                     }
+                }
+            }
+            ToolbarItem{
+                Button(showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
+                    showDoneToDos.toggle()
                 }
             }
         }

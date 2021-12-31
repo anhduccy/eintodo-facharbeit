@@ -17,8 +17,6 @@ struct ListView: View {
     @Binding var showDoneToDos: Bool
     
     init(type: ListViewTypes = ListViewTypes.dates, showDoneToDos: Binding<Bool>, userSelected: UserSelected){
-        
-
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: userSelected.lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
@@ -41,10 +39,9 @@ struct ListView: View {
                         NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                         NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "(deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@) && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                    predicate: NSPredicate(format: "((deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)) && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
                     animation: .default)
             }
-        
         case .noDates: //To-Dos without deadline and notification
             if(showDoneToDos.wrappedValue == true){
                 _todos = FetchRequest(

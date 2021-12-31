@@ -63,13 +63,12 @@ struct CalendarView: View {
     
     //Date attributes
     @State var currentMonth: Int = 0
-    @State var navigateDate : Date = Date()
+    @State var navigateDate: Date = Date()
     
     @Binding var showDoneToDos: Bool
     @State var showFilterPopover = false
     @State var filter: FilterToDoType
     @State var showDateNavigatorPopover = false
-
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
     let day: Int = 3600*24 //Day in Seconds
@@ -245,12 +244,9 @@ struct CalendarView: View {
                             .foregroundColor(Colors.primaryColor)
                     }
                 }.padding()
-                
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination:
-                                    ListView(type: listViewType, showDoneToDos: $showDoneToDos, userSelected: userSelected), isActive: $listViewIsActive)
-                    { EmptyView() }
+                    NavigationLink(destination: ListView(type: listViewType, showDoneToDos: $showDoneToDos, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 400)
@@ -324,7 +320,6 @@ extension CalendarView{
         
         // adding offset days to get exact week day...
         let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
-        print(firstWeekday)
             for _ in 0..<firstWeekday + 5 {
                 days.insert(DateValue(day: -1, date: Date()), at: 0)
             }
