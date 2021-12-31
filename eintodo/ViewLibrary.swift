@@ -108,7 +108,7 @@ struct SystemImage: View{
 
 //Buttons
 struct SheetButton: View {
-    @EnvironmentObject public var userSelected: UserSelected
+    @EnvironmentObject private var userSelected: UserSelected
     
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false

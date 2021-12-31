@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ToDoListsView: View {
     @Environment(\.managedObjectContext) public var viewContext
-    @EnvironmentObject public var userSelected: UserSelected
+    @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     
     @State var listViewType: ListViewTypes = .dates

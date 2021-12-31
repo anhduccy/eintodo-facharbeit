@@ -13,7 +13,7 @@ struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
-    @EnvironmentObject public var userSelected: UserSelected
+    @EnvironmentObject private var userSelected: UserSelected
 
     let detailViewType: DetailViewTypes
 

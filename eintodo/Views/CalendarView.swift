@@ -53,7 +53,7 @@ struct SelectFilterPopover: View{
 
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
-    @EnvironmentObject public var userSelected: UserSelected
+    @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], animation: .default)
     public var todos: FetchedResults<ToDo>
     

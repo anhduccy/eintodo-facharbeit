@@ -16,7 +16,7 @@ struct ContentView: View {
     @State var showSettings: Bool = false
     
     //Communication between Views
-    @EnvironmentObject public var userSelected: UserSelected
+    @EnvironmentObject private var userSelected: UserSelected
 
     var body: some View {
         NavigationView {
