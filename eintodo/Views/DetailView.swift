@@ -282,8 +282,6 @@ struct DetailView: View {
 extension DetailView{
     public func getToDoList(with: String) -> [String]{
         lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
-        print(lists)
-        print(with)
         var array: [String] = []
         for list in lists{
             array.append(list.listTitle!) //0

@@ -134,7 +134,7 @@ struct CalendarView: View {
                                         }){
                                             ZStack{
                                                 //IF (dayValue.date is current date) AND (dayValue.date is not selected date) AND (there are none to-dos at dayValue.date), display the text blue
-                                                if(isToday(date: dayValue.date) && !isSameDay(date1: userSelected.selectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
+                                                if(isToday(date: dayValue.date) && !isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(Color.blue)
                                                 } else {
