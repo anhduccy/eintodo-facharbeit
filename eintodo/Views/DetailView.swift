@@ -216,7 +216,7 @@ struct DetailView: View {
                         case .add:
                             Spacer()
                         }
-                        if(title != ""){
+                        if(title != "" && list != ""){
                             Button(action: {
                                 switch(detailViewType){
                                 case .display:
@@ -282,12 +282,14 @@ struct DetailView: View {
 extension DetailView{
     public func getToDoList(with: String) -> [String]{
         lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
+        print(lists)
+        print(with)
         var array: [String] = []
         for list in lists{
-            array.append(list.listTitle!)
-            array.append(list.listDescription!)
-            array.append(list.color!)
-            array.append(list.symbol!)
+            array.append(list.listTitle!) //0
+            array.append(list.listDescription!) //1
+            array.append(list.color!) //2
+            array.append(list.symbol!) //3
         }
         return array
     }

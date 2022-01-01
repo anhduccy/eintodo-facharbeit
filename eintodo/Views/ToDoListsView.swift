@@ -154,7 +154,7 @@ struct ToDoListsView: View {
                     NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
-            .frame(minWidth: 275)
+            .frame(minWidth: 300)
             .onAppear{
                 withAnimation{
                     userSelected.selectedToDoList = "Heute"

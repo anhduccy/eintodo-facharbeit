@@ -131,7 +131,7 @@ struct ListView: View {
                 VStack{
                     HStack{
                         Spacer()
-                        Text("Keine Erinnerungen ausgewählt")
+                        Text("Du hast noch nichts für den Tag geplant")
                         Spacer()
                     }
                 }

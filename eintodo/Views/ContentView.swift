@@ -83,6 +83,7 @@ struct ContentView: View {
                     fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
                 }
             }
+            userSelected.selectedToDoList = lists[0].listTitle!
         }
     }
 }

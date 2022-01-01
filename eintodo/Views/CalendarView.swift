@@ -94,7 +94,7 @@ struct CalendarView: View {
                     //Calendar
                     LazyVGrid(columns: columns){
                         ForEach(weekdays, id: \.self){ weekday in
-                            Text(weekday)
+                            Text(weekday).bold()
                         }
                         
                         ForEach(extractDate(), id: \.self){ dayValue in
@@ -204,7 +204,7 @@ struct CalendarView: View {
                     NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
-            .frame(minWidth: 375)
+            .frame(minWidth: 300)
         }
         .navigationTitle(DateInString(date: userSelected.lastSelectedDate, type: "display"))
         .toolbar{

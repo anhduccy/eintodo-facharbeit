@@ -159,7 +159,7 @@ struct SheetButton: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, list: todo.list!, isPresented: $isPresented)
+            DetailView(detailViewType: .display, todo: todo, list: todo.list ?? "Error", isPresented: $isPresented)
         }
     }
 }
