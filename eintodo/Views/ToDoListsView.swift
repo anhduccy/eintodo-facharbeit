@@ -213,7 +213,7 @@ struct ToDoListsCounter: View{
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var list: FetchedResults<ToDo>
     init(list: String){
-        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "list == %@", list), animation: .default)
+        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "list == %@ && isDone == false", list), animation: .default)
         inputList = list
     }
     let inputList: String
