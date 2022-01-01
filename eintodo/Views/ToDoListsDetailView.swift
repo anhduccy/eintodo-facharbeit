@@ -28,9 +28,10 @@ struct ToDoListDetailView: View{
     
     //Constants
     let colors: [String] = ["pink", "red", "yellow", "green", "blue", "indigo", "purple", "brown", "gray"]
-    let symbols: [String] = ["list.bullet", "bookmark.fill", "mappin"]
+    let symbols: [String] = ["list.bullet", "bookmark.fill", "mappin", "gift.fill", "graduationcap.fill", "doc.fill", "book.fill", "banknote", "creditcard.fill", "figure.walk", "fork.knife", "house.fill", "tv.fill", "music.note", "pc", "gamecontroller.fill", "headphones", "beats.headphones", "leaf.fill", "person.fill", "person.2.fill", "person.3.fill", "pawprint.fill", "cart.fill", "bag.fill", "shippingbox.fill", "tram.fill", "airplane", "car.fill", "sun.max.fill", "moon.fill", "drop.fill", "snowflake", "flame.fill", "screwdriver.fill", "scissors", "curlybraces", "chevron.left.forwardslash.chevron.right", "lightbulb.fill", "bubble.left.fill", "staroflife.fill", "square.fill", "circle.fill", "triangle.fill", "heart.fill", "star.fill"]
     let buttonSize: CGFloat = 30
     let buttonSymbolSize: CGFloat = 15
+    let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 10)
         
     var body: some View{
         ZStack{
@@ -39,6 +40,10 @@ struct ToDoListDetailView: View{
                     .font(.title.bold())
                     .textFieldStyle(.plain)
                     .foregroundColor(getColorFromString(string: selectedColor))
+                TextField("Beschreibung", text: $description)
+                    .font(.body)
+                    .textFieldStyle(.plain)
+                    .foregroundColor(.gray)
                 ZStack{
                     Circle().fill(getColorFromString(string: selectedColor)).frame(width: 50, height: 50)
                     Image(systemName: selectedSymbol)
@@ -51,7 +56,7 @@ struct ToDoListDetailView: View{
                     //Colors
                     VStack(spacing: 0){
                         HStack{
-                            Text("Farbe").font(.headline.bold())
+                            Text("Farbe").font(.headline)
                             Spacer()
                         }
                         HStack{
@@ -74,10 +79,10 @@ struct ToDoListDetailView: View{
                     //Symbols
                     VStack{
                         HStack{
-                            Text("Symbole").font(.headline.bold())
+                            Text("Symbole").font(.headline)
                             Spacer()
                         }
-                        HStack{
+                        LazyVGrid(columns: columns){
                             ForEach(symbols, id: \.self){ symbol in
                                 Button(action: {
                                     withAnimation{
@@ -86,7 +91,7 @@ struct ToDoListDetailView: View{
                                 }, label: {
                                     if(selectedSymbol == symbol){
                                         ZStack{
-                                            Circle().foregroundColor(Colors.primaryColor)
+                                            Circle().foregroundColor(getColorFromString(string: selectedColor))
                                                 .frame(width: buttonSize, height: buttonSize, alignment: .center)
                                             Image(systemName: symbol)
                                                 .resizable()
