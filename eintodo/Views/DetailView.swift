@@ -165,7 +165,13 @@ struct DetailView: View {
                         HStack{
                             switch(detailViewType){
                             case .add:
-                                IconImage(image: "list.bullet.circle.fill", size: 25, isActivated: true)
+                                ZStack{
+                                    Circle()
+                                        .fill(getColorFromString(string: getToDoList(with: list)[2]))
+                                        .frame(width: 25, height: 25)
+                                    Image(systemName: getToDoList(with: list)[3])
+                                        .foregroundColor(.white)
+                                }
                             case .display:
                                 ZStack{
                                     Circle()

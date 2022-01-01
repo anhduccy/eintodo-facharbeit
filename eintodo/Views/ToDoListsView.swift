@@ -111,6 +111,7 @@ struct ToDoListsView: View {
                                                 Spacer()
                                             }).buttonStyle(.plain)
                                             
+                                            ToDoListsCounter(list: list.listTitle!)
                                             //Info button
                                             SheetButtonToDoList(list: list)
                                         }
@@ -194,7 +195,7 @@ struct ToDoListsView: View {
 }
 
 extension ToDoListsView{
-    public func deleteAllToDoList(){
+    func deleteAllToDoList(){
         for list in lists{
             viewContext.delete(list)
         }
@@ -204,5 +205,22 @@ extension ToDoListsView{
             let nsError = error as NSError
             fatalError("Could not delete all CoreData-Entities in ToDoListsView: \(nsError), \(nsError.userInfo)")
         }
+    }
+}
+
+//VIEWS
+struct ToDoListsCounter: View{
+    @EnvironmentObject private var userSelected: UserSelected
+    @FetchRequest var list: FetchedResults<ToDo>
+    init(list: String){
+        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "list == %@", list), animation: .default)
+        inputList = list
+    }
+    let inputList: String
+    var body: some View{
+        Text("\(list.count)")
+            .font(.body)
+            .fontWeight(.light)
+            .foregroundColor(userSelected.selectedToDoList == inputList ? .white : .gray)
     }
 }
