@@ -143,6 +143,9 @@ struct ListView: View {
                     //Checkmark button
                     Button(action: {
                         todo.isDone.toggle()
+                        if(todo.isDone == true){
+                            deleteUserNotification(identifier: todo.id!)
+                        }
                         updateToDo()
                         }, label: {
                         if(todo.isDone){

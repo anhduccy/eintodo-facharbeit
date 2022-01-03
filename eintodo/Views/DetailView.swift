@@ -307,14 +307,14 @@ extension DetailView{
             newToDo.notes = notes
             if showDeadline{
                 newToDo.deadline = deadline
-                addUserNotification(id: newToDo.id!, date: deadline, type: "deadline")
+                addUserNotification(title: title, id: newToDo.id!, date: deadline, type: "deadline")
 
             } else {
                 newToDo.deadline = Dates.defaultDate
             }
             if showNotification {
                 newToDo.notification = notification
-                addUserNotification(id: newToDo.id!, date: notification, type: "notification")
+                addUserNotification(title: title, id: newToDo.id!, date: notification, type: "notification")
             } else {
                 newToDo.notification = Dates.defaultDate
             }
@@ -348,7 +348,7 @@ extension DetailView{
             if showDeadline{
                 todo.deadline = deadline
                 deleteUserNotification(identifier: todo.id!)
-                addUserNotification(id: todo.id!, date: todo.deadline!, type: "deadline")
+                addUserNotification(title: title, id: todo.id!, date: todo.deadline!, type: "deadline")
             }
             if !showDeadline{
                 todo.deadline = Dates.defaultDate
@@ -357,7 +357,7 @@ extension DetailView{
             if showNotification{
                 todo.notification = notification
                 deleteUserNotification(identifier: todo.id!)
-                addUserNotification(id: todo.id!, date: todo.notification!, type: "notification")
+                addUserNotification(title: title, id: todo.id!, date: todo.notification!, type: "notification")
             }
             if !showNotification{
                 todo.notification = Dates.defaultDate
@@ -398,38 +398,10 @@ extension DetailView{
             }
         }
     }
-    
     //DISMISSING DetailView
     public func dismissDetailView(){
         userSelected.selectedDate = deadline
         isPresented.toggle()
-    }
-    
-    //USERNOTIFICATION - Ask for permisson, add and delete notification of ToDo.deadline and ToDo.notification
-    public func askForUserNotificationPermission(){
-        //Ask user for UserNotification permission
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
-            if success {
-            } else if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    public func addUserNotification(id: UUID, date: Date, type: String){
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.subtitle = DateInString(date: date, type: type)
-        content.sound = UNNotificationSound.default
-        
-        if(getInterval(from: date) > 0){
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
-            let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request)
-            print("notification set for ", date, "\n")
-        }
-    }
-    public func deleteUserNotification(identifier: UUID){
-        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
     }
 }
 

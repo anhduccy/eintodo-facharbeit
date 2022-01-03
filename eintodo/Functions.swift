@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UserNotifications
 
 //GETTER
 //Get the start of month
@@ -138,4 +139,32 @@ public func isDateInPast(date: Date) -> Bool{
     } else {
         return false
     }
+}
+
+
+//USERNOTIFICATION - Ask for permisson, add and delete notification of ToDo.deadline and ToDo.notification
+public func askForUserNotificationPermission(){
+    //Ask user for UserNotification permission
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
+        if success {
+        } else if let error = error {
+            print(error.localizedDescription)
+        }
+    }
+}
+public func addUserNotification(title: String, id: UUID, date: Date, type: String){
+    let content = UNMutableNotificationContent()
+    content.title = title
+    content.subtitle = DateInString(date: date, type: type)
+    content.sound = UNNotificationSound.default
+    
+    if(getInterval(from: date) > 0){
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
+        let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+        print("notification set for ", date, "\n")
+    }
+}
+public func deleteUserNotification(identifier: UUID){
+    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
 }
