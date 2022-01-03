@@ -258,16 +258,27 @@ struct DetailView: View {
         .onAppear{
             switch(detailViewType){
             case .add:
-                deadline = userSelected.selectedDate
-                notification = userSelected.selectedDate
+                if deadline == Dates.defaultDate{
+                    showDeadline = false
+                    deadline = Date()
+                } else {
+                    deadline = userSelected.selectedDate
+                }
+                if notification == Dates.defaultDate{
+                    showNotification = false
+                    notification = Date()
+                } else {
+                    notification = userSelected.selectedDate
+                }
                 list = userSelected.selectedToDoList
             case .display: //Value assignment of CoreData storage, if type is display
                 title = todo.title ?? "Error"
                 notes = todo.notes ?? "Error"
-                deadline = todo.deadline ?? Dates.defaultDate
                 if deadline == Dates.defaultDate{
                     showDeadline = false
                     deadline = Date()
+                } else {
+                    deadline = todo.deadline ?? Dates.defaultDate
                 }
                 notification = todo.notification ?? Dates.defaultDate
                 if notification == Dates.defaultDate{
