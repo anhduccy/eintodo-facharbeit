@@ -12,7 +12,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
     
-    @FetchRequest(sortDescriptors: []) var todos: FetchedResults<ToDo>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     @State var showAddView: Bool = false

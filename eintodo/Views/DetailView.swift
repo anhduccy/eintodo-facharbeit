@@ -272,7 +272,15 @@ struct DetailView: View {
                 } else {
                     notification = userSelected.selectedDate
                 }
-                list = userSelected.selectedToDoList
+                //If the UserSelected list is not a default-generated list (there are 4) then use the Observable attribute selectedToDoList, otherwise use the first possible list stored in ToDoList
+                if(userSelected.selectedToDoList == "Heute" ||
+                   userSelected.selectedToDoList == "Alle" ||
+                   userSelected.selectedToDoList == "Fällig" ||
+                   userSelected.selectedToDoList == "Markiert"){
+                    list = lists[0].listTitle!
+                } else {
+                    list = userSelected.selectedToDoList
+                }
             case .display: //Value assignment of CoreData storage, if type is display
                 title = todo.title ?? "Error"
                 notes = todo.notes ?? "Error"
