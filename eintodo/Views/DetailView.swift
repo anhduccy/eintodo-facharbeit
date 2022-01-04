@@ -14,6 +14,8 @@ struct DetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
     @EnvironmentObject private var userSelected: UserSelected
+    
+    @AppStorage("deadlineTime") private var AppStorageDeadlineTime: Date = Date()
 
     let detailViewType: DetailViewTypes
 
@@ -260,9 +262,9 @@ struct DetailView: View {
             case .add:
                 if deadline == Dates.defaultDate{
                     showDeadline = false
-                    deadline = Date()
+                    deadline = combineDateAndTime(date: getDate(date: Date()), time: getTime(date: AppStorageDeadlineTime))
                 } else {
-                    deadline = userSelected.selectedDate
+                    deadline = combineDateAndTime(date: getDate(date: userSelected.selectedDate), time: getTime(date: AppStorageDeadlineTime))
                 }
                 if notification == Dates.defaultDate{
                     showNotification = false
@@ -276,9 +278,9 @@ struct DetailView: View {
                 notes = todo.notes ?? "Error"
                 if deadline == Dates.defaultDate{
                     showDeadline = false
-                    deadline = Date()
+                    deadline = combineDateAndTime(date: getDate(date: Date()), time: getTime(date: AppStorageDeadlineTime))
                 } else {
-                    deadline = todo.deadline ?? Dates.defaultDate
+                    deadline = combineDateAndTime(date: getDate(date: todo.deadline ?? Dates.defaultDate), time: getTime(date: AppStorageDeadlineTime))
                 }
                 notification = todo.notification ?? Dates.defaultDate
                 if notification == Dates.defaultDate{

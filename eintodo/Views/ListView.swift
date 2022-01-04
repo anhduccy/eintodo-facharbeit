@@ -159,7 +159,7 @@ struct ListView: View {
                         .padding(.leading, 5)
                     
                     //Labelling
-                    SheetButton(todo)
+                    ListRow(todo)
                     Spacer()
                     Button(action: {
                         todo.isMarked.toggle()

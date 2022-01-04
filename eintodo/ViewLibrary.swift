@@ -107,7 +107,7 @@ struct SystemImage: View{
 }
 
 //Buttons
-struct SheetButton: View {
+struct ListRow: View {
     @EnvironmentObject private var userSelected: UserSelected
     
     @ObservedObject var todo: ToDo
@@ -135,7 +135,7 @@ struct SheetButton: View {
                     }
                     if todo.deadline != Dates.defaultDate{
                         HStack{
-                            Text(DateInString(date: todo.deadline ?? Dates.defaultDate, type: "deadline"))
+                            Text(DateInString(date: todo.deadline ?? Dates.defaultDate, type: "notification"))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()

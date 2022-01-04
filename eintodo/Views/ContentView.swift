@@ -13,7 +13,6 @@ struct ContentView: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     @State var showAddView: Bool = false
-    @State var showSettings: Bool = false
     
     //Communication between Views
     @EnvironmentObject private var userSelected: UserSelected
@@ -55,20 +54,10 @@ struct ContentView: View {
                         }
                         .keyboardShortcut("n", modifiers: [.command])
                 }
-                
-                ToolbarItem{
-                    Button(action: {
-                        showSettings.toggle()
-                    }, label:{
-                        Label("Settings", systemImage: "gear")
-                    })
-                        .sheet(isPresented: $showSettings){
-                            SettingsView(showSettings: $showSettings)
-                        }
-                }
             }
         }
         .onAppear{
+            //Create a list if there is no lists at the beginning
             if lists.isEmpty{
                 let newToDoList = ToDoList(context: viewContext)
                 newToDoList.listID = UUID()
@@ -83,6 +72,8 @@ struct ContentView: View {
                     fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
                 }
             }
+            
+            //Set the first list as the selected to do list
             userSelected.selectedToDoList = lists[0].listTitle!
         }
     }

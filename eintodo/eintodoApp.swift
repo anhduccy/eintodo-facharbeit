@@ -17,5 +17,8 @@ struct eintodoApp: App {
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
                     .environmentObject(UserSelected(selectedDate: Date(), lastSelectedDate: Dates.defaultDate, selectedToDoList: "", showDoneToDos: false))
         }
+        Settings{
+            SettingsView()
+        }
     }
 }

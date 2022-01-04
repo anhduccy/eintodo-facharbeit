@@ -4,7 +4,6 @@
 //
 //  Created by anh :) on 16.12.21.
 //
-
 import Foundation
 import SwiftUI
 import UserNotifications
@@ -24,15 +23,13 @@ func getMonthInterval(from date: Date) -> Int {
     }
     return interval
 }
-
 //Get interval in sconds between input date and current date
 func getInterval(from date: Date) -> Int {
     let interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
     return interval
 }
-
 //Return a color from a string
-public func getColorFromString(string: String)->Color{
+func getColorFromString(string: String)->Color{
     switch(string){
         case "red": return Color.red
         case "pink": return Color.pink
@@ -46,10 +43,29 @@ public func getColorFromString(string: String)->Color{
         default: return Color.indigo
     }
 }
+//Get time from date and return it as a String
+func getTime(date: Date)->String{
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm"
+    return formatter.string(from: date)
+}
+//Get day, month and year from date and return it as a String
+func getDate(date: Date)->String{
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd.MM.yyyy"
+    return formatter.string(from: date)
+}
+//Combine date (String) and time (String) to a new date and return it as the type Date
+func combineDateAndTime(date: String, time: String)->Date{
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd.MM.yyyy, HH:mm"
+    let DATE = "\(date), \(time)"
+    return formatter.date(from: DATE)!
+}
  
 //Formatters
-//Format Date into String
-public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String) -> String{
+//Format Date into String -> A support function for ViewLibrary (ListRow)
+ func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String) -> String{
     let timeFormatter = DateFormatter()
     timeFormatter.dateFormat = ", HH:mm"
     let formatter = DateFormatter()
@@ -89,33 +105,28 @@ public func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String
     } else {
         output = "Error"
     }
-    
     return output
 }
 
 //Comparisons
 //Compare two dates and return true if it is the same
-public func isSameDay(date1: Date, date2: Date) -> Bool {
+ func isSameDay(date1: Date, date2: Date) -> Bool {
     return Calendar.current.isDate(date1, inSameDayAs: date2)
 }
-
 //If input date is equal as the yesterday's date, return true
-public func isYesterday(date: Date)->Bool{
+ func isYesterday(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Date().addingTimeInterval(-TimeInterval(SecondsCalculated.day)))
 }
-
 //If input date is current date, return true
-public func isToday(date: Date)->Bool{
+ func isToday(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Date())
 }
-
 //If input date is equal as the tomorrow date, return true
-public func isTomorrow(date: Date)->Bool{
+ func isTomorrow(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Date().addingTimeInterval(TimeInterval(SecondsCalculated.day)))
 }
-
 //If input date is before the current date, return a color
-public func isDateInPast(date: Date, defaultColor: Color)->Color{
+ func isDateInPast(date: Date, defaultColor: Color)->Color{
     let currentDate = Calendar.current.startOfDay(for: Date())
     if date != Dates.defaultDate{
         if date < currentDate{
@@ -128,7 +139,7 @@ public func isDateInPast(date: Date, defaultColor: Color)->Color{
     }
 }
 //If input date is before the current date, return true
-public func isDateInPast(date: Date) -> Bool{
+ func isDateInPast(date: Date) -> Bool{
     let currentDate = Calendar.current.startOfDay(for: Date())
     if date != Dates.defaultDate{
         if date < currentDate{
@@ -141,9 +152,8 @@ public func isDateInPast(date: Date) -> Bool{
     }
 }
 
-
 //USERNOTIFICATION - Ask for permisson, add and delete notification of ToDo.deadline and ToDo.notification
-public func askForUserNotificationPermission(){
+func askForUserNotificationPermission(){
     //Ask user for UserNotification permission
     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
         if success {
@@ -152,7 +162,7 @@ public func askForUserNotificationPermission(){
         }
     }
 }
-public func addUserNotification(title: String, id: UUID, date: Date, type: String){
+func addUserNotification(title: String, id: UUID, date: Date, type: String){
     let content = UNMutableNotificationContent()
     content.title = title
     content.subtitle = DateInString(date: date, type: type)
@@ -162,9 +172,10 @@ public func addUserNotification(title: String, id: UUID, date: Date, type: Strin
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
         let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request)
-        print("notification set for ", date, "\n")
+        print("The notification is set for \(date) \n")
     }
 }
-public func deleteUserNotification(identifier: UUID){
+func deleteUserNotification(identifier: UUID){
     UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
+    print("The notification is deleted for the id \(identifier) \n")
 }

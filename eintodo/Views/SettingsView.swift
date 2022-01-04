@@ -6,16 +6,33 @@
 //
 
 import SwiftUI
+import Foundation
 
-struct SettingsView: View {
-    @Binding var showSettings: Bool
+//Add Date to AppStorage, because AppStorage as default does not support the type Date
+extension Date: RawRepresentable {
+    private static let formatter = ISO8601DateFormatter()
     
+    public var rawValue: String {
+        Date.formatter.string(from: self)
+    }
+    
+    public init?(rawValue: String) {
+        self = Date.formatter.date(from: rawValue) ?? Date()
+    }
+}
+struct SettingsView: View {
+    @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
     var body: some View {
         ZStack{
-            VStack{
-                Text("SettingsView")
+            VStack(spacing: 20){
+                HStack{
+                    Text("Einstellungen").font(.title.bold())
+                    Spacer()
+                }
+                DatePicker("Standard-Erinnerungszeit für Fällig", selection: $deadlineTime, displayedComponents: .hourAndMinute)
+                Spacer()
             }
-        }
-        .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
+            .padding()
+        }.frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
     }
 }
