@@ -33,6 +33,7 @@ struct SettingsView: View {
                 Spacer()
             }
             .padding()
-        }.frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
+        }
+        .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
     }
 }

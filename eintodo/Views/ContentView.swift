@@ -10,6 +10,9 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
+    
+    @FetchRequest(sortDescriptors: []) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     @State var showAddView: Bool = false
@@ -56,6 +59,7 @@ struct ContentView: View {
                 }
             }
         }
+        //INITIALIZING FOR THE APP
         .onAppear{
             //Create a list if there is no lists at the beginning
             if lists.isEmpty{
@@ -75,13 +79,22 @@ struct ContentView: View {
             
             //Set the first list as the selected to do list
             userSelected.selectedToDoList = lists[0].listTitle!
+            print(userSelected.selectedToDoList)
+        }
+        .onChange(of: deadlineTime){ newValue in
+            for todo in todos{
+                let formattedDate = combineDateAndTime(date: getDate(date: todo.deadline!), time: getTime(date: deadlineTime))
+                if todo.deadline != Dates.defaultDate{
+                    todo.deadline = formattedDate
+                    updateUserNotification(title: todo.title!, id: todo.id!, date: formattedDate, type: "deadline")
+                }
+                do{
+                    try viewContext.save()
+                }catch{
+                    let nsError = error as NSError
+                    fatalError("Could not update all to-dos due a change of AppStorage DeadlineTime in SettingsView: \(nsError), \(nsError.userInfo)")
+                }
+            }
         }
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()

@@ -9,13 +9,13 @@ import SwiftUI
 import UserNotifications
 
 struct DetailView: View {
-    @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
     @Environment(\.managedObjectContext) public var viewContext
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.colorScheme) public var colorScheme
-    @EnvironmentObject private var userSelected: UserSelected
     
+    @EnvironmentObject private var userSelected: UserSelected
     @AppStorage("deadlineTime") private var AppStorageDeadlineTime: Date = Date()
+
+    @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
 
     let detailViewType: DetailViewTypes
 
@@ -169,17 +169,17 @@ struct DetailView: View {
                             case .add:
                                 ZStack{
                                     Circle()
-                                        .fill(getColorFromString(string: getToDoList(with: list)[2]))
+                                        .fill(getToDoListColor(with: list))
                                         .frame(width: 25, height: 25)
-                                    Image(systemName: getToDoList(with: list)[3])
+                                    Image(systemName: getToDoListSymbol(with: list))
                                         .foregroundColor(.white)
                                 }
                             case .display:
                                 ZStack{
                                     Circle()
-                                        .fill(getColorFromString(string: getToDoList(with: list)[2]))
+                                        .fill(getToDoListColor(with: list))
                                         .frame(width: 25, height: 25)
-                                    Image(systemName: getToDoList(with: list)[3])
+                                    Image(systemName: getToDoListSymbol(with: list))
                                         .foregroundColor(.white)
                                 }
                             }
@@ -299,16 +299,21 @@ struct DetailView: View {
 }
 
 extension DetailView{
-    public func getToDoList(with: String) -> [String]{
+    func getToDoListColor(with: String) -> Color{
+        var color: String = ""
         lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
-        var array: [String] = []
         for list in lists{
-            array.append(list.listTitle!) //0
-            array.append(list.listDescription!) //1
-            array.append(list.color!) //2
-            array.append(list.symbol!) //3
+            color = list.color!
         }
-        return array
+        return getColorFromString(string: color)
+    }
+    public func getToDoListSymbol(with: String) -> String{
+        var symbol = ""
+        lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
+        for list in lists{
+            symbol = list.symbol!
+        }
+        return symbol
     }
     
     //CORE-DATA - Add, update and delete ToDo
@@ -360,8 +365,7 @@ extension DetailView{
             //Deadline
             if showDeadline{
                 todo.deadline = deadline
-                deleteUserNotification(identifier: todo.id!)
-                addUserNotification(title: title, id: todo.id!, date: todo.deadline!, type: "deadline")
+                updateUserNotification(title: title, id: todo.id!, date: todo.deadline!, type: "deadline")
             }
             if !showDeadline{
                 todo.deadline = Dates.defaultDate
@@ -369,8 +373,7 @@ extension DetailView{
             //Notification
             if showNotification{
                 todo.notification = notification
-                deleteUserNotification(identifier: todo.id!)
-                addUserNotification(title: title, id: todo.id!, date: todo.notification!, type: "notification")
+                updateUserNotification(title: title, id: todo.id!, date: todo.notification!, type: "notification")
             }
             if !showNotification{
                 todo.notification = Dates.defaultDate
