@@ -10,6 +10,7 @@
         <attribute name="notification" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ToDoList" representedClassName="ToDoList" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="String" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
@@ -19,7 +20,7 @@
         <attribute name="symbol" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="ToDo" positionX="-62.1875" positionY="293.953125" width="128" height="164"/>
+        <element name="ToDo" positionX="-62.1875" positionY="293.953125" width="128" height="179"/>
         <element name="ToDoList" positionX="-63" positionY="45" width="128" height="104"/>
     </elements>
 </model>

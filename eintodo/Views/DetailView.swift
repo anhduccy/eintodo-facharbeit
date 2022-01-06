@@ -11,6 +11,7 @@ import UserNotifications
 struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
+    @Environment(\.openURL) var openURL
     
     @EnvironmentObject private var userSelected: UserSelected
     @AppStorage("deadlineTime") private var AppStorageDeadlineTime: Date = Date()
@@ -23,6 +24,7 @@ struct DetailView: View {
     @State var todo: ToDo
     @State var title: String = ""
     @State var notes: String = ""
+    @State var url: String = ""
     @State var deadline: Date = Date()
     @State var notification: Date = Date()
     @State var isMarked: Bool = false
@@ -52,6 +54,18 @@ struct DetailView: View {
                         .font(.body)
                         .textFieldStyle(.plain)
                         .foregroundColor(.gray)
+                    HStack{
+                        TextField("URL", text: $url)
+                            .font(.body)
+                            .textFieldStyle(.plain)
+                            .foregroundColor(.gray)
+                        if(url != ""){
+                            Button("Öffne URL"){
+                                openURL(URL(string: url)!)
+                            }.buttonStyle(.plain)
+                                .foregroundColor(Colors.primaryColor)
+                        }
+                    }
                 }
                 
                 Divider()
@@ -256,7 +270,7 @@ struct DetailView: View {
             }
         }
         .padding()
-        .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
+        .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeight, maxHeight: Sizes.defaultSheetHeight)
         .onAppear{
             switch(detailViewType){
             case .add:
@@ -284,6 +298,7 @@ struct DetailView: View {
             case .display: //Value assignment of CoreData storage, if type is display
                 title = todo.title ?? "Error"
                 notes = todo.notes ?? "Error"
+                url = todo.url ?? "Error"
                 if deadline == Dates.defaultDate{
                     showDeadline = false
                     deadline = combineDateAndTime(date: getDate(date: Date()), time: getTime(date: AppStorageDeadlineTime))
@@ -331,6 +346,7 @@ extension DetailView{
             newToDo.id = UUID()
             newToDo.title = title
             newToDo.notes = notes
+            newToDo.url = url
             if showDeadline{
                 newToDo.deadline = deadline
                 addUserNotification(title: title, id: newToDo.id!, date: deadline, type: "deadline")
@@ -370,6 +386,7 @@ extension DetailView{
             //Text
             todo.title = title
             todo.notes = notes
+            todo.url = url
             //Deadline
             if showDeadline{
                 todo.deadline = deadline
