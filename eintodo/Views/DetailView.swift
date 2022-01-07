@@ -31,6 +31,7 @@ struct DetailView: View {
     @State var isMarked: Bool = false
     @State var priority: Int = 0
     @State var list: String
+    @State var images: [NSImage] = []
     
     //Toggles and Conditions for Animation
     @State var showDeadline = true
@@ -218,7 +219,7 @@ struct DetailView: View {
                             Spacer()
                         }
                         //Images
-                        ImageView()
+                        ImageView(images: $images)
                     }
                 }
                 //Group - Control buttons
@@ -313,6 +314,7 @@ struct DetailView: View {
                 isMarked = todo.isMarked
                 list = todo.list!
                 priority = Int(todo.priority)
+                images = CoreDataToNSImageArray(coreDataObject: todo.images) ?? []
             }
             askForUserNotificationPermission()
         }
@@ -320,6 +322,7 @@ struct DetailView: View {
 }
 
 extension DetailView{
+    //Get information of ToDoList for the specified ToDo
     func getToDoListColor(with: String) -> Color{
         var color: String = ""
         lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
@@ -328,7 +331,7 @@ extension DetailView{
         }
         return getColorFromString(string: color)
     }
-    public func getToDoListSymbol(with: String) -> String{
+    func getToDoListSymbol(with: String) -> String{
         var symbol = ""
         lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
         for list in lists{
@@ -338,38 +341,38 @@ extension DetailView{
     }
     
     //CORE-DATA - Add, update and delete ToDo
-    public func addToDo() {
+    func addToDo() {
         withAnimation {
             let newToDo = ToDo(context: viewContext)
+            //Own ID
             newToDo.id = UUID()
+            //Texts
             newToDo.title = title
             newToDo.notes = notes
             newToDo.url = url
+            //Deadline
             if showDeadline{
                 newToDo.deadline = deadline
                 addUserNotification(title: title, id: newToDo.id!, date: deadline, type: "deadline")
-
             } else {
                 newToDo.deadline = Dates.defaultDate
             }
+            //Notification
             if showNotification {
                 newToDo.notification = notification
                 addUserNotification(title: title, id: newToDo.id!, date: notification, type: "notification")
             } else {
                 newToDo.notification = Dates.defaultDate
             }
+            //isMarked
             newToDo.isMarked = isMarked
-            switch(priority){
-            case 3:
-                newToDo.priority = 3
-            case 2:
-                newToDo.priority = 2
-            case 1:
-                newToDo.priority = 1
-            default:
-                newToDo.priority = 0
-            }
+            //Priority
+            newToDo.priority = Int16(priority)
+            //List
             newToDo.list = list
+            //Images
+            newToDo.images = NSImageArrayToCoreData(images: images)
+            //Set the ToDo to undone
             newToDo.isDone = false
             do {
                 try viewContext.save()
@@ -379,7 +382,7 @@ extension DetailView{
             }
         }
     }
-    public func updateToDo() {
+    func updateToDo() {
         withAnimation {
             //Text
             todo.title = title
@@ -389,33 +392,24 @@ extension DetailView{
             if showDeadline{
                 todo.deadline = deadline
                 updateUserNotification(title: title, id: todo.id!, date: todo.deadline!, type: "deadline")
-            }
-            if !showDeadline{
+            } else {
                 todo.deadline = Dates.defaultDate
             }
             //Notification
             if showNotification{
                 todo.notification = notification
                 updateUserNotification(title: title, id: todo.id!, date: todo.notification!, type: "notification")
-            }
-            if !showNotification{
+            } else {
                 todo.notification = Dates.defaultDate
             }
             //IsMarked
             todo.isMarked = isMarked
             //Priorities
-            switch(priority){
-            case 3:
-                todo.priority = 3
-            case 2:
-                todo.priority = 2
-            case 1:
-                todo.priority = 1
-            default:
-                todo.priority = 0
-            }
+            todo.priority = Int16(priority)
             //Lists
             todo.list = list
+            //Images
+            todo.images = NSImageArrayToCoreData(images: images)
             //Store in CoreData
             do {
                 try viewContext.save()
@@ -425,7 +419,7 @@ extension DetailView{
             }
         }
     }
-    public func deleteToDo(){
+    func deleteToDo(){
         withAnimation {
             deleteUserNotification(identifier: todo.id!)
             viewContext.delete(todo)
@@ -438,17 +432,39 @@ extension DetailView{
         }
     }
     //DISMISSING DetailView
-    public func dismissDetailView(){
+    func dismissDetailView(){
         userSelected.selectedDate = deadline
         isPresented.toggle()
+    }
+    /* Convert [NSImage] to Data and backwards (Storing Images)
+     * This will be disallowed in the future (Further information in the terminal, if you try to save an image)
+     */
+    func NSImageArrayToCoreData(images: [NSImage])->Data? {
+        let imageArray = NSMutableArray()
+        for img in images{
+            let data = img.tiffRepresentation
+            imageArray.add(data!)
+        }
+        return try? NSKeyedArchiver.archivedData(withRootObject: imageArray, requiringSecureCoding: true)
+    }
+    func CoreDataToNSImageArray(coreDataObject: Data?)->[NSImage]?{
+        var images = [NSImage]()
+        guard let object = coreDataObject else { return nil }
+        if let imageArray = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: object) {
+            for img in imageArray {
+                if let img = img as? Data, let image = NSImage(data: img) {
+                    images.append(image)
+                }
+            }
+        }
+        return images
     }
 }
 
 //SUBVIEWS
 //ImagePickerView - Button to pick image + Area to show the images
 struct ImageView: View{
-    @State var URLs: [URL] = []
-    @State var showImageDetailView: Bool = false
+    @Binding var images: [NSImage]
     var body: some View{
         ZStack{
             VStack{
@@ -474,8 +490,8 @@ struct ImageView: View{
                     //ImageArea
                     ScrollView(.horizontal){
                         HStack{
-                            ForEach(URLs.indices, id: \.self){ index in
-                                ImageButton(URLs: $URLs, selectedIndexOfURL: index, image: load(URL: URLs[index])!)
+                            ForEach(images.indices, id: \.self){ index in
+                                ImageButton(selectedIndexOfURL: index, images: $images, image: images[index])
                             }
                         }
                     }
@@ -485,7 +501,7 @@ struct ImageView: View{
         }
     }
     private func selectImage(){
-        let panel = NSOpenPanel()
+        let panel = NSOpenPanel() //Panel to select Image in Finder
         panel.prompt = "Bild auswählen"
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
@@ -495,7 +511,7 @@ struct ImageView: View{
         if panel.runModal() == NSApplication.ModalResponse.OK {
             let results = panel.urls
             for result in results{
-                URLs.append(result.absoluteURL)
+                images.append(load(URL: result.absoluteURL)!)
             }
         }
     }
@@ -509,11 +525,10 @@ struct ImageView: View{
 }
 //ImageDetailView - Show the image in a fuller size
 struct ImageDetailView: View{
+    @Binding var images: [NSImage]
     @Binding var isPresented: Bool
-    @Binding var URLs: [URL]
     @Binding var selectedIndexOfURL: Int
     let image: NSImage
-    
     var body: some View{
         VStack{
             Image(nsImage: image)
@@ -523,7 +538,7 @@ struct ImageDetailView: View{
             HStack{
                 Button(action: {
                     isPresented.toggle()
-                    URLs.remove(at: selectedIndexOfURL)
+                    images.remove(at: selectedIndexOfURL)
                 }, label: {
                     Text("Entfernen")
                         .foregroundColor(.red)
@@ -549,10 +564,9 @@ struct ImageDetailView: View{
 //ImageButton - For Each Image to open the ImageDetailView
 struct ImageButton: View{
     @State var isPresented: Bool = false
-    @Binding var URLs: [URL]
     @State var selectedIndexOfURL: Int
+    @Binding var images: [NSImage]
     let image: NSImage
-
     var body: some View{
         Button(action: {
             isPresented.toggle()
@@ -565,7 +579,7 @@ struct ImageButton: View{
                 .cornerRadius(10)
 
         }).sheet(isPresented: $isPresented){
-            ImageDetailView(isPresented: $isPresented, URLs: $URLs, selectedIndexOfURL: $selectedIndexOfURL, image: image)
+            ImageDetailView(images: $images, isPresented: $isPresented, selectedIndexOfURL: $selectedIndexOfURL, image: image)
         }.buttonStyle(.plain)
     }
 }
