@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UserNotifications
+import UniformTypeIdentifiers
 
 struct DetailView: View {
     @Environment(\.managedObjectContext) public var viewContext
@@ -43,228 +44,221 @@ struct DetailView: View {
     
     var body: some View {
         ZStack{
-            VStack(spacing: 20){
-
-                //Group - Title & Notes
-                VStack(spacing: 2){
-                    TextField("Titel", text: $title)
-                        .font(.title.bold())
-                        .textFieldStyle(.plain)
-                    TextField("Notizen", text: $notes)
-                        .font(.body)
-                        .textFieldStyle(.plain)
-                        .foregroundColor(.gray)
-                    HStack{
-                        TextField("URL", text: $url)
-                            .font(.body)
-                            .textFieldStyle(.plain)
-                            .foregroundColor(.gray)
-                        if(url != ""){
-                            Button("Öffne URL"){
-                                openURL(URL(string: url)!)
-                            }.buttonStyle(.plain)
-                                .foregroundColor(Colors.primaryColor)
+            VStack{
+                ScrollView{
+                    VStack(spacing: 20){
+                        //Group of TextField - Title, Notes, URLs
+                        VStack(spacing: 2){
+                            TextField("Titel", text: $title)
+                                .font(.title.bold())
+                                .textFieldStyle(.plain)
+                            TextField("Notizen", text: $notes)
+                                .font(.body)
+                                .textFieldStyle(.plain)
+                                .foregroundColor(.gray)
+                            HStack{
+                                TextField("URL", text: $url)
+                                    .font(.body)
+                                    .textFieldStyle(.plain)
+                                    .foregroundColor(.gray)
+                                if(url != ""){
+                                    Button("Öffne URL"){
+                                        openURL(URL(string: url)!)
+                                    }.buttonStyle(.plain)
+                                        .foregroundColor(Colors.primaryColor)
+                                }
+                            }
                         }
+                        
+                        Divider()
+
+                        //Group of Buttons - List, Deadline, Notifications, isMarked, Priorities, Images
+                        VStack{
+                            //List
+                            Button(action: {
+                                showListPicker.toggle()
+                            },
+                                   label: {
+                                HStack{
+                                    switch(detailViewType){
+                                    case .add:
+                                        ZStack{
+                                            Circle()
+                                                .fill(getToDoListColor(with: list))
+                                                .frame(width: 25, height: 25)
+                                            Image(systemName: getToDoListSymbol(with: list))
+                                                .foregroundColor(.white)
+                                        }
+                                    case .display:
+                                        ZStack{
+                                            Circle()
+                                                .fill(getToDoListColor(with: list))
+                                                .frame(width: 25, height: 25)
+                                            Image(systemName: getToDoListSymbol(with: list))
+                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                    Text("Ausgewählte Liste - " + list)
+                                    Spacer()
+                                }
+                            })
+                            .popover(isPresented: $showListPicker){
+                                VStack{
+                                    Text("Liste auswählen").font(.title2.bold())
+                                    DetailViewListPicker(listsValueString: $list)
+                                }
+                                .padding()
+                            }.buttonStyle(.plain)
+                            
+                            //Deadline
+                            VStack{
+                                HStack{
+                                    HStack{
+                                        Button(action: {
+                                            withAnimation{
+                                                showDeadline.toggle()
+                                            }
+                                        }, label: {
+                                            IconImage(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
+                                        })
+                                            .buttonStyle(.plain)
+                                        
+                                        Text("Fällig am")
+                                            .font(.body)
+                                        Spacer()
+                                    }
+                                    .frame(width: 125)
+                                    if showDeadline {
+                                        DatePicker("",
+                                            selection: $deadline,
+                                            displayedComponents: [.date]
+                                        )
+                                            .datePickerStyle(.compact)
+                                    } else {
+                                        Spacer()
+                                    }
+                                }
+                            }
+                            
+                            //Notifications
+                            VStack{
+                                HStack{
+                                    HStack{
+                                        Button(action: {
+                                            withAnimation{
+                                                showNotification.toggle()
+                                            }
+                                        }, label: {
+                                            IconImage(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
+                                        })
+                                            .buttonStyle(.plain)
+                                        
+                                        Text("Erinnerung")
+                                            .font(.body)
+                                        Spacer()
+                                    }
+                                    .frame(width: 125)
+                                    if showNotification {
+                                        DatePicker("",
+                                            selection: $notification,
+                                                   displayedComponents: [.date, .hourAndMinute]
+                                        )
+                                            .datePickerStyle(.compact)
+                                    } else{
+                                        Spacer()
+                                    }
+                                }
+                            }
+                            
+                            //IsMarked
+                            HStack{
+                                Button(action: {
+                                    withAnimation{
+                                        isMarked.toggle()
+                                    }
+                                }, label: {
+                                    IconImage(image: "star.circle.fill", color: Colors.primaryColor, size: 25, isActivated: isMarked)
+                                })
+                                    .buttonStyle(.plain)
+                                Text("Markiert")
+                                    .font(.body)
+                                Spacer()
+                            }
+                            
+                            //Priorities
+                            HStack{
+                                Button(action: {
+                                    withAnimation{
+                                        showPriorityPopover.toggle()
+                                    }
+                                }, label: {
+                                    switch(priority){
+                                    case 3:
+                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
+                                    case 2:
+                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.75)
+                                    case 1:
+                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.5)
+                                    default:
+                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: false)
+                                    }
+                                })
+                                    .buttonStyle(.plain)
+                                    .popover(isPresented: $showPriorityPopover){
+                                        SelectPriorityPopover(priority: $priority)
+                                    }
+                                Text("Priorität")
+                                    .font(.body)
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        //Images
+                        ImageView()
                     }
                 }
-                
-                Divider()
-                
-                //Group - Deadline, Notifications & isMarked
-                VStack{
-                    //Deadline
-                    VStack{
-                        HStack{
-                            HStack{
-                                Button(action: {
-                                    withAnimation{
-                                        showDeadline.toggle()
-                                    }
-                                }, label: {
-                                    IconImage(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
-                                })
-                                    .buttonStyle(.plain)
-                                
-                                Text("Fällig am")
-                                    .font(.body)
-                                Spacer()
-                            }
-                            .frame(width: 125)
-                            if showDeadline {
-                                DatePicker("",
-                                    selection: $deadline,
-                                    displayedComponents: [.date]
-                                )
-                                    .datePickerStyle(.compact)
-                            } else {
-                                Spacer()
-                            }
-                        }
-                    }
-                    
-                    //Notifications
-                    VStack{
-                        HStack{
-                            HStack{
-                                Button(action: {
-                                    withAnimation{
-                                        showNotification.toggle()
-                                    }
-                                }, label: {
-                                    IconImage(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
-                                })
-                                    .buttonStyle(.plain)
-                                
-                                Text("Erinnerung")
-                                    .font(.body)
-                                Spacer()
-                            }
-                            .frame(width: 125)
-                            if showNotification {
-                                DatePicker("",
-                                    selection: $notification,
-                                           displayedComponents: [.date, .hourAndMinute]
-                                )
-                                    .datePickerStyle(.compact)
-                            } else{
-                                Spacer()
-                            }
-                        }
-                    }
-                    
-                    //IsMarked
-                    HStack{
-                        Button(action: {
-                            withAnimation{
-                                isMarked.toggle()
-                            }
-                        }, label: {
-                            IconImage(image: "star.circle.fill", color: Colors.primaryColor, size: 25, isActivated: isMarked)
-                        })
-                            .buttonStyle(.plain)
-                        Text("Markiert")
-                            .font(.body)
+                //Group - Control buttons
+                HStack{
+                    Button("Abbrechen"){dismissDetailView()}.buttonStyle(.plain).foregroundColor(Colors.secondaryColor)
+                    switch(detailViewType){
+                    case .display:
                         Spacer()
-                    }
-                    
-                    //Priority
-                    HStack{
                         Button(action: {
-                            withAnimation{
-                                showPriorityPopover.toggle()
-                            }
-                        }, label: {
-                            switch(priority){
-                            case 3:
-                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
-                            case 2:
-                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.75)
-                            case 1:
-                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.5)
-                            default:
-                                IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: false)
-                            }
-                        })
-                            .buttonStyle(.plain)
-                            .popover(isPresented: $showPriorityPopover){
-                                SelectPriorityPopover(priority: $priority)
-                            }
-                        Text("Priorität")
-                            .font(.body)
-                        Spacer()
-                    }
-                    
-                    //List
-                    Button(action: {
-                        showListPicker.toggle()
-                    }, label: {
-                        HStack{
-                            switch(detailViewType){
-                            case .add:
-                                ZStack{
-                                    Circle()
-                                        .fill(getToDoListColor(with: list))
-                                        .frame(width: 25, height: 25)
-                                    Image(systemName: getToDoListSymbol(with: list))
-                                        .foregroundColor(.white)
-                                }
-                            case .display:
-                                ZStack{
-                                    Circle()
-                                        .fill(getToDoListColor(with: list))
-                                        .frame(width: 25, height: 25)
-                                    Image(systemName: getToDoListSymbol(with: list))
-                                        .foregroundColor(.white)
-                                }
-                            }
-                            Text("Ausgewählte Liste - " + list)
-                            Spacer()
-                        }
-                    })
-                    .popover(isPresented: $showListPicker){
-                        VStack{
-                            Text("Liste auswählen").font(.title2.bold())
-                            DetailViewListPicker(listsValueString: $list)
-                        }
-                        .padding()
-                    }.buttonStyle(.plain)
-                    Spacer()
-                    
-                    Spacer()
-                    
-                    //Group - Submit button
-                    HStack{
-                        Button("Abbrechen"){
+                            deleteToDo()
                             dismissDetailView()
-                        }
-                        .foregroundColor(Colors.secondaryColor)
+                        }, label: {
+                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
+                        }).buttonStyle(.plain)
+                            .onHover{ over in
+                                withAnimation{overDeleteButton = over}
+                            }
+                        Spacer()
+                    case .add:
+                        Spacer()
+                    }
+                    if(title != "" && list != ""){
+                        Button(action: {
+                            switch(detailViewType){
+                            case .display:
+                                updateToDo()
+                            case .add:
+                                addToDo()
+                            }
+                            dismissDetailView()
+                        }, label: {
+                            Text("Fertig")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .foregroundColor(colorScheme == .dark ? Colors.secondaryColor : Colors.primaryColor)
+                        })
                         .buttonStyle(.plain)
-                        switch(detailViewType){
-                        case .display:
-                            Spacer()
-                            Button(action: {
-                                deleteToDo()
-                                dismissDetailView()
-                            }, label: {
-                                IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
-                            })
-                                .buttonStyle(.plain)
-                                .onHover{ over in
-                                    withAnimation{
-                                        overDeleteButton = over
-                                    }
-                                }
-                            Spacer()
-                        case .add:
-                            Spacer()
-                        }
-                        if(title != "" && list != ""){
-                            Button(action: {
-                                switch(detailViewType){
-                                case .display:
-                                    updateToDo()
-                                case .add:
-                                    addToDo()
-                                }
-                                dismissDetailView()
-                            }, label: {
-                                Text("Fertig")
-                                    .font(.body)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(colorScheme == .dark ? Colors.secondaryColor : Colors.primaryColor)
-                            })
-                            .buttonStyle(.plain)
-                        } else {
-                            Button(action: {
-                                dismissDetailView()
-                            }, label: {
-                                Text("Fertig")
-                                    .font(.body)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.gray)
-                            })
-                            .buttonStyle(.plain)
-                        }
+                    } else {
+                        Button(action: {dismissDetailView()}, label: {
+                            Text("Fertig")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.gray)
+                        }).buttonStyle(.plain)
                     }
                 }
             }
@@ -446,8 +440,131 @@ extension DetailView{
     }
 }
 
+//SUBVIEWS
+//ImagePickerView - Button to pick image + Area to show the images
+struct ImageView: View{
+    @State var URLs: [URL] = []
+    @State var showImageDetailView: Bool = false
+    var body: some View{
+        ZStack{
+            VStack{
+                HStack{
+                    Text("Bilder").font(.headline)
+                    Spacer()
+                }
+                HStack{
+                    Button(action: selectImage){
+                        ZStack{
+                            Rectangle()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(Colors.primaryColor)
+                                .cornerRadius(10)
+                                .opacity(0.1)
+                            Image(systemName: "plus")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20)
+                                .foregroundColor(Colors.primaryColor)
+                        }
+                    }.buttonStyle(.plain)
+                    //ImageArea
+                    ScrollView(.horizontal){
+                        HStack{
+                            ForEach(URLs.indices, id: \.self){ index in
+                                ImageButton(URLs: $URLs, selectedIndexOfURL: index, image: load(URL: URLs[index])!)
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+            }
+        }
+    }
+    private func selectImage(){
+        let panel = NSOpenPanel()
+        panel.prompt = "Bild auswählen"
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        panel.canCreateDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [UTType("public.image")!]
+        if panel.runModal() == NSApplication.ModalResponse.OK {
+            let results = panel.urls
+            for result in results{
+                URLs.append(result.absoluteURL)
+            }
+        }
+    }
+    private func load(URL: URL) -> NSImage?{
+        do {
+            let imageData = try Data(contentsOf: URL)
+            return NSImage(data: imageData)
+        } catch {print("Error loading image in DetailView: \(error)")}
+        return nil
+    }
+}
+//ImageDetailView - Show the image in a fuller size
+struct ImageDetailView: View{
+    @Binding var isPresented: Bool
+    @Binding var URLs: [URL]
+    @Binding var selectedIndexOfURL: Int
+    let image: NSImage
+    
+    var body: some View{
+        VStack{
+            Image(nsImage: image)
+                .resizable()
+                .scaledToFit()
+            Spacer()
+            HStack{
+                Button(action: {
+                    isPresented.toggle()
+                    URLs.remove(at: selectedIndexOfURL)
+                }, label: {
+                    Text("Entfernen")
+                        .foregroundColor(.red)
+                        .font(.body)
+                }).buttonStyle(.plain)
+                Spacer()
+                Button(action: {
+                    isPresented.toggle()
+                }, label: {
+                    Text("Schließen")
+                        .foregroundColor(Colors.primaryColor)
+                        .font(.body.bold())
+                }).buttonStyle(.plain)
+            }
+            .padding(.leading, 10)
+            .padding(.trailing, 10)
+            .padding(.bottom, 10)
+            .padding(.top, 2.5)
+        }
+        .frame(height: 500)
+    }
+}
+//ImageButton - For Each Image to open the ImageDetailView
+struct ImageButton: View{
+    @State var isPresented: Bool = false
+    @Binding var URLs: [URL]
+    @State var selectedIndexOfURL: Int
+    let image: NSImage
 
-//VIEWS
+    var body: some View{
+        Button(action: {
+            isPresented.toggle()
+        },
+        label: {
+            Image(nsImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 40, height: 40)
+                .cornerRadius(10)
+
+        }).sheet(isPresented: $isPresented){
+            ImageDetailView(isPresented: $isPresented, URLs: $URLs, selectedIndexOfURL: $selectedIndexOfURL, image: image)
+        }.buttonStyle(.plain)
+    }
+}
 //Popover to select priority
 struct SelectPriorityPopover: View{
     @Binding var priority: Int
@@ -468,8 +585,7 @@ struct SelectPriorityPopover: View{
         .padding()
     }
 }
-
-//ListPicker
+//ListPicker to select lists
 struct DetailViewListPicker: View{
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     @Binding var listsValueString: String
