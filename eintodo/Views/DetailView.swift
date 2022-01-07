@@ -45,35 +45,39 @@ struct DetailView: View {
     var body: some View {
         ZStack{
             VStack{
+                //Group of TextField - Title, Notes, URLs
+                VStack(spacing: 2){
+                    TextField("Titel", text: $title)
+                        .font(.title.bold())
+                        .textFieldStyle(.plain)
+                    TextField("Notizen", text: $notes)
+                        .font(.body)
+                        .textFieldStyle(.plain)
+                        .foregroundColor(.gray)
+                    HStack{
+                        TextField("URL", text: $url)
+                            .font(.body)
+                            .textFieldStyle(.plain)
+                            .foregroundColor(.gray)
+                        if(url != ""){
+                            Button("Öffne URL"){
+                                openURL(URL(string: url)!)
+                            }.buttonStyle(.plain)
+                                .foregroundColor(Colors.primaryColor)
+                        }
+                    }
+                }
+                
+                Divider()
+                
                 ScrollView{
                     VStack(spacing: 20){
-                        //Group of TextField - Title, Notes, URLs
-                        VStack(spacing: 2){
-                            TextField("Titel", text: $title)
-                                .font(.title.bold())
-                                .textFieldStyle(.plain)
-                            TextField("Notizen", text: $notes)
-                                .font(.body)
-                                .textFieldStyle(.plain)
-                                .foregroundColor(.gray)
-                            HStack{
-                                TextField("URL", text: $url)
-                                    .font(.body)
-                                    .textFieldStyle(.plain)
-                                    .foregroundColor(.gray)
-                                if(url != ""){
-                                    Button("Öffne URL"){
-                                        openURL(URL(string: url)!)
-                                    }.buttonStyle(.plain)
-                                        .foregroundColor(Colors.primaryColor)
-                                }
-                            }
-                        }
-                        
-                        Divider()
-
                         //Group of Buttons - List, Deadline, Notifications, isMarked, Priorities, Images
                         VStack{
+                            HStack{
+                                Text("Allgemein").font(.headline)
+                                Spacer()
+                            }
                             //List
                             Button(action: {
                                 showListPicker.toggle()
@@ -262,8 +266,8 @@ struct DetailView: View {
                     }
                 }
             }
+            .padding()
         }
-        .padding()
         .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeight, maxHeight: Sizes.defaultSheetHeight)
         .onAppear{
             switch(detailViewType){
