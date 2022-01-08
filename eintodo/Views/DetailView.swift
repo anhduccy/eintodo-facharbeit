@@ -23,6 +23,7 @@ struct DetailView: View {
 
     //Values for ToDo
     @State var todo: ToDo
+    @State var id: UUID = UUID()
     @State var title: String = ""
     @State var notes: String = ""
     @State var url: String = ""
@@ -220,6 +221,8 @@ struct DetailView: View {
                         }
                         //Images
                         ImageView(images: $images)
+                        //SubToDos
+                        SubToDoList(id: $id)
                     }
                 }
                 //Group - Control buttons
@@ -269,7 +272,7 @@ struct DetailView: View {
             }
             .padding()
         }
-        .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeight, maxHeight: Sizes.defaultSheetHeight)
+        .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeightDetailView)
         .onAppear{
             switch(detailViewType){
             case .add:
@@ -295,6 +298,7 @@ struct DetailView: View {
                     list = userSelected.selectedToDoList
                 }
             case .display: //Value assignment of CoreData storage, if type is display
+                id = todo.id!
                 title = todo.title ?? "Error"
                 notes = todo.notes ?? "Error"
                 url = todo.url ?? "Error"
@@ -346,7 +350,7 @@ extension DetailView{
         withAnimation {
             let newToDo = ToDo(context: viewContext)
             //Own ID
-            newToDo.id = UUID()
+            newToDo.id = id
             //Texts
             newToDo.title = title
             newToDo.notes = notes
@@ -379,7 +383,7 @@ extension DetailView{
                 try viewContext.save()
             } catch {
                 let nsError = error as NSError
-                fatalError("Could not add CoreData-Entity in AddView: \(nsError), \(nsError.userInfo)")
+                fatalError("Could not add CoreData-Entity ToDo in DetailView: \(nsError), \(nsError.userInfo)")
             }
         }
     }
@@ -630,6 +634,112 @@ struct DetailViewListPicker: View{
                 }
                 counter += 1
             }
+        }
+    }
+}
+//SubToDoList - View to add a SubToDo + Area to show the list
+struct SubToDoList: View{
+    @Environment(\.managedObjectContext) public var viewContext
+    @FetchRequest(sortDescriptors: [], animation: .default) var subToDos: FetchedResults<SubToDo>
+    @State var sub_title: String = ""
+    @Binding var id: UUID
+    var body: some View{
+        //SubToDos
+        VStack{
+            HStack{
+                Text("Erinnerungen").font(.headline)
+                Spacer()
+            }
+            HStack{
+                Button(action: {
+                    if sub_title != ""{
+                        addSubToDo()
+                        sub_title = ""
+                    }
+                }, label: {
+                    IconImage(image: "plus.circle.fill", size: 20, isActivated: true)
+                }).buttonStyle(.plain)
+                TextField("Neue Erinnerung", text: $sub_title).textFieldStyle(.plain)
+            }
+            ForEach(subToDos, id: \.self){ subToDo in
+                HStack{
+                    Button(action: {
+                        subToDo.sub_isDone.toggle()
+                    }, label: {
+                        IconImage(image: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle", size: 20, isActivated: subToDo.sub_isDone)
+                    }).buttonStyle(.plain)
+                    SubToDoListTextField(subToDo: subToDo, sub_title: subToDo.sub_title!)
+                    Spacer()
+                    Button(action: {
+                        deleteSubToDo(subToDo: subToDo)
+                    }, label: {
+                        IconImage(image: "trash.circle.fill", color: .red, size: 20, isActivated: true)
+                    }).buttonStyle(.plain)
+                }
+            }
+        }
+        .onAppear{
+            subToDos.nsPredicate = NSPredicate(format: "idOfMainToDo == %@", id as CVarArg)
+        }
+    }
+    func addSubToDo(){
+        let newSubToDo = SubToDo(context: viewContext)
+        newSubToDo.sub_title = sub_title
+        newSubToDo.sub_id = UUID()
+        newSubToDo.sub_isDone = false
+        var itemsInSubToDos = subToDos.count
+        itemsInSubToDos += 1
+        newSubToDo.sub_sortIndex = Int16(itemsInSubToDos)
+        newSubToDo.idOfMainToDo = id
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not add CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
+        }
+    }
+    func deleteSubToDo(subToDo: SubToDo){
+        viewContext.delete(subToDo)
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not delete CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+//SubToDoListTextField - Row to update the SubToDo
+struct SubToDoListTextField: View{
+    @Environment(\.managedObjectContext) public var viewContext
+    let subToDo: SubToDo
+    @State var sub_title: String = ""
+    
+    var body: some View{
+        TextField("", text: $sub_title).textFieldStyle(.plain)
+            .onDisappear{
+                if sub_title != ""{
+                    updateSubToDo()
+                } else {
+                    deleteSubToDo(subToDo: subToDo)
+                }
+            }
+    }
+    func updateSubToDo(){
+        subToDo.sub_title = sub_title
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not update CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
+        }
+    }
+    func deleteSubToDo(subToDo: SubToDo){
+        viewContext.delete(subToDo)
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Could not delete CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
         }
     }
 }

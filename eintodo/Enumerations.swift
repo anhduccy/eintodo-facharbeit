@@ -35,6 +35,7 @@ struct SecondsCalculated {
 struct Sizes {
     static let defaultSheetWidth: CGFloat = 400
     static let defaultSheetHeight: CGFloat = 400
+    static let defaultSheetHeightDetailView: CGFloat = 500
 }
 struct Colors {
     static let primaryColor: Color = .indigo

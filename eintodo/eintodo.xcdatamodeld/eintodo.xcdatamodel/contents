@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="SubToDo" representedClassName="SubToDo" syncable="YES" codeGenerationType="class">
+        <attribute name="idOfMainToDo" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="sub_id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="sub_isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="sub_sortIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sub_title" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="ToDo" representedClassName="ToDo" syncable="YES" codeGenerationType="class">
         <attribute name="deadline" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -23,5 +30,6 @@
     <elements>
         <element name="ToDo" positionX="-62.1875" positionY="293.953125" width="128" height="194"/>
         <element name="ToDoList" positionX="-63" positionY="45" width="128" height="104"/>
+        <element name="SubToDo" positionX="-63" positionY="207" width="128" height="104"/>
     </elements>
 </model>
