@@ -298,6 +298,7 @@ struct DetailView: View {
                 title = todo.title ?? "Error"
                 notes = todo.notes ?? "Error"
                 url = todo.url ?? "Error"
+                deadline = todo.deadline ?? Dates.defaultDate
                 if deadline == Dates.defaultDate{
                     showDeadline = false
                     deadline = combineDateAndTime(date: getDate(date: Date()), time: getTime(date: AppStorageDeadlineTime))
