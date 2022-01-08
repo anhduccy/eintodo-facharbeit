@@ -708,13 +708,25 @@ struct SubToDoListRow: View{
             Button(action: {
                 subToDo.sub_isDone.toggle()
             }, label: {
-                IconImage(image: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle", color: overCheckmarkBox ? Colors.primaryColor : subToDo.sub_isDone ? Colors.primaryColor : .gray, size: 20, isActivated: true)
-                    .opacity(overCheckmarkBox ? 1 : subToDo.sub_isDone ? 1 : 0.5)
-                    .onHover{over in
-                        withAnimation{
-                            overCheckmarkBox = over
-                        }
+                ZStack{
+                    if(subToDo.sub_isDone){
+                        Circle()
+                            .fill(.white)
+                            .frame(width: 15, height: 15)
                     }
+                    Image(systemName: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(overCheckmarkBox ? Colors.primaryColor : subToDo.sub_isDone ? Colors.primaryColor : .gray)
+                        .opacity(overCheckmarkBox ? 1 : subToDo.sub_isDone ? 1 : 0.5)
+                        .onHover{ over in
+                            withAnimation{
+                                overCheckmarkBox = over
+
+                            }
+                        }
+                }
             }).buttonStyle(.plain)
             //TextField
             TextField("", text: $sub_title).textFieldStyle(.plain)
