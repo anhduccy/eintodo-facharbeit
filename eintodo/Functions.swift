@@ -33,6 +33,7 @@ func getColorFromString(string: String)->Color{
     switch(string){
         case "red": return Color.red
         case "pink": return Color.pink
+        case "orange": return Color.orange
         case "yellow": return Color.yellow
         case "green": return Color.green
         case "blue": return Color.blue

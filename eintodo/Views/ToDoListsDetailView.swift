@@ -10,6 +10,8 @@ import SwiftUI
 struct ToDoListDetailView: View{
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
+    @EnvironmentObject var userSelected: UserSelected
+    @FetchRequest(sortDescriptors: [], animation: .default) var todos: FetchedResults<ToDo>
 
     let type: DetailViewTypes
 
@@ -27,7 +29,7 @@ struct ToDoListDetailView: View{
     @State var overDeleteButton = false
     
     //Constants
-    let colors: [String] = ["pink", "red", "yellow", "green", "blue", "indigo", "purple", "brown", "gray"]
+    let colors: [String] = ["pink", "red", "orange", "yellow", "green", "blue", "indigo", "purple", "brown", "gray"]
     let symbols: [String] = ["list.bullet", "bookmark.fill", "mappin", "gift.fill", "graduationcap.fill", "doc.fill", "book.fill", "banknote", "creditcard.fill", "figure.walk", "fork.knife", "house.fill", "tv.fill", "music.note", "pc", "gamecontroller.fill", "headphones", "beats.headphones", "leaf.fill", "person.fill", "person.2.fill", "person.3.fill", "pawprint.fill", "cart.fill", "bag.fill", "shippingbox.fill", "tram.fill", "airplane", "car.fill", "sun.max.fill", "moon.fill", "drop.fill", "snowflake", "flame.fill", "screwdriver.fill", "scissors", "curlybraces", "chevron.left.forwardslash.chevron.right", "lightbulb.fill", "bubble.left.fill", "staroflife.fill", "square.fill", "circle.fill", "triangle.fill", "heart.fill", "star.fill"]
     let buttonSize: CGFloat = 30
     let buttonSymbolSize: CGFloat = 15
@@ -192,12 +194,16 @@ struct ToDoListDetailView: View{
 
 extension ToDoListDetailView{
     public func addToDoList(){
+        //Initialize the ToDoList
         let newToDoList = ToDoList(context: viewContext)
         newToDoList.listID = UUID()
         newToDoList.listTitle = title
         newToDoList.listDescription = description
         newToDoList.color = selectedColor
         newToDoList.symbol = selectedSymbol
+        //Set selected to do list to the edited one
+        userSelected.selectedToDoList = title
+
         do{
             try viewContext.save()
         }catch{
@@ -206,10 +212,18 @@ extension ToDoListDetailView{
         }
     }
     public func updateToDoList(){
+        todos.nsPredicate = NSPredicate(format: "list == %@", toDoList.listTitle! as CVarArg)
+        //Update ToDoList
         toDoList.listTitle = title
         toDoList.listDescription = description
         toDoList.color = selectedColor
         toDoList.symbol = selectedSymbol
+        //Update the titles of all todos in the list
+        for todo in todos{
+            todo.list = title
+        }
+        //Set selected to do list to the edited one
+        userSelected.selectedToDoList = title
         do{
             try viewContext.save()
         }catch{
