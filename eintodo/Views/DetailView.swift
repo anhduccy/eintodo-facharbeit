@@ -18,6 +18,7 @@ struct DetailView: View {
     @AppStorage("deadlineTime") private var AppStorageDeadlineTime: Date = Date()
 
     @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
+    @FetchRequest(sortDescriptors: []) var subToDos: FetchedResults<SubToDo>
 
     let detailViewType: DetailViewTypes
 
@@ -93,6 +94,9 @@ struct DetailView: View {
                                                 .fill(getToDoListColor(with: list))
                                                 .frame(width: 25, height: 25)
                                             Image(systemName: getToDoListSymbol(with: list))
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 12.5, height: 12.5)
                                                 .foregroundColor(.white)
                                         }
                                     case .display:
@@ -101,6 +105,9 @@ struct DetailView: View {
                                                 .fill(getToDoListColor(with: list))
                                                 .frame(width: 25, height: 25)
                                             Image(systemName: getToDoListSymbol(with: list))
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 12.5, height: 12.5)
                                                 .foregroundColor(.white)
                                         }
                                     }
@@ -222,7 +229,7 @@ struct DetailView: View {
                         //Images
                         ImageView(images: $images)
                         //SubToDos
-                        SubToDoList(id: $id)
+                        SubToDoList(id: id)
                     }
                 }
                 //Group - Control buttons
@@ -431,6 +438,10 @@ extension DetailView{
         withAnimation {
             deleteUserNotification(identifier: todo.id!)
             viewContext.delete(todo)
+            subToDos.nsPredicate = NSPredicate(format: "idOfMainToDo == %@", todo.id! as CVarArg)
+            for subToDo in subToDos{
+                viewContext.delete(subToDo)
+            }
             do {
                 try viewContext.save()
             } catch {
@@ -538,10 +549,10 @@ struct ImageDetailView: View{
                         .font(.body.bold())
                 }).buttonStyle(.plain)
             }
-            .padding(.leading, 10)
-            .padding(.trailing, 10)
-            .padding(.bottom, 10)
-            .padding(.top, 2.5)
+            .padding(.leading, 15)
+            .padding(.trailing, 15)
+            .padding(.bottom, 15)
+            .padding(.top, 7.5)
         }
         .frame(height: 500)
     }
@@ -620,18 +631,29 @@ struct DetailViewListPicker: View{
 //SubToDoList - View to add a SubToDo + Area to show the list
 struct SubToDoList: View{
     @Environment(\.managedObjectContext) public var viewContext
-    @FetchRequest(sortDescriptors: [
-        NSSortDescriptor(keyPath: \SubToDo.sub_isDone, ascending: true),
-        NSSortDescriptor(keyPath: \SubToDo.sub_sortIndex, ascending: true)
-    ], animation: .default) var subToDos: FetchedResults<SubToDo>
+    @FetchRequest var subToDos: FetchedResults<SubToDo>
     @State var sub_title: String = ""
-    @Binding var id: UUID
+    let id: UUID
+    
+    init(id: UUID){
+        _subToDos = FetchRequest(sortDescriptors: [
+            NSSortDescriptor(keyPath: \SubToDo.sub_isDone, ascending: true),
+            NSSortDescriptor(keyPath: \SubToDo.sub_sortIndex, ascending: true)
+        ], predicate: NSPredicate(format: "idOfMainToDo == %@", id as CVarArg), animation: .default)
+        self.id = id
+    }
+    
     var body: some View{
         //SubToDos
         VStack{
             HStack{
                 Text("Erinnerungen").font(.headline)
                 Spacer()
+            }
+            ForEach(subToDos, id: \.self){ subToDo in
+                HStack{
+                    SubToDoListRow(subToDo: subToDo, sub_title: subToDo.sub_title!)
+                }
             }
             HStack{
                 Button(action: {
@@ -644,14 +666,6 @@ struct SubToDoList: View{
                 }).buttonStyle(.plain)
                 TextField("Neue Erinnerung", text: $sub_title).textFieldStyle(.plain)
             }
-            ForEach(subToDos, id: \.self){ subToDo in
-                HStack{
-                    SubToDoListRow(subToDo: subToDo, sub_title: subToDo.sub_title!)
-                }
-            }
-        }
-        .onAppear{
-            subToDos.nsPredicate = NSPredicate(format: "idOfMainToDo == %@", id as CVarArg)
         }
     }
     func addSubToDo(){
@@ -686,6 +700,7 @@ struct SubToDoListRow: View{
     @ObservedObject var subToDo: SubToDo
     @State var sub_title: String = ""
     @State var overDeleteButton: Bool = false
+    @State var overCheckmarkBox: Bool = false
     
     var body: some View{
         HStack{
@@ -693,7 +708,13 @@ struct SubToDoListRow: View{
             Button(action: {
                 subToDo.sub_isDone.toggle()
             }, label: {
-                IconImage(image: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle", size: 20, isActivated: subToDo.sub_isDone)
+                IconImage(image: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle", color: overCheckmarkBox ? Colors.primaryColor : subToDo.sub_isDone ? Colors.primaryColor : .gray, size: 20, isActivated: true)
+                    .opacity(overCheckmarkBox ? 1 : subToDo.sub_isDone ? 1 : 0.5)
+                    .onHover{over in
+                        withAnimation{
+                            overCheckmarkBox = over
+                        }
+                    }
             }).buttonStyle(.plain)
             //TextField
             TextField("", text: $sub_title).textFieldStyle(.plain)

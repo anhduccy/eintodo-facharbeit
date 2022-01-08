@@ -178,7 +178,7 @@ struct ListRow: View {
         return iconName
     }
     func hasImage()->Bool{
-        if CoreDataToNSImageArray(coreDataObject: todo.images)!.isEmpty{
+        if CoreDataToNSImageArray(coreDataObject: todo.images)?.isEmpty ?? [].isEmpty{
             return false
         } else {
             return true
