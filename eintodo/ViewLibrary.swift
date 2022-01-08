@@ -93,12 +93,14 @@ struct SystemImage: View{
         if(isActivated){
             Image(systemName: image)
                 .resizable()
+                .scaledToFit()
                 .frame(width: size, height: size)
                 .foregroundColor(color)
                 .opacity(opacity)
         } else {
             Image(systemName: image)
                 .resizable()
+                .scaledToFit()
                 .frame(width: size, height: size)
                 .foregroundColor(.gray)
                 .opacity(colorScheme == .dark ? 1 : 0.5)
@@ -109,6 +111,7 @@ struct SystemImage: View{
 //Buttons
 struct ListRow: View {
     @EnvironmentObject private var userSelected: UserSelected
+    @FetchRequest var subToDos: FetchedResults<SubToDo>
     
     @ObservedObject var todo: ToDo
     @State var isPresented: Bool = false
@@ -117,6 +120,7 @@ struct ListRow: View {
 
     init(_ todo: ToDo) {
         self.todo = todo
+        _subToDos = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfMainToDo == %@", todo.id! as CVarArg), animation: .default)
     }
 
     var body: some View {
@@ -157,9 +161,27 @@ struct ListRow: View {
             if(todo.notes != ""){
                 SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
             }
+            if(hasImage()){
+                SystemImage(image: "photo.fill", color: .white, size: 15, isActivated: true)
+            }
+            if(!subToDos.isEmpty){
+                SystemImage(image: getNumberIcon(), color: .white, size: 15, isActivated: true)
+            }
         }
         .sheet(isPresented: $isPresented) {
             DetailView(detailViewType: .display, todo: todo, list: todo.list ?? "Error", isPresented: $isPresented)
+        }
+    }
+    func getNumberIcon()->String{
+        let int = subToDos.count
+        let iconName = "\(int).circle.fill"
+        return iconName
+    }
+    func hasImage()->Bool{
+        if CoreDataToNSImageArray(coreDataObject: todo.images)!.isEmpty{
+            return false
+        } else {
+            return true
         }
     }
 }

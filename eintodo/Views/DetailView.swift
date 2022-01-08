@@ -227,10 +227,12 @@ struct DetailView: View {
                 }
                 //Group - Control buttons
                 HStack{
+                    //Cancel
                     Button("Abbrechen"){dismissDetailView()}.buttonStyle(.plain).foregroundColor(Colors.secondaryColor)
                     switch(detailViewType){
                     case .display:
                         Spacer()
+                        //Delete
                         Button(action: {
                             deleteToDo()
                             dismissDetailView()
@@ -244,6 +246,7 @@ struct DetailView: View {
                     case .add:
                         Spacer()
                     }
+                    //Done
                     if(title != "" && list != ""){
                         Button(action: {
                             switch(detailViewType){
@@ -441,29 +444,6 @@ extension DetailView{
         userSelected.selectedDate = deadline
         isPresented.toggle()
     }
-    /* Convert [NSImage] to Data and backwards (Storing Images)
-     * This will be disallowed in the future (Further information in the terminal, if you try to save an image)
-     */
-    func NSImageArrayToCoreData(images: [NSImage])->Data? {
-        let imageArray = NSMutableArray()
-        for img in images{
-            let data = img.tiffRepresentation
-            imageArray.add(data!)
-        }
-        return try? NSKeyedArchiver.archivedData(withRootObject: imageArray, requiringSecureCoding: true)
-    }
-    func CoreDataToNSImageArray(coreDataObject: Data?)->[NSImage]?{
-        var images = [NSImage]()
-        guard let object = coreDataObject else { return nil }
-        if let imageArray = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: object) {
-            for img in imageArray {
-                if let img = img as? Data, let image = NSImage(data: img) {
-                    images.append(image)
-                }
-            }
-        }
-        return images
-    }
 }
 
 //SUBVIEWS
@@ -640,7 +620,10 @@ struct DetailViewListPicker: View{
 //SubToDoList - View to add a SubToDo + Area to show the list
 struct SubToDoList: View{
     @Environment(\.managedObjectContext) public var viewContext
-    @FetchRequest(sortDescriptors: [], animation: .default) var subToDos: FetchedResults<SubToDo>
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(keyPath: \SubToDo.sub_isDone, ascending: true),
+        NSSortDescriptor(keyPath: \SubToDo.sub_sortIndex, ascending: true)
+    ], animation: .default) var subToDos: FetchedResults<SubToDo>
     @State var sub_title: String = ""
     @Binding var id: UUID
     var body: some View{
@@ -663,18 +646,7 @@ struct SubToDoList: View{
             }
             ForEach(subToDos, id: \.self){ subToDo in
                 HStack{
-                    Button(action: {
-                        subToDo.sub_isDone.toggle()
-                    }, label: {
-                        IconImage(image: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle", size: 20, isActivated: subToDo.sub_isDone)
-                    }).buttonStyle(.plain)
-                    SubToDoListTextField(subToDo: subToDo, sub_title: subToDo.sub_title!)
-                    Spacer()
-                    Button(action: {
-                        deleteSubToDo(subToDo: subToDo)
-                    }, label: {
-                        IconImage(image: "trash.circle.fill", color: .red, size: 20, isActivated: true)
-                    }).buttonStyle(.plain)
+                    SubToDoListRow(subToDo: subToDo, sub_title: subToDo.sub_title!)
                 }
             }
         }
@@ -709,20 +681,43 @@ struct SubToDoList: View{
     }
 }
 //SubToDoListTextField - Row to update the SubToDo
-struct SubToDoListTextField: View{
+struct SubToDoListRow: View{
     @Environment(\.managedObjectContext) public var viewContext
-    let subToDo: SubToDo
+    @ObservedObject var subToDo: SubToDo
     @State var sub_title: String = ""
+    @State var overDeleteButton: Bool = false
     
     var body: some View{
-        TextField("", text: $sub_title).textFieldStyle(.plain)
-            .onDisappear{
-                if sub_title != ""{
-                    updateSubToDo()
-                } else {
-                    deleteSubToDo(subToDo: subToDo)
+        HStack{
+            //Checkmark box
+            Button(action: {
+                subToDo.sub_isDone.toggle()
+            }, label: {
+                IconImage(image: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle", size: 20, isActivated: subToDo.sub_isDone)
+            }).buttonStyle(.plain)
+            //TextField
+            TextField("", text: $sub_title).textFieldStyle(.plain)
+                .onDisappear{
+                    if sub_title != ""{
+                        updateSubToDo()
+                    } else {
+                        deleteSubToDo(subToDo: subToDo)
+                    }
                 }
-            }
+            Spacer()
+            //Delete-Button
+            Button(action: {
+                deleteSubToDo(subToDo: subToDo)
+            }, label: {
+                IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 20, isActivated: true)
+            })
+                .buttonStyle(.plain)
+                .onHover{ over in
+                    withAnimation{
+                        overDeleteButton = over
+                    }
+                }
+        }
     }
     func updateSubToDo(){
         subToDo.sub_title = sub_title

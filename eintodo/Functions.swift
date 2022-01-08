@@ -183,3 +183,27 @@ func deleteUserNotification(identifier: UUID){
     UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
     print("The notification is deleted for the id \(identifier) \n")
 }
+
+/* Convert [NSImage] to Data and backwards (Storing Images)
+ * This will be disallowed in the future (Further information in the terminal, if you try to save an image)
+ */
+func NSImageArrayToCoreData(images: [NSImage])->Data? {
+    let imageArray = NSMutableArray()
+    for img in images{
+        let data = img.tiffRepresentation
+        imageArray.add(data!)
+    }
+    return try? NSKeyedArchiver.archivedData(withRootObject: imageArray, requiringSecureCoding: true)
+}
+func CoreDataToNSImageArray(coreDataObject: Data?)->[NSImage]?{
+    var images = [NSImage]()
+    guard let object = coreDataObject else { return nil }
+    if let imageArray = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: object) {
+        for img in imageArray {
+            if let img = img as? Data, let image = NSImage(data: img) {
+                images.append(image)
+            }
+        }
+    }
+    return images
+}
