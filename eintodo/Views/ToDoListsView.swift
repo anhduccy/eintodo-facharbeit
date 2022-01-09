@@ -28,6 +28,7 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             userSelected.selectedToDoList = "Heute"
+                                            userSelected.selectedToDoListID = UUID()
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .dates
@@ -41,6 +42,7 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             userSelected.selectedToDoList = "Fällig"
+                                            userSelected.selectedToDoListID = UUID()
                                             listViewType = .inPastAndNotDone
                                             self.listViewIsActive = true
                                         }
@@ -54,6 +56,7 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             userSelected.selectedToDoList = "Alle"
+                                            userSelected.selectedToDoListID = UUID()
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .all
@@ -67,6 +70,7 @@ struct ToDoListsView: View {
                                     Button(action: {
                                         withAnimation{
                                             userSelected.selectedToDoList = "Markiert"
+                                            userSelected.selectedToDoListID = UUID()
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
                                             listViewType = .marked
@@ -93,6 +97,7 @@ struct ToDoListsView: View {
                                             Button(action: {
                                                 withAnimation{
                                                     userSelected.selectedToDoList = list.listTitle!
+                                                    userSelected.selectedToDoListID = list.listID!
                                                     self.listViewType = .list
                                                     self.listViewIsActive = true
                                                 }
@@ -107,11 +112,11 @@ struct ToDoListsView: View {
                                                         .foregroundColor(.white)
                                                 }
                                                 Text(list.listTitle!).font(.body)
-                                                    .foregroundColor(userSelected.selectedToDoList == list.listTitle! ? .white : .primary)
+                                                    .foregroundColor(userSelected.selectedToDoListID == list.listID! ? .white : .primary)
                                                 Spacer()
                                             }).buttonStyle(.plain)
                                             
-                                            ToDoListsCounter(list: list.listTitle!)
+                                            ToDoListsCounter(listID: list.listID!)
                                             //Info button
                                             SheetButtonToDoList(list: list)
                                         }
@@ -119,7 +124,7 @@ struct ToDoListsView: View {
                                         .padding(.bottom, 6.5)
                                         .padding(.leading, 5)
                                         .padding(.trailing, 5)
-                                        .background(userSelected.selectedToDoList == list.listTitle! ? .blue : .clear)
+                                        .background(userSelected.selectedToDoListID == list.listID! ? .blue : .clear)
                                         .cornerRadius(5)
                                     }
                                 }
@@ -159,6 +164,7 @@ struct ToDoListsView: View {
             .onAppear{
                 withAnimation{
                     userSelected.selectedToDoList = "Heute"
+                    userSelected.selectedToDoListID = UUID()
                     userSelected.lastSelectedDate = Date()
                     userSelected.selectedDate = Date()
                     listViewType = .dates
@@ -212,15 +218,15 @@ extension ToDoListsView{
 struct ToDoListsCounter: View{
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var list: FetchedResults<ToDo>
-    init(list: String){
-        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "list == %@ && isDone == false", list), animation: .default)
-        inputList = list
+    init(listID: UUID){
+        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfToDoList == %@ && isDone == false", listID as CVarArg), animation: .default)
+        inputList = listID
     }
-    let inputList: String
+    let inputList: UUID
     var body: some View{
         Text("\(list.count)")
             .font(.body)
             .fontWeight(.light)
-            .foregroundColor(userSelected.selectedToDoList == inputList ? .white : .gray)
+            .foregroundColor(userSelected.selectedToDoListID == inputList ? .white : .gray)
     }
 }

@@ -12,12 +12,14 @@ class UserSelected: ObservableObject{
     @Published var selectedDate: Date
     @Published var lastSelectedDate: Date
     @Published var selectedToDoList: String
+    @Published var selectedToDoListID: UUID
     @Published var showDoneToDos: Bool
 
-    init(selectedDate: Date, lastSelectedDate: Date, selectedToDoList: String, showDoneToDos: Bool){
+    init(selectedDate: Date, lastSelectedDate: Date, selectedToDoList: String, selectedToDoListID: UUID, showDoneToDos: Bool){
         self.selectedDate = selectedDate
         self.lastSelectedDate = lastSelectedDate
         self.selectedToDoList = selectedToDoList
+        self.selectedToDoListID = selectedToDoListID
         self.showDoneToDos = showDoneToDos
     }
 }

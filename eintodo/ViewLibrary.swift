@@ -139,7 +139,7 @@ struct ListRow: View {
                     }
                     if todo.deadline != Dates.defaultDate{
                         HStack{
-                            Text(DateInString(date: todo.deadline ?? Dates.defaultDate, type: "notification"))
+                            Text(DateInString(date: todo.deadline ?? Dates.defaultDate, type: "deadline"))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()
@@ -169,7 +169,7 @@ struct ListRow: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, list: todo.list ?? "Error", isPresented: $isPresented)
+            DetailView(detailViewType: .display, todo: todo, list: todo.list ?? "Error", listID: todo.idOfToDoList!, isPresented: $isPresented)
         }
     }
     func getNumberIcon()->String{
@@ -196,7 +196,7 @@ struct SheetButtonToDoList: View{
             showToDoListsDetailView.toggle()
         }, label: {
             Image(systemName: "info.circle")
-                .foregroundColor(userSelected.selectedToDoList == list.listTitle ?? "Error" ? .white : Colors.primaryColor)
+                .foregroundColor(userSelected.selectedToDoListID == list.listID ?? UUID() ? .white : Colors.primaryColor)
         }).buttonStyle(.plain)
             .sheet(isPresented: $showToDoListsDetailView){
                 ToDoListDetailView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)

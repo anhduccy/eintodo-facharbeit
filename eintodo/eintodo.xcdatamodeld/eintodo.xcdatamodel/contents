@@ -10,6 +10,7 @@
     <entity name="ToDo" representedClassName="ToDo" syncable="YES" codeGenerationType="class">
         <attribute name="deadline" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="idOfToDoList" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="images" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="Data"/>
         <attribute name="isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isMarked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -28,8 +29,8 @@
         <attribute name="symbol" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="ToDo" positionX="-62.1875" positionY="293.953125" width="128" height="194"/>
-        <element name="ToDoList" positionX="-63" positionY="45" width="128" height="104"/>
         <element name="SubToDo" positionX="-63" positionY="207" width="128" height="104"/>
+        <element name="ToDo" positionX="-62.1875" positionY="293.953125" width="128" height="209"/>
+        <element name="ToDoList" positionX="-63" positionY="45" width="128" height="104"/>
     </elements>
 </model>

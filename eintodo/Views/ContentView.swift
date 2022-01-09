@@ -53,7 +53,7 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     })
                         .sheet(isPresented: $showAddView){
-                            DetailView(detailViewType: .add, todo: ToDo(), list: lists[0].listTitle! , isPresented: $showAddView)
+                            DetailView(detailViewType: .add, todo: ToDo(), list: lists[0].listTitle! , listID: lists[0].listID!, isPresented: $showAddView)
                         }
                         .keyboardShortcut("n", modifiers: [.command])
                 }
@@ -79,7 +79,7 @@ struct ContentView: View {
             
             //Set the first list as the selected to do list
             userSelected.selectedToDoList = lists[0].listTitle!
-            print(userSelected.selectedToDoList)
+            userSelected.selectedToDoListID = lists[0].listID!
         }
         .onChange(of: deadlineTime){ newValue in
             for todo in todos{

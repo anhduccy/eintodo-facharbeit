@@ -33,6 +33,7 @@ struct DetailView: View {
     @State var isMarked: Bool = false
     @State var priority: Int = 0
     @State var list: String
+    @State var listID: UUID
     @State var images: [NSImage] = []
     
     //Toggles and Conditions for Animation
@@ -91,9 +92,9 @@ struct DetailView: View {
                                     case .add:
                                         ZStack{
                                             Circle()
-                                                .fill(getToDoListColor(with: list))
+                                                .fill(getToDoListColor(with: listID))
                                                 .frame(width: 25, height: 25)
-                                            Image(systemName: getToDoListSymbol(with: list))
+                                            Image(systemName: getToDoListSymbol(with: listID))
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 12.5, height: 12.5)
@@ -102,9 +103,9 @@ struct DetailView: View {
                                     case .display:
                                         ZStack{
                                             Circle()
-                                                .fill(getToDoListColor(with: list))
+                                                .fill(getToDoListColor(with: listID))
                                                 .frame(width: 25, height: 25)
-                                            Image(systemName: getToDoListSymbol(with: list))
+                                            Image(systemName: getToDoListSymbol(with: listID))
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 12.5, height: 12.5)
@@ -118,7 +119,7 @@ struct DetailView: View {
                             .popover(isPresented: $showListPicker){
                                 VStack{
                                     Text("Liste auswählen").font(.title2.bold())
-                                    DetailViewListPicker(listsValueString: $list)
+                                    DetailViewListPicker(listsValueString: $list, listsValueID: $listID)
                                 }
                                 .padding()
                             }.buttonStyle(.plain)
@@ -304,8 +305,10 @@ struct DetailView: View {
                    userSelected.selectedToDoList == "Fällig" ||
                    userSelected.selectedToDoList == "Markiert"){
                     list = lists[0].listTitle!
+                    listID = lists[0].listID!
                 } else {
                     list = userSelected.selectedToDoList
+                    listID = userSelected.selectedToDoListID
                 }
             case .display: //Value assignment of CoreData storage, if type is display
                 id = todo.id!
@@ -328,6 +331,7 @@ struct DetailView: View {
                 }
                 isMarked = todo.isMarked
                 list = todo.list!
+                listID = todo.idOfToDoList!
                 priority = Int(todo.priority)
                 images = CoreDataToNSImageArray(coreDataObject: todo.images) ?? []
             }
@@ -338,17 +342,17 @@ struct DetailView: View {
 
 extension DetailView{
     //Get information of ToDoList for the specified ToDo
-    func getToDoListColor(with: String) -> Color{
+    func getToDoListColor(with: UUID) -> Color{
         var color: String = ""
-        lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
+        lists.nsPredicate = NSPredicate(format: "listID == %@", with as CVarArg)
         for list in lists{
             color = list.color!
         }
         return getColorFromString(string: color)
     }
-    func getToDoListSymbol(with: String) -> String{
+    func getToDoListSymbol(with: UUID) -> String{
         var symbol = ""
-        lists.nsPredicate = NSPredicate(format: "listTitle == %@", with as CVarArg)
+        lists.nsPredicate = NSPredicate(format: "listID == %@", with as CVarArg)
         for list in lists{
             symbol = list.symbol!
         }
@@ -385,6 +389,7 @@ extension DetailView{
             newToDo.priority = Int16(priority)
             //List
             newToDo.list = list
+            newToDo.idOfToDoList = listID
             //Images
             newToDo.images = NSImageArrayToCoreData(images: images)
             //Set the ToDo to undone
@@ -423,6 +428,7 @@ extension DetailView{
             todo.priority = Int16(priority)
             //Lists
             todo.list = list
+            todo.idOfToDoList = listID
             //Images
             todo.images = NSImageArrayToCoreData(images: images)
             //Store in CoreData
@@ -603,12 +609,14 @@ struct SelectPriorityPopover: View{
 struct DetailViewListPicker: View{
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     @Binding var listsValueString: String
+    @Binding var listsValueID: UUID
     @State private var listType: Int = 0
     var body: some View {
        let binding = Binding<Int>(
            get: { self.listType },
            set: {
                self.listType = $0
+               self.listsValueID = self.lists[self.listType].listID!
                self.listsValueString = self.lists[self.listType].listTitle!
            })
        return Picker(selection: binding, label: Text("")) {
@@ -620,7 +628,7 @@ struct DetailViewListPicker: View{
        .onAppear{ //Check in which list, ToDo was before
             var counter = 0
             for list in lists{
-                if(list.listTitle == listsValueString){
+                if(list.listID == listsValueID){
                     listType = counter
                 }
                 counter += 1

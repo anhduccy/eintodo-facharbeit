@@ -112,13 +112,13 @@ struct ListView: View {
                 _todos = FetchRequest(sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], predicate: NSPredicate(format: "list == %@", userSelected.selectedToDoList), animation: .default)
+                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@", userSelected.selectedToDoListID as CVarArg), animation: .default)
             } else { //All To-Dos which has not been done yet
                 _todos = FetchRequest(sortDescriptors: [
                     NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
                     NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                                      predicate: NSPredicate(format: "list == %@ && isDone == false", userSelected.selectedToDoList), animation: .default)
+                                      predicate: NSPredicate(format: "idOfToDoList == %@ && isDone == false", userSelected.selectedToDoListID as CVarArg), animation: .default)
             }
         }
     }

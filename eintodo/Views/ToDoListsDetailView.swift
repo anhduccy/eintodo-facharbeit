@@ -203,6 +203,7 @@ extension ToDoListDetailView{
         newToDoList.symbol = selectedSymbol
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title
+        userSelected.selectedToDoListID = newToDoList.listID!
 
         do{
             try viewContext.save()
@@ -224,6 +225,8 @@ extension ToDoListDetailView{
         }
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title
+        userSelected.selectedToDoListID = toDoList.listID!
+
         do{
             try viewContext.save()
         }catch{
