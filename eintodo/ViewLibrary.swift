@@ -185,21 +185,3 @@ struct ListRow: View {
         }
     }
 }
-
-struct SheetButtonToDoList: View{
-    @ObservedObject var list: ToDoList
-    @EnvironmentObject private var userSelected: UserSelected
-    @State var showToDoListsDetailView: Bool = false
-    
-    var body: some View{
-        Button(action: {
-            showToDoListsDetailView.toggle()
-        }, label: {
-            Image(systemName: "info.circle")
-                .foregroundColor(userSelected.selectedToDoListID == list.listID ?? UUID() ? .white : Colors.primaryColor)
-        }).buttonStyle(.plain)
-            .sheet(isPresented: $showToDoListsDetailView){
-                ToDoListDetailView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
-            }
-    }
-}

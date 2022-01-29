@@ -10,11 +10,17 @@ import SwiftUI
 struct ToDoListsView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @EnvironmentObject private var userSelected: UserSelected
+    
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     
     @State var listViewType: ListViewTypes = .dates
     @State var listViewIsActive: Bool = false
+    
     @State var showToDoListsDetailView: Bool = false
+    
+    //Hover effects
+    @State var userListPushed = false
 
     var body: some View {
         NavigationView{
@@ -85,14 +91,31 @@ struct ToDoListsView: View {
                             //User Lists
                             VStack(spacing: 10){
                                 HStack{
-                                    Text("Meine Listen").font(.headline.bold())
+                                    Text("Meine Listen").font(.title2.bold())
                                     Spacer()
+                                    HStack{
+                                        Button(action: {
+                                            showToDoListsDetailView.toggle()
+                                        }, label: {
+                                            Text("Neue Liste")
+                                                .foregroundColor(Colors.primaryColor)
+                                        })
+                                            .buttonStyle(.plain)
+                                            .sheet(isPresented: $showToDoListsDetailView){
+                                                ToDoListDetailView(type: .add, isPresented: $showToDoListsDetailView, toDoList: ToDoList())
+                                            }
+                                    }
                                 }
-                                .padding(.leading, 5)
                                 //ForEach, if its selected, do the styling of background blue and so on...
                                 VStack(spacing: 0){
                                     ForEach(lists, id: \.self){ list in
                                         HStack{
+                                            if(userSelected.selectedToDoListID == list.listID!){
+                                                Rectangle()
+                                                    .fill(getColorFromString(string: list.listColor ?? "indigo"))
+                                                    .frame(width: 5)
+                                                    .cornerRadius(10)
+                                            }
                                             //ListRowItem
                                             Button(action: {
                                                 withAnimation{
@@ -100,6 +123,7 @@ struct ToDoListsView: View {
                                                     userSelected.selectedToDoListID = list.listID!
                                                     self.listViewType = .list
                                                     self.listViewIsActive = true
+                                                    userListPushed = true
                                                 }
                                             }, label: {
                                                 ZStack{
@@ -112,48 +136,26 @@ struct ToDoListsView: View {
                                                         .foregroundColor(.white)
                                                 }
                                                 Text(list.listTitle!).font(.body)
-                                                    .foregroundColor(userSelected.selectedToDoListID == list.listID! ? .white : .primary)
                                                 Spacer()
                                             }).buttonStyle(.plain)
                                             
-                                            ToDoListsCounter(listID: list.listID!)
+                                            //Counter
+                                            Text("\(todos.count)")
+                                                .font(.body)
+                                                .fontWeight(.light)
+                                                .foregroundColor(userSelected.selectedToDoListID == list.listID! ? getColorFromString(string: list.listColor ?? "indigo") : .gray)
+                                            
                                             //Info button
                                             SheetButtonToDoList(list: list)
                                         }
                                         .padding(.top, 6.5)
                                         .padding(.bottom, 6.5)
-                                        .padding(.leading, 5)
-                                        .padding(.trailing, 5)
-                                        .background(userSelected.selectedToDoListID == list.listID! ? .blue : .clear)
-                                        .cornerRadius(5)
                                     }
                                 }
                             }
                         }
                     }
                     Spacer()
-                    HStack{
-                        Button(action: {
-                            showToDoListsDetailView.toggle()
-                        }, label: {
-                            HStack{
-                                Image(systemName: "plus.circle.fill")
-                                    .resizable()
-                                    .frame(width: 17.5, height: 17.5)
-                                    .foregroundColor(Colors.primaryColor)
-                                Text("Neue Liste hinzufügen").font(.headline)
-                                Spacer()
-                            }
-                        })
-                            .buttonStyle(.plain)
-                            .sheet(isPresented: $showToDoListsDetailView){
-                                ToDoListDetailView(type: .add, isPresented: $showToDoListsDetailView, toDoList: ToDoList())
-                            }
-                    }
-                    .padding(.leading, 10)
-                    .padding(.trailing, 10)
-                    .padding(.bottom, 12.5)
-                    .padding(.top, 5)
                 }
                 
                 VStack{
@@ -214,19 +216,20 @@ extension ToDoListsView{
     }
 }
 
-//VIEWS
-struct ToDoListsCounter: View{
+struct SheetButtonToDoList: View{
+    @ObservedObject var list: ToDoList
     @EnvironmentObject private var userSelected: UserSelected
-    @FetchRequest var list: FetchedResults<ToDo>
-    init(listID: UUID){
-        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", listID as CVarArg), animation: .default)
-        inputList = listID
-    }
-    let inputList: UUID
+    @State var showToDoListsDetailView: Bool = false
+    
     var body: some View{
-        Text("\(list.count)")
-            .font(.body)
-            .fontWeight(.light)
-            .foregroundColor(userSelected.selectedToDoListID == inputList ? .white : .gray)
+        Button(action: {
+            showToDoListsDetailView.toggle()
+        }, label: {
+            Image(systemName: "info.circle")
+                .foregroundColor(userSelected.selectedToDoListID == list.listID ?? UUID() ? getColorFromString(string: list.listColor ?? "indigo") : .gray)
+        }).buttonStyle(.plain)
+            .sheet(isPresented: $showToDoListsDetailView){
+                ToDoListDetailView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
+            }
     }
 }
