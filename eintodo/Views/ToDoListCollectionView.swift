@@ -1,5 +1,5 @@
 //
-//  ToDoListsView.swift
+//  ToDoListCollectionView.swift
 //  eintodo
 //
 //  Created by anh :) on 28.12.21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToDoListsView: View {
+struct ToDoListCollectionView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @EnvironmentObject private var userSelected: UserSelected
     
@@ -17,11 +17,8 @@ struct ToDoListsView: View {
     @State var listViewType: ListViewTypes = .dates
     @State var listViewIsActive: Bool = false
     
-    @State var showToDoListsDetailView: Bool = false
+    @State var showToDoListCollectionEditView: Bool = false
     
-    //Hover effects
-    @State var userListPushed = false
-
     var body: some View {
         NavigationView{
             ZStack{
@@ -41,7 +38,7 @@ struct ToDoListsView: View {
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
-                                        ToDoListsViewMainButtonIcon(title: "Heute", imageName: "calendar.circle.fill", backgroundColor: .indigo)
+                                        ToDoListCollectionDefaultListIcon(title: "Heute", imageName: "calendar.circle.fill", backgroundColor: .indigo)
                                     }).buttonStyle(.plain)
                                     
                                     //In Past and not done
@@ -53,7 +50,7 @@ struct ToDoListsView: View {
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
-                                        ToDoListsViewMainButtonIcon(title: "Fällig", imageName: "clock.circle.fill", backgroundColor: .red)
+                                        ToDoListCollectionDefaultListIcon(title: "Fällig", imageName: "clock.circle.fill", backgroundColor: .red)
                                     }).buttonStyle(.plain)
                                 }
                                 
@@ -69,7 +66,7 @@ struct ToDoListsView: View {
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
-                                        ToDoListsViewMainButtonIcon(title: "Alle", imageName: "tray.circle.fill", backgroundColor: .gray)
+                                        ToDoListCollectionDefaultListIcon(title: "Alle", imageName: "tray.circle.fill", backgroundColor: .gray)
                                     }).buttonStyle(.plain)
                                     
                                     //Marked
@@ -83,7 +80,7 @@ struct ToDoListsView: View {
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
-                                        ToDoListsViewMainButtonIcon(title: "Markiert", imageName: "star.circle.fill", backgroundColor: .orange)
+                                        ToDoListCollectionDefaultListIcon(title: "Markiert", imageName: "star.circle.fill", backgroundColor: .orange)
                                     }).buttonStyle(.plain)
                                 }
                             }
@@ -95,14 +92,14 @@ struct ToDoListsView: View {
                                     Spacer()
                                     HStack{
                                         Button(action: {
-                                            showToDoListsDetailView.toggle()
+                                            showToDoListCollectionEditView.toggle()
                                         }, label: {
                                             Text("Neue Liste")
                                                 .foregroundColor(Colors.primaryColor)
                                         })
                                             .buttonStyle(.plain)
-                                            .sheet(isPresented: $showToDoListsDetailView){
-                                                ToDoListDetailView(type: .add, isPresented: $showToDoListsDetailView, toDoList: ToDoList())
+                                            .sheet(isPresented: $showToDoListCollectionEditView){
+                                                ToDoListDetailView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
                                             }
                                     }
                                 }
@@ -116,37 +113,14 @@ struct ToDoListsView: View {
                                                     .frame(width: 5)
                                                     .cornerRadius(10)
                                             }
-                                            //ListRowItem
-                                            Button(action: {
-                                                withAnimation{
-                                                    userSelected.selectedToDoList = list.listTitle!
-                                                    userSelected.selectedToDoListID = list.listID!
-                                                    self.listViewType = .list
-                                                    self.listViewIsActive = true
-                                                    userListPushed = true
-                                                }
-                                            }, label: {
-                                                ZStack{
-                                                    Circle().fill(getColorFromString(string: list.listColor ?? "indigo"))
-                                                        .frame(width: 25, height: 25)
-                                                    Image(systemName: list.listSymbol ?? "list.bullet")
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(width: 12.5, height: 12.5)
-                                                        .foregroundColor(.white)
-                                                }
-                                                Text(list.listTitle!).font(.body)
-                                                Spacer()
-                                            }).buttonStyle(.plain)
+                                            //ToDoListCollectionRow
+                                            ToDoListCollectionRow(listViewIsActive: $listViewIsActive, list: list)
                                             
                                             //Counter
-                                            Text("\(todos.count)")
-                                                .font(.body)
-                                                .fontWeight(.light)
-                                                .foregroundColor(userSelected.selectedToDoListID == list.listID! ? getColorFromString(string: list.listColor ?? "indigo") : .gray)
-                                            
+                                            ToDoListCollectionRowItemCounter(list: list)
+                                                                                
                                             //Info button
-                                            SheetButtonToDoList(list: list)
+                                            ToDoListCollectionRowInfoButton(list: list)
                                         }
                                         .padding(.top, 6.5)
                                         .padding(.bottom, 6.5)
@@ -155,11 +129,10 @@ struct ToDoListsView: View {
                             }
                         }
                     }
-                    Spacer()
                 }
                 
                 VStack{
-                    NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ToDoListView(title: userSelected.selectedToDoList, type: .list, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 300)
@@ -174,7 +147,7 @@ struct ToDoListsView: View {
                 }
             }
         }
-        .navigationTitle(userSelected.selectedToDoList)
+        .navigationTitle("Liste")
         .toolbar{
             ToolbarItem{
                 Button("Alle löschen"){
@@ -200,9 +173,6 @@ struct ToDoListsView: View {
             }
         }
     }
-}
-
-extension ToDoListsView{
     func deleteAllToDoList(){
         for list in lists{
             viewContext.delete(list)
@@ -216,14 +186,95 @@ extension ToDoListsView{
     }
 }
 
-struct SheetButtonToDoList: View{
-    @ObservedObject var list: ToDoList
+//Subviews of ToDoListCollection
+struct ToDoListCollectionRow: View{
+    @EnvironmentObject var userSelected: UserSelected
+    @Binding var listViewIsActive: Bool
+    let list: ToDoList
+    
+    var body: some View{
+        Button(action: {
+            withAnimation{
+                userSelected.selectedToDoList = list.listTitle!
+                userSelected.selectedToDoListID = list.listID!
+                self.listViewIsActive = true
+            }
+        }, label: {
+            ZStack{
+                Circle().fill(getColorFromString(string: list.listColor ?? "indigo"))
+                    .frame(width: 25, height: 25)
+                Image(systemName: list.listSymbol ?? "list.bullet")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 12.5, height: 12.5)
+                    .foregroundColor(.white)
+            }
+            Text(list.listTitle!).font(.body)
+            Spacer()
+        }).buttonStyle(.plain)
+    }
+}
+
+struct ToDoListCollectionDefaultListIcon: View{
+    let title: String
+    let imageName: String
+    let size: CGFloat
+    let foregroundColor: Color
+    let backgroundColor: Color
+    
+    init(title: String, imageName: String, size: CGFloat = 25, foregroundColor: Color = .white, backgroundColor: Color){
+        self.title = title
+        self.imageName = imageName
+        self.size = size
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+    }
+    
+    var body: some View{
+        HStack{
+            Image(systemName: imageName)
+                .resizable()
+                .frame(width: size, height: size)
+                .foregroundColor(foregroundColor)
+            Text(title).font(.headline)
+                .foregroundColor(foregroundColor)
+            Spacer()
+        }
+        .padding(7.5)
+        .background(backgroundColor)
+        .cornerRadius(5)
+    }
+}
+
+//Subviews of ToDoListCollectionRow
+struct ToDoListCollectionRowItemCounter: View{
     @EnvironmentObject private var userSelected: UserSelected
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
+    @ObservedObject var list: ToDoList
+    
+    init(list: ToDoList){
+        _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@", list.listID! as CVarArg), animation: .default)
+        _list = ObservedObject(wrappedValue: list)
+    }
+    var body: some View{
+        Text("\(todos.count)")
+            .font(.body)
+            .fontWeight(.light)
+            .foregroundColor(userSelected.selectedToDoListID == list.listID! ? getColorFromString(string: list.listColor ?? "indigo") : .gray)
+    }
+}
+
+struct ToDoListCollectionRowInfoButton: View{
+    @EnvironmentObject private var userSelected: UserSelected
+    @ObservedObject var list: ToDoList
     @State var showToDoListsDetailView: Bool = false
     
     var body: some View{
         Button(action: {
-            showToDoListsDetailView.toggle()
+            withAnimation{
+                userSelected.selectedToDoListID = list.listID ?? UUID()
+                showToDoListsDetailView.toggle()
+            }
         }, label: {
             Image(systemName: "info.circle")
                 .foregroundColor(userSelected.selectedToDoListID == list.listID ?? UUID() ? getColorFromString(string: list.listColor ?? "indigo") : .gray)

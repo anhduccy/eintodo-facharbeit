@@ -35,7 +35,7 @@ struct ContentView: View {
                         Text("Kalender")
                     }
                 }
-                NavigationLink(destination: ToDoListsView()){
+                NavigationLink(destination: ToDoListCollectionView()){
                     HStack{
                         Image(systemName: "list.dash")
                         Text("Listen")

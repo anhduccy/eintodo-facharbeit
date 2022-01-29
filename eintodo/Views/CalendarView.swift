@@ -201,12 +201,12 @@ struct CalendarView: View {
                 }.padding()
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ListView(type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ToDoListView(title: DateInString(date: userSelected.lastSelectedDate, type: "display"), type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 300)
         }
-        .navigationTitle(DateInString(date: userSelected.lastSelectedDate, type: "display"))
+        .navigationTitle("Kalender")
         .toolbar{
             ToolbarItem{
                 Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
@@ -350,7 +350,7 @@ extension CalendarView{
     }
 }
 
-//SUB-VIEWS OF CALENDARVIEW
+//Subviews of CalendarView
 struct DateNavigatorPopover: View{
     @EnvironmentObject private var userSelected: UserSelected
     @Binding var currentMonth: Int

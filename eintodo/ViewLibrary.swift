@@ -23,36 +23,6 @@ struct CalendarViewMonthButton: View {
         .frame(width: size, height: size)
     }
 }
-struct ToDoListsViewMainButtonIcon: View{
-    let title: String
-    let imageName: String
-    let size: CGFloat
-    let foregroundColor: Color
-    let backgroundColor: Color
-    
-    init(title: String, imageName: String, size: CGFloat = 25, foregroundColor: Color = .white, backgroundColor: Color){
-        self.title = title
-        self.imageName = imageName
-        self.size = size
-        self.foregroundColor = foregroundColor
-        self.backgroundColor = backgroundColor
-    }
-    
-    var body: some View{
-        HStack{
-            Image(systemName: imageName)
-                .resizable()
-                .frame(width: size, height: size)
-                .foregroundColor(foregroundColor)
-            Text(title).font(.headline)
-                .foregroundColor(foregroundColor)
-            Spacer()
-        }
-        .padding(7.5)
-        .background(backgroundColor)
-        .cornerRadius(5)
-    }
-}
 struct IconImage: View {
     init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
         self.image = image
@@ -104,84 +74,6 @@ struct SystemImage: View{
                 .frame(width: size, height: size)
                 .foregroundColor(.gray)
                 .opacity(colorScheme == .dark ? 1 : 0.5)
-        }
-    }
-}
-
-//Buttons
-struct ListRow: View {
-    @EnvironmentObject private var userSelected: UserSelected
-    @FetchRequest var subToDos: FetchedResults<SubToDo>
-    
-    @ObservedObject var todo: ToDo
-    @State var isPresented: Bool = false
-        
-    let text_color: Color = .white
-
-    init(_ todo: ToDo) {
-        self.todo = todo
-        _subToDos = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfMainToDo == %@", todo.todoID! as CVarArg), animation: .default)
-    }
-
-    var body: some View {
-        HStack{
-            //Labelling
-            Button(action: {
-                isPresented.toggle()
-            }, label: {
-                VStack{
-                    HStack{
-                        Text(todo.todoTitle ?? "Error")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(text_color)
-                        Spacer()
-                    }
-                    if todo.todoDeadline != Dates.defaultDate{
-                        HStack{
-                            Text(DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"))
-                                .foregroundColor(text_color)
-                                .fontWeight(.light)
-                            Spacer()
-                        }
-                    }
-                    if todo.todoNotification != Dates.defaultDate{
-                        HStack{
-                            Text(DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"))
-                                .foregroundColor(text_color)
-                                .fontWeight(.light)
-                            Spacer()
-                        }
-                    }
-                }
-                .padding(.top, 5)
-                .padding(.bottom, 5)
-            })
-                .buttonStyle(.plain)
-            if(todo.todoNotes != ""){
-                SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
-            }
-            if(hasImage()){
-                SystemImage(image: "photo.fill", color: .white, size: 15, isActivated: true)
-            }
-            if(!subToDos.isEmpty){
-                SystemImage(image: getNumberIcon(), color: .white, size: 15, isActivated: true)
-            }
-        }
-        .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
-        }
-    }
-    func getNumberIcon()->String{
-        let int = subToDos.count
-        let iconName = "\(int).circle.fill"
-        return iconName
-    }
-    func hasImage()->Bool{
-        if CoreDataToNSImageArray(coreDataObject: todo.todoImages)?.isEmpty ?? [].isEmpty{
-            return false
-        } else {
-            return true
         }
     }
 }
