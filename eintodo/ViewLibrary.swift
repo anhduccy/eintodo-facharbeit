@@ -120,7 +120,7 @@ struct ListRow: View {
 
     init(_ todo: ToDo) {
         self.todo = todo
-        _subToDos = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfMainToDo == %@", todo.id! as CVarArg), animation: .default)
+        _subToDos = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfMainToDo == %@", todo.todoID! as CVarArg), animation: .default)
     }
 
     var body: some View {
@@ -131,23 +131,23 @@ struct ListRow: View {
             }, label: {
                 VStack{
                     HStack{
-                        Text(todo.title ?? "Error")
+                        Text(todo.todoTitle ?? "Error")
                             .font(.headline)
                             .fontWeight(.semibold)
                             .foregroundColor(text_color)
                         Spacer()
                     }
-                    if todo.deadline != Dates.defaultDate{
+                    if todo.todoDeadline != Dates.defaultDate{
                         HStack{
-                            Text(DateInString(date: todo.deadline ?? Dates.defaultDate, type: "deadline"))
+                            Text(DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()
                         }
                     }
-                    if todo.notification != Dates.defaultDate{
+                    if todo.todoNotification != Dates.defaultDate{
                         HStack{
-                            Text(DateInString(date: todo.notification ?? Dates.defaultDate, type: "notification"))
+                            Text(DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"))
                                 .foregroundColor(text_color)
                                 .fontWeight(.light)
                             Spacer()
@@ -158,7 +158,7 @@ struct ListRow: View {
                 .padding(.bottom, 5)
             })
                 .buttonStyle(.plain)
-            if(todo.notes != ""){
+            if(todo.todoNotes != ""){
                 SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
             }
             if(hasImage()){
@@ -169,7 +169,7 @@ struct ListRow: View {
             }
         }
         .sheet(isPresented: $isPresented) {
-            DetailView(detailViewType: .display, todo: todo, list: todo.list ?? "Error", listID: todo.idOfToDoList!, isPresented: $isPresented)
+            DetailView(detailViewType: .display, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
         }
     }
     func getNumberIcon()->String{
@@ -178,7 +178,7 @@ struct ListRow: View {
         return iconName
     }
     func hasImage()->Bool{
-        if CoreDataToNSImageArray(coreDataObject: todo.images)?.isEmpty ?? [].isEmpty{
+        if CoreDataToNSImageArray(coreDataObject: todo.todoImages)?.isEmpty ?? [].isEmpty{
             return false
         } else {
             return true

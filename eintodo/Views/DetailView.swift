@@ -311,29 +311,29 @@ struct DetailView: View {
                     listID = userSelected.selectedToDoListID
                 }
             case .display: //Value assignment of CoreData storage, if type is display
-                id = todo.id!
-                title = todo.title ?? "Error"
-                notes = todo.notes ?? "Error"
-                url = todo.url ?? "Error"
-                deadline = todo.deadline ?? Dates.defaultDate
+                id = todo.todoID!
+                title = todo.todoTitle ?? "Error"
+                notes = todo.todoNotes ?? "Error"
+                url = todo.todoURL ?? "Error"
+                deadline = todo.todoDeadline ?? Dates.defaultDate
                 if deadline == Dates.defaultDate{
                     showDeadline = false
                     deadline = combineDateAndTime(date: getDate(date: Date()), time: getTime(date: AppStorageDeadlineTime))
                 } else {
-                    deadline = combineDateAndTime(date: getDate(date: todo.deadline ?? Dates.defaultDate), time: getTime(date: AppStorageDeadlineTime))
+                    deadline = combineDateAndTime(date: getDate(date: todo.todoDeadline ?? Dates.defaultDate), time: getTime(date: AppStorageDeadlineTime))
                 }
-                notification = todo.notification ?? Dates.defaultDate
+                notification = todo.todoNotification ?? Dates.defaultDate
                 if notification == Dates.defaultDate{
                     showNotification = false
                     notification = Date()
                 } else {
-                    notification = todo.notification!
+                    notification = todo.todoNotification!
                 }
-                isMarked = todo.isMarked
-                list = todo.list!
+                isMarked = todo.todoIsMarked
+                list = todo.todoList!
                 listID = todo.idOfToDoList!
-                priority = Int(todo.priority)
-                images = CoreDataToNSImageArray(coreDataObject: todo.images) ?? []
+                priority = Int(todo.todoPriority)
+                images = CoreDataToNSImageArray(coreDataObject: todo.todoImages) ?? []
             }
             askForUserNotificationPermission()
         }
@@ -346,7 +346,7 @@ extension DetailView{
         var color: String = ""
         lists.nsPredicate = NSPredicate(format: "listID == %@", with as CVarArg)
         for list in lists{
-            color = list.color!
+            color = list.listColor!
         }
         return getColorFromString(string: color)
     }
@@ -354,7 +354,7 @@ extension DetailView{
         var symbol = ""
         lists.nsPredicate = NSPredicate(format: "listID == %@", with as CVarArg)
         for list in lists{
-            symbol = list.symbol!
+            symbol = list.listSymbol!
         }
         return symbol
     }
@@ -364,36 +364,36 @@ extension DetailView{
         withAnimation {
             let newToDo = ToDo(context: viewContext)
             //Own ID
-            newToDo.id = id
+            newToDo.todoID = id
             //Texts
-            newToDo.title = title
-            newToDo.notes = notes
-            newToDo.url = url
+            newToDo.todoTitle = title
+            newToDo.todoNotes = notes
+            newToDo.todoURL = url
             //Deadline
             if showDeadline{
-                newToDo.deadline = deadline
-                addUserNotification(title: title, id: newToDo.id!, date: deadline, type: "deadline")
+                newToDo.todoDeadline = deadline
+                addUserNotification(title: title, id: newToDo.todoID!, date: deadline, type: "deadline")
             } else {
-                newToDo.deadline = Dates.defaultDate
+                newToDo.todoDeadline = Dates.defaultDate
             }
             //Notification
             if showNotification {
-                newToDo.notification = notification
-                addUserNotification(title: title, id: newToDo.id!, date: notification, type: "notification")
+                newToDo.todoNotification = notification
+                addUserNotification(title: title, id: newToDo.todoID!, date: notification, type: "notification")
             } else {
-                newToDo.notification = Dates.defaultDate
+                newToDo.todoNotification = Dates.defaultDate
             }
             //isMarked
-            newToDo.isMarked = isMarked
+            newToDo.todoIsMarked = isMarked
             //Priority
-            newToDo.priority = Int16(priority)
+            newToDo.todoPriority = Int16(priority)
             //List
-            newToDo.list = list
+            newToDo.todoList = list
             newToDo.idOfToDoList = listID
             //Images
-            newToDo.images = NSImageArrayToCoreData(images: images)
+            newToDo.todoImages = NSImageArrayToCoreData(images: images)
             //Set the ToDo to undone
-            newToDo.isDone = false
+            newToDo.todoIsDone = false
             do {
                 try viewContext.save()
             } catch {
@@ -405,32 +405,32 @@ extension DetailView{
     func updateToDo() {
         withAnimation {
             //Text
-            todo.title = title
-            todo.notes = notes
-            todo.url = url
+            todo.todoTitle = title
+            todo.todoNotes = notes
+            todo.todoURL = url
             //Deadline
             if showDeadline{
-                todo.deadline = deadline
-                updateUserNotification(title: title, id: todo.id!, date: todo.deadline!, type: "deadline")
+                todo.todoDeadline = deadline
+                updateUserNotification(title: title, id: todo.todoID!, date: todo.todoDeadline!, type: "deadline")
             } else {
-                todo.deadline = Dates.defaultDate
+                todo.todoDeadline = Dates.defaultDate
             }
             //Notification
             if showNotification{
-                todo.notification = notification
-                updateUserNotification(title: title, id: todo.id!, date: todo.notification!, type: "notification")
+                todo.todoNotification = notification
+                updateUserNotification(title: title, id: todo.todoID!, date: todo.todoNotification!, type: "notification")
             } else {
-                todo.notification = Dates.defaultDate
+                todo.todoNotification = Dates.defaultDate
             }
             //IsMarked
-            todo.isMarked = isMarked
+            todo.todoIsMarked = isMarked
             //Priorities
-            todo.priority = Int16(priority)
+            todo.todoPriority = Int16(priority)
             //Lists
-            todo.list = list
+            todo.todoList = list
             todo.idOfToDoList = listID
             //Images
-            todo.images = NSImageArrayToCoreData(images: images)
+            todo.todoImages = NSImageArrayToCoreData(images: images)
             //Store in CoreData
             do {
                 try viewContext.save()
@@ -442,9 +442,9 @@ extension DetailView{
     }
     func deleteToDo(){
         withAnimation {
-            deleteUserNotification(identifier: todo.id!)
+            deleteUserNotification(identifier: todo.todoID!)
             viewContext.delete(todo)
-            subToDos.nsPredicate = NSPredicate(format: "idOfMainToDo == %@", todo.id! as CVarArg)
+            subToDos.nsPredicate = NSPredicate(format: "idOfMainToDo == %@", todo.todoID! as CVarArg)
             for subToDo in subToDos{
                 viewContext.delete(subToDo)
             }
@@ -645,8 +645,8 @@ struct SubToDoList: View{
     
     init(id: UUID){
         _subToDos = FetchRequest(sortDescriptors: [
-            NSSortDescriptor(keyPath: \SubToDo.sub_isDone, ascending: true),
-            NSSortDescriptor(keyPath: \SubToDo.sub_sortIndex, ascending: true)
+            NSSortDescriptor(keyPath: \SubToDo.subtodoIsDone, ascending: true),
+            NSSortDescriptor(keyPath: \SubToDo.subtodoSortIndex, ascending: true)
         ], predicate: NSPredicate(format: "idOfMainToDo == %@", id as CVarArg), animation: .default)
         self.id = id
     }
@@ -660,7 +660,7 @@ struct SubToDoList: View{
             }
             ForEach(subToDos, id: \.self){ subToDo in
                 HStack{
-                    SubToDoListRow(subToDo: subToDo, sub_title: subToDo.sub_title!)
+                    SubToDoListRow(subToDo: subToDo, sub_title: subToDo.subtodoTitle!)
                 }
             }
             HStack{
@@ -678,12 +678,12 @@ struct SubToDoList: View{
     }
     func addSubToDo(){
         let newSubToDo = SubToDo(context: viewContext)
-        newSubToDo.sub_title = sub_title
-        newSubToDo.sub_id = UUID()
-        newSubToDo.sub_isDone = false
+        newSubToDo.subtodoTitle = sub_title
+        newSubToDo.subtodoID = UUID()
+        newSubToDo.subtodoIsDone = false
         var itemsInSubToDos = subToDos.count
         itemsInSubToDos += 1
-        newSubToDo.sub_sortIndex = Int16(itemsInSubToDos)
+        newSubToDo.subtodoSortIndex = Int16(itemsInSubToDos)
         newSubToDo.idOfMainToDo = id
         do {
             try viewContext.save()
@@ -714,20 +714,20 @@ struct SubToDoListRow: View{
         HStack{
             //Checkmark box
             Button(action: {
-                subToDo.sub_isDone.toggle()
+                subToDo.subtodoIsDone.toggle()
             }, label: {
                 ZStack{
-                    if(subToDo.sub_isDone){
+                    if(subToDo.subtodoIsDone){
                         Circle()
                             .fill(.white)
                             .frame(width: 15, height: 15)
                     }
-                    Image(systemName: subToDo.sub_isDone ? "checkmark.circle.fill" : "circle")
+                    Image(systemName: subToDo.subtodoIsDone ? "checkmark.circle.fill" : "circle")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 20, height: 20)
-                        .foregroundColor(overCheckmarkBox ? Colors.primaryColor : subToDo.sub_isDone ? Colors.primaryColor : .gray)
-                        .opacity(overCheckmarkBox ? 1 : subToDo.sub_isDone ? 1 : 0.5)
+                        .foregroundColor(overCheckmarkBox ? Colors.primaryColor : subToDo.subtodoIsDone ? Colors.primaryColor : .gray)
+                        .opacity(overCheckmarkBox ? 1 : subToDo.subtodoIsDone ? 1 : 0.5)
                         .onHover{ over in
                             withAnimation{
                                 overCheckmarkBox = over
@@ -761,7 +761,7 @@ struct SubToDoListRow: View{
         }
     }
     func updateSubToDo(){
-        subToDo.sub_title = sub_title
+        subToDo.subtodoTitle = sub_title
         do {
             try viewContext.save()
         } catch {

@@ -27,34 +27,34 @@ struct ListView: View {
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "(deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                    predicate: NSPredicate(format: "(todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
                     animation: .default)
             } else { //To-Dos with deadline and/or notfication and show done to-dos is false
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "((deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)) && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                    predicate: NSPredicate(format: "((todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)) && todoIsDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg),
                     animation: .default)
             }
         case .noDates: //To-Dos without deadline and notification
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
-                    predicate: NSPredicate(format: "deadline == %@ && notification == %@",
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)],
+                    predicate: NSPredicate(format: "todoDeadline == %@ && todoNotification == %@",
                                            defaultDate as CVarArg,  defaultDate as CVarArg),
                     animation: .default)
             } else { //To-Dos without deadline and notfication and show done to-dos is false
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.title, ascending: true)],
-                    predicate: NSPredicate(format: "deadline == %@ && notification == %@ && isDone == false",
+                        NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)],
+                    predicate: NSPredicate(format: "todoDeadline == %@ && todoNotification == %@ && todoIsDone == false",
                                            defaultDate as CVarArg, defaultDate as CVarArg),
                     animation: .default)
             }
@@ -62,63 +62,63 @@ struct ListView: View {
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "deadline < %@ && deadline != %@", currentDate as CVarArg, defaultDate as CVarArg),
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                    predicate: NSPredicate(format: "todoDeadline < %@ && todoDeadline != %@", currentDate as CVarArg, defaultDate as CVarArg),
                     animation: .default)
             } else {
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "deadline < %@ && deadline != %@ && isDone == false", currentDate as CVarArg, defaultDate as CVarArg),
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                    predicate: NSPredicate(format: "todoDeadline < %@ && todoDeadline != %@ && todoIsDone == false", currentDate as CVarArg, defaultDate as CVarArg),
                     animation: .default)
             }
         case .marked:
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "isMarked == true"),
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                    predicate: NSPredicate(format: "todoIsMarked == true"),
                     animation: .default)
             } else {
                 _todos = FetchRequest(
                     sortDescriptors: [
-                        NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                        NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                    predicate: NSPredicate(format: "isMarked == true && isDone == false"),
+                        NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                        NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                    predicate: NSPredicate(format: "todoIsMarked == true && todoIsDone == false"),
                     animation: .default)
             }
         case .all: //All To-Dos
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(sortDescriptors: [
-                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], animation: .default)
+                    NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)], animation: .default)
             } else { //All To-Dos which has not been done yet
                 _todos = FetchRequest(sortDescriptors: [
-                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                                      predicate: NSPredicate(format: "isDone == false"), animation: .default)
+                    NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                                      predicate: NSPredicate(format: "todoIsDone == false"), animation: .default)
             }
         case .list:
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(sortDescriptors: [
-                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@", userSelected.selectedToDoListID as CVarArg), animation: .default)
+                    NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@", userSelected.selectedToDoListID as CVarArg), animation: .default)
             } else { //All To-Dos which has not been done yet
                 _todos = FetchRequest(sortDescriptors: [
-                    NSSortDescriptor(keyPath: \ToDo.isDone, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.deadline, ascending: true),
-                    NSSortDescriptor(keyPath: \ToDo.notification, ascending: true)],
-                                      predicate: NSPredicate(format: "idOfToDoList == %@ && isDone == false", userSelected.selectedToDoListID as CVarArg), animation: .default)
+                    NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                    NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)],
+                                      predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", userSelected.selectedToDoListID as CVarArg), animation: .default)
             }
         }
     }
@@ -142,13 +142,13 @@ struct ListView: View {
                 HStack{
                     //Checkmark button
                     Button(action: {
-                        todo.isDone.toggle()
-                        if(todo.isDone == true){
-                            deleteUserNotification(identifier: todo.id!)
+                        todo.todoIsDone.toggle()
+                        if(todo.todoIsDone == true){
+                            deleteUserNotification(identifier: todo.todoID!)
                         }
                         updateToDo()
                         }, label: {
-                        if(todo.isDone){
+                        if(todo.todoIsDone){
                             SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
                         } else {
                             SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
@@ -162,10 +162,10 @@ struct ListView: View {
                     ListRow(todo)
                     Spacer()
                     Button(action: {
-                        todo.isMarked.toggle()
+                        todo.todoIsMarked.toggle()
                         updateToDo()
                     }, label: {
-                        if(todo.isMarked){
+                        if(todo.todoIsMarked){
                             SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
                                 .padding(5)
                         } else {
@@ -176,7 +176,7 @@ struct ListView: View {
                         .buttonStyle(.plain)
                 }
                 .padding(5)
-                .background(isDateInPast(date: todo.deadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
+                .background(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
                 .cornerRadius(8.5)
             }
         }

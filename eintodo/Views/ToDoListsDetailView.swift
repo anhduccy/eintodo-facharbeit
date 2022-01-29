@@ -182,8 +182,8 @@ struct ToDoListDetailView: View{
             case .display:
                 title = toDoList.listTitle!
                 description = toDoList.listDescription!
-                selectedColor = toDoList.color!
-                selectedSymbol = toDoList.symbol!
+                selectedColor = toDoList.listColor!
+                selectedSymbol = toDoList.listSymbol!
             case .add:
                 break
             }
@@ -199,8 +199,8 @@ extension ToDoListDetailView{
         newToDoList.listID = UUID()
         newToDoList.listTitle = title
         newToDoList.listDescription = description
-        newToDoList.color = selectedColor
-        newToDoList.symbol = selectedSymbol
+        newToDoList.listColor = selectedColor
+        newToDoList.listSymbol = selectedSymbol
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title
         userSelected.selectedToDoListID = newToDoList.listID!
@@ -213,15 +213,15 @@ extension ToDoListDetailView{
         }
     }
     public func updateToDoList(){
-        todos.nsPredicate = NSPredicate(format: "list == %@", toDoList.listTitle! as CVarArg)
+        todos.nsPredicate = NSPredicate(format: "todoList == %@", toDoList.listTitle! as CVarArg)
         //Update ToDoList
         toDoList.listTitle = title
         toDoList.listDescription = description
-        toDoList.color = selectedColor
-        toDoList.symbol = selectedSymbol
+        toDoList.listColor = selectedColor
+        toDoList.listSymbol = selectedSymbol
         //Update the titles of all todos in the list
         for todo in todos{
-            todo.list = title
+            todo.todoList = title
         }
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title

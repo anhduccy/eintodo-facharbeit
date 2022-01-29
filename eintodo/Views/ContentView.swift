@@ -12,7 +12,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
     
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)]) var todos: FetchedResults<ToDo>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     @State var showAddView: Bool = false
@@ -67,8 +67,8 @@ struct ContentView: View {
                 newToDoList.listID = UUID()
                 newToDoList.listTitle = "Neue Liste"
                 newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
-                newToDoList.color = "indigo"
-                newToDoList.symbol = "list.bullet"
+                newToDoList.listColor = "indigo"
+                newToDoList.listSymbol = "list.bullet"
                 do{
                     try viewContext.save()
                 }catch{
@@ -83,10 +83,10 @@ struct ContentView: View {
         }
         .onChange(of: deadlineTime){ newValue in
             for todo in todos{
-                let formattedDate = combineDateAndTime(date: getDate(date: todo.deadline!), time: getTime(date: deadlineTime))
-                if todo.deadline != Dates.defaultDate{
-                    todo.deadline = formattedDate
-                    updateUserNotification(title: todo.title!, id: todo.id!, date: formattedDate, type: "deadline")
+                let formattedDate = combineDateAndTime(date: getDate(date: todo.todoDeadline!), time: getTime(date: deadlineTime))
+                if todo.todoDeadline != Dates.defaultDate{
+                    todo.todoDeadline = formattedDate
+                    updateUserNotification(title: todo.todoTitle!, id: todo.todoID!, date: formattedDate, type: "deadline")
                 }
                 do{
                     try viewContext.save()

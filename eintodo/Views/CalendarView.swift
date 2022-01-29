@@ -10,7 +10,7 @@ import SwiftUI
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @EnvironmentObject private var userSelected: UserSelected
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.title, ascending: true)], animation: .default)
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], animation: .default)
     public var todos: FetchedResults<ToDo>
     
     //ListView attributes
@@ -285,11 +285,11 @@ extension CalendarView{
         var format = ""
         switch(filter){
         case.deadline:
-            format = "deadline <= %@ && deadline >= %@"
+            format = "todoDeadline <= %@ && todoDeadline >= %@"
         case.notification:
-            format = "notification <= %@ && notification >= %@"
+            format = "todoNotification <= %@ && todoNotification >= %@"
         case.isMarked:
-            format = "((deadline <= %@ && deadline >= %@) || (notification <= %@ && notification >= %@)) && isMarked == true"
+            format = "((todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)) && todoIsMarked == true"
         }
         return format
     }
@@ -301,7 +301,7 @@ extension CalendarView{
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let format = returnFormatOfFilter()
         
-        let predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
+        let predicate = NSPredicate(format: format + " && todoIsDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
         if todos.isEmpty{
             return true
@@ -317,7 +317,7 @@ extension CalendarView{
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let format = returnFormatOfFilter()
         
-        var predicate = NSPredicate(format: format + " && isDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
+        var predicate = NSPredicate(format: format + " && todoIsDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
         todos.nsPredicate = predicate
         if todos.isEmpty {
             predicate = NSPredicate(format: format, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)

@@ -103,9 +103,9 @@ struct ToDoListsView: View {
                                                 }
                                             }, label: {
                                                 ZStack{
-                                                    Circle().fill(getColorFromString(string: list.color ?? "indigo"))
+                                                    Circle().fill(getColorFromString(string: list.listColor ?? "indigo"))
                                                         .frame(width: 25, height: 25)
-                                                    Image(systemName: list.symbol ?? "list.bullet")
+                                                    Image(systemName: list.listSymbol ?? "list.bullet")
                                                         .resizable()
                                                         .scaledToFit()
                                                         .frame(width: 12.5, height: 12.5)
@@ -181,8 +181,8 @@ struct ToDoListsView: View {
                     newToDoList.listID = UUID()
                     newToDoList.listTitle = "Neue Liste"
                     newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
-                    newToDoList.color = "indigo"
-                    newToDoList.symbol = "list.bullet"
+                    newToDoList.listColor = "indigo"
+                    newToDoList.listSymbol = "list.bullet"
                     do{
                         try viewContext.save()
                     }catch{
@@ -219,7 +219,7 @@ struct ToDoListsCounter: View{
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var list: FetchedResults<ToDo>
     init(listID: UUID){
-        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfToDoList == %@ && isDone == false", listID as CVarArg), animation: .default)
+        _list = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", listID as CVarArg), animation: .default)
         inputList = listID
     }
     let inputList: UUID

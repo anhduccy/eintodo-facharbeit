@@ -2,31 +2,31 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="SubToDo" representedClassName="SubToDo" syncable="YES" codeGenerationType="class">
         <attribute name="idOfMainToDo" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="sub_id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="sub_isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="sub_sortIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="sub_title" optional="YES" attributeType="String"/>
+        <attribute name="subtodoID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="subtodoIsDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="subtodoSortIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="subtodoTitle" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ToDo" representedClassName="ToDo" syncable="YES" codeGenerationType="class">
-        <attribute name="deadline" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="idOfToDoList" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="images" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="Data"/>
-        <attribute name="isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isMarked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="list" optional="YES" attributeType="String"/>
-        <attribute name="notes" optional="YES" attributeType="String"/>
-        <attribute name="notification" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
-        <attribute name="url" optional="YES" attributeType="String"/>
+        <attribute name="todoDeadline" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="todoID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="todoImages" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="Data"/>
+        <attribute name="todoIsDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="todoIsMarked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="todoList" optional="YES" attributeType="String"/>
+        <attribute name="todoNotes" optional="YES" attributeType="String"/>
+        <attribute name="todoNotification" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="todoPriority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="todoTitle" optional="YES" attributeType="String"/>
+        <attribute name="todoURL" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ToDoList" representedClassName="ToDoList" syncable="YES" codeGenerationType="class">
-        <attribute name="color" optional="YES" attributeType="String" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="listColor" optional="YES" attributeType="String" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
         <attribute name="listDescription" optional="YES" attributeType="String"/>
         <attribute name="listID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="listSymbol" optional="YES" attributeType="String"/>
         <attribute name="listTitle" optional="YES" attributeType="String"/>
-        <attribute name="symbol" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="SubToDo" positionX="-63" positionY="207" width="128" height="104"/>
