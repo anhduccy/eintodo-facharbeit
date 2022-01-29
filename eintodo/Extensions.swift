@@ -7,22 +7,6 @@
 
 import SwiftUI
 
-/* DELETE ALL TO-DOS
-public func deleteAllItems() {
-    withAnimation {
-        for todo in todos{
-            viewContext.delete(todo)
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not delete all CoreData-Entites in CalendarView:  \(nsError), \(nsError.userInfo)")
-        }
-    }
-}
- */
-
 //Date
 extension Date {
     func getAllDates() -> [Date] {
