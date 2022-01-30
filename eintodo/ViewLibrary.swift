@@ -7,23 +7,8 @@
 
 import SwiftUI
 
-//Images and Icons
-struct CalendarViewMonthButton: View {
-    let name: String
-    let color: Color
-    let size: CGFloat = 22.5
-    
-    var body: some View{
-        ZStack{
-            Circle().fill(color).opacity(0.2)
-            Image(systemName: name)
-                .foregroundColor(color)
-        }
-        .padding(0)
-        .frame(width: size, height: size)
-    }
-}
-struct IconImage: View {
+//System Icons and Image Settings
+struct SystemIcon: View {
     init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
         self.image = image
         self.color = color

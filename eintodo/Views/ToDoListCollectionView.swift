@@ -99,7 +99,7 @@ struct ToDoListCollectionView: View {
                                         })
                                             .buttonStyle(.plain)
                                             .sheet(isPresented: $showToDoListCollectionEditView){
-                                                ToDoListDetailView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
+                                                ToDoListCollectionEditView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
                                             }
                                     }
                                 }
@@ -280,7 +280,7 @@ struct ToDoListCollectionRowInfoButton: View{
                 .foregroundColor(userSelected.selectedToDoListID == list.listID ?? UUID() ? getColorFromString(string: list.listColor ?? "indigo") : .gray)
         }).buttonStyle(.plain)
             .sheet(isPresented: $showToDoListsDetailView){
-                ToDoListDetailView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
+                ToDoListCollectionEditView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
             }
     }
 }

@@ -133,7 +133,7 @@ struct DetailView: View {
                                                 showDeadline.toggle()
                                             }
                                         }, label: {
-                                            IconImage(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
+                                            SystemIcon(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
                                         })
                                             .buttonStyle(.plain)
                                         
@@ -163,7 +163,7 @@ struct DetailView: View {
                                                 showNotification.toggle()
                                             }
                                         }, label: {
-                                            IconImage(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
+                                            SystemIcon(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
                                         })
                                             .buttonStyle(.plain)
                                         
@@ -191,7 +191,7 @@ struct DetailView: View {
                                         isMarked.toggle()
                                     }
                                 }, label: {
-                                    IconImage(image: "star.circle.fill", color: Colors.primaryColor, size: 25, isActivated: isMarked)
+                                    SystemIcon(image: "star.circle.fill", color: Colors.primaryColor, size: 25, isActivated: isMarked)
                                 })
                                     .buttonStyle(.plain)
                                 Text("Markiert")
@@ -208,13 +208,13 @@ struct DetailView: View {
                                 }, label: {
                                     switch(priority){
                                     case 3:
-                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
+                                        SystemIcon(image: "exclamationmark.circle.fill", size: 25, isActivated: true)
                                     case 2:
-                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.75)
+                                        SystemIcon(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.75)
                                     case 1:
-                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.5)
+                                        SystemIcon(image: "exclamationmark.circle.fill", size: 25, isActivated: true, opacity: 0.5)
                                     default:
-                                        IconImage(image: "exclamationmark.circle.fill", size: 25, isActivated: false)
+                                        SystemIcon(image: "exclamationmark.circle.fill", size: 25, isActivated: false)
                                     }
                                 })
                                     .buttonStyle(.plain)
@@ -245,7 +245,7 @@ struct DetailView: View {
                             deleteToDo()
                             dismissDetailView()
                         }, label: {
-                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
+                            SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
                         }).buttonStyle(.plain)
                             .onHover{ over in
                                 withAnimation{overDeleteButton = over}
@@ -670,7 +670,7 @@ struct SubToDoList: View{
                         sub_title = ""
                     }
                 }, label: {
-                    IconImage(image: "plus.circle.fill", size: 20, isActivated: true)
+                    SystemIcon(image: "plus.circle.fill", size: 20, isActivated: true)
                 }).buttonStyle(.plain)
                 TextField("Neue Erinnerung", text: $sub_title).textFieldStyle(.plain)
             }
@@ -750,7 +750,7 @@ struct SubToDoListRow: View{
             Button(action: {
                 deleteSubToDo(subToDo: subToDo)
             }, label: {
-                IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 20, isActivated: true)
+                SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 20, isActivated: true)
             })
                 .buttonStyle(.plain)
                 .onHover{ over in

@@ -1,5 +1,5 @@
 //
-//  ToDoListsDetailView.swift
+//  ToDoListCollectionEditView.swift
 //  eintodo
 //
 //  Created by anh :) on 29.12.21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToDoListDetailView: View{
+struct ToDoListCollectionEditView: View{
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
     @EnvironmentObject var userSelected: UserSelected
@@ -133,7 +133,7 @@ struct ToDoListDetailView: View{
                             deleteToDoList()
                             isPresented.toggle()
                         }, label: {
-                            IconImage(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
+                            SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
                         })
                             .buttonStyle(.plain)
                             .onHover{ over in
@@ -190,9 +190,6 @@ struct ToDoListDetailView: View{
             
         }
     }
-}
-
-extension ToDoListDetailView{
     public func addToDoList(){
         //Initialize the ToDoList
         let newToDoList = ToDoList(context: viewContext)
@@ -244,3 +241,4 @@ extension ToDoListDetailView{
         }
     }
 }
+

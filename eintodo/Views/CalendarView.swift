@@ -46,7 +46,7 @@ struct CalendarView: View {
                                 userSelected.selectedDate = getCurrentMonth(date: userSelected.selectedDate)
                                 userSelected.lastSelectedDate = getCurrentMonth(date: userSelected.lastSelectedDate)
                             }){
-                                CalendarViewMonthButton(name: "chevron.backward", color: Colors.primaryColor)
+                                MonthNavigatorButton(name: "chevron.backward", color: Colors.primaryColor)
                             }
                             .buttonStyle(.plain)
                             Button(action: {
@@ -54,7 +54,7 @@ struct CalendarView: View {
                                 userSelected.lastSelectedDate = getCurrentMonth(date: userSelected.lastSelectedDate)
                                 userSelected.selectedDate = getCurrentMonth(date: userSelected.selectedDate)
                             }){
-                                CalendarViewMonthButton(name: "chevron.forward", color: Colors.primaryColor)
+                                MonthNavigatorButton(name: "chevron.forward", color: Colors.primaryColor)
                             }
                             .buttonStyle(.plain)
 
@@ -391,6 +391,21 @@ struct SelectFilterPopover: View{
             }
         }
         .padding()
+    }
+}
+struct MonthNavigatorButton: View {
+    let name: String
+    let color: Color
+    let size: CGFloat = 22.5
+    
+    var body: some View{
+        ZStack{
+            Circle().fill(color).opacity(0.2)
+            Image(systemName: name)
+                .foregroundColor(color)
+        }
+        .padding(0)
+        .frame(width: size, height: size)
     }
 }
 
