@@ -15,7 +15,7 @@ struct CalendarView: View {
     
     //ListView attributes
     @State var listViewIsActive: Bool = true
-    @State var listViewType: ListViewTypes = .dates
+    @State var toDoListFilterType: ToDoListFilterType = .dates
     
     //Date attributes
     @State var currentMonth: Int = 0
@@ -130,7 +130,7 @@ struct CalendarView: View {
                                         Button(action: {
                                             userSelected.selectedDate = dayValue.date
                                             userSelected.lastSelectedDate = userSelected.selectedDate
-                                            self.listViewType = .dates
+                                            self.toDoListFilterType = .dates
                                         }){
                                             ZStack{
                                                 //IF (dayValue.date is current date) AND (dayValue.date is not selected date) AND (there are none to-dos at dayValue.date), display the text blue
@@ -184,7 +184,7 @@ struct CalendarView: View {
                     HStack{
                         Button("Erinnerungen ohne Datum"){
                             userSelected.selectedDate = Dates.defaultDate
-                            self.listViewType = .noDates
+                            self.toDoListFilterType = .noDates
                         }
                         .foregroundColor(Colors.primaryColor)
                         .buttonStyle(.plain)
@@ -201,7 +201,7 @@ struct CalendarView: View {
                 }.padding()
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ToDoListView(title: DateInString(date: userSelected.lastSelectedDate, type: "display"), type: listViewType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ToDoListView(title: DateInString(date: userSelected.lastSelectedDate, type: "display"), listFilterType: toDoListFilterType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 300)

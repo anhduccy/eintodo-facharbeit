@@ -14,14 +14,14 @@ struct ToDoListView: View {
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var todos: FetchedResults<ToDo>
         
-    init(title: String, type: ListViewTypes = ListViewTypes.dates, userSelected: UserSelected){
+    init(title: String, listFilterType: ToDoListFilterType = .dates, userSelected: UserSelected){
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: userSelected.lastSelectedDate)
         let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
         let defaultDate = Dates.defaultDate
         let currentDate = Date()
         
-        switch(type){
+        switch(listFilterType){
         case .dates: //To-Dos with deadline and/or notfication
             if(userSelected.showDoneToDos == true){
                 _todos = FetchRequest(

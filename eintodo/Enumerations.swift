@@ -45,7 +45,7 @@ struct Colors {
 }
 
 //Enums - View types
-enum ListViewTypes {
+enum ToDoListFilterType {
     case dates
     case noDates
     case inPastAndNotDone

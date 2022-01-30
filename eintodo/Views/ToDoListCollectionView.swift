@@ -14,7 +14,7 @@ struct ToDoListCollectionView: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     
-    @State var listViewType: ListViewTypes = .dates
+    @State var toDoListFilterType: ToDoListFilterType = .dates
     @State var listViewIsActive: Bool = false
     
     @State var showToDoListCollectionEditView: Bool = false
@@ -34,7 +34,7 @@ struct ToDoListCollectionView: View {
                                             userSelected.selectedToDoListID = UUID()
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
-                                            listViewType = .dates
+                                            toDoListFilterType = .dates
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
@@ -46,7 +46,7 @@ struct ToDoListCollectionView: View {
                                         withAnimation{
                                             userSelected.selectedToDoList = "Fällig"
                                             userSelected.selectedToDoListID = UUID()
-                                            listViewType = .inPastAndNotDone
+                                            toDoListFilterType = .inPastAndNotDone
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
@@ -62,7 +62,7 @@ struct ToDoListCollectionView: View {
                                             userSelected.selectedToDoListID = UUID()
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
-                                            listViewType = .all
+                                            toDoListFilterType = .all
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
@@ -76,7 +76,7 @@ struct ToDoListCollectionView: View {
                                             userSelected.selectedToDoListID = UUID()
                                             userSelected.lastSelectedDate = Date()
                                             userSelected.selectedDate = Date()
-                                            listViewType = .marked
+                                            toDoListFilterType = .marked
                                             self.listViewIsActive = true
                                         }
                                     }, label: {
@@ -132,7 +132,7 @@ struct ToDoListCollectionView: View {
                 }
                 
                 VStack{
-                    NavigationLink(destination: ToDoListView(title: userSelected.selectedToDoList, type: .list, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ToDoListView(title: userSelected.selectedToDoList, listFilterType: .list, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 300)
@@ -142,7 +142,7 @@ struct ToDoListCollectionView: View {
                     userSelected.selectedToDoListID = UUID()
                     userSelected.lastSelectedDate = Date()
                     userSelected.selectedDate = Date()
-                    listViewType = .dates
+                    toDoListFilterType = .dates
                     self.listViewIsActive = true
                 }
             }
