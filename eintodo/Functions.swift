@@ -163,7 +163,10 @@ func askForUserNotificationPermission(){
         }
     }
 }
-func addUserNotification(title: String, id: UUID, date: Date, type: String){
+
+func updateUserNotification(title: String, id: UUID, date: Date, type: String){
+    deleteUserNotification(identifier: id)
+    //Add UserNotification
     let content = UNMutableNotificationContent()
     content.title = title
     content.subtitle = DateInString(date: date, type: type)
@@ -175,10 +178,6 @@ func addUserNotification(title: String, id: UUID, date: Date, type: String){
         UNUserNotificationCenter.current().add(request)
         print("The notification is set for \(date) \n title: \(title) \n subtitle: \(DateInString(date: date, type: type)) \n id: \(id)")
     }
-}
-func updateUserNotification(title: String, id: UUID, date: Date, type: String){
-    deleteUserNotification(identifier: id)
-    addUserNotification(title: title, id: id, date: date, type: type)
 }
 func deleteUserNotification(identifier: UUID){
     UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])

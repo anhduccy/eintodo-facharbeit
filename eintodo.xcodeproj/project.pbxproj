@@ -19,6 +19,9 @@
 		794855F7276690410086927E /* eintodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 794855F5276690410086927E /* eintodo.xcdatamodeld */; };
 		794856032766996D0086927E /* ToDoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794856022766996D0086927E /* ToDoListView.swift */; };
 		7948560F2766ABF30086927E /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948560E2766ABF30086927E /* CalendarView.swift */; };
+		7965CED627A83C8B00AEEB9E /* OtherSubviewsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7965CED527A83C8B00AEEB9E /* OtherSubviewsDetailView.swift */; };
+		7965CED827A8411E00AEEB9E /* SubToDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7965CED727A8411E00AEEB9E /* SubToDoView.swift */; };
+		7965CEDA27A8491E00AEEB9E /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7965CED927A8491E00AEEB9E /* ImageView.swift */; };
 		7999DE71277B7E0D008557EB /* ToDoListCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999DE70277B7E0D008557EB /* ToDoListCollectionView.swift */; };
 		79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542C2771283B00E935D8 /* SettingsView.swift */; };
 		79B56F46277FB83900D0EC16 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B56F45277FB83900D0EC16 /* Home.swift */; };
@@ -41,6 +44,9 @@
 		794855F8276690410086927E /* eintodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = eintodo.entitlements; sourceTree = "<group>"; };
 		794856022766996D0086927E /* ToDoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListView.swift; sourceTree = "<group>"; };
 		7948560E2766ABF30086927E /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		7965CED527A83C8B00AEEB9E /* OtherSubviewsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherSubviewsDetailView.swift; sourceTree = "<group>"; };
+		7965CED727A8411E00AEEB9E /* SubToDoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubToDoView.swift; sourceTree = "<group>"; };
+		7965CED927A8491E00AEEB9E /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		7999DE70277B7E0D008557EB /* ToDoListCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListCollectionView.swift; sourceTree = "<group>"; };
 		79AC542C2771283B00E935D8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		79B56F45277FB83900D0EC16 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -101,6 +107,25 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		7965CEDC27A849C200AEEB9E /* ToDo */ = {
+			isa = PBXGroup;
+			children = (
+				7947DED527778C5A008C999A /* DetailView.swift */,
+				7965CEDD27A849D700AEEB9E /* Subviews */,
+			);
+			name = ToDo;
+			sourceTree = "<group>";
+		};
+		7965CEDD27A849D700AEEB9E /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				7965CED527A83C8B00AEEB9E /* OtherSubviewsDetailView.swift */,
+				7965CED927A8491E00AEEB9E /* ImageView.swift */,
+				7965CED727A8411E00AEEB9E /* SubToDoView.swift */,
+			);
+			name = Subviews;
+			sourceTree = "<group>";
+		};
 		79BAB9BB276BBDDD009EB5A3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -109,7 +134,7 @@
 				79B56F45277FB83900D0EC16 /* Home.swift */,
 				7948560E2766ABF30086927E /* CalendarView.swift */,
 				79E98E2427A5BCBC0026DFA0 /* ToDoList */,
-				7947DED527778C5A008C999A /* DetailView.swift */,
+				7965CEDC27A849C200AEEB9E /* ToDo */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -194,10 +219,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7965CED627A83C8B00AEEB9E /* OtherSubviewsDetailView.swift in Sources */,
 				7948560F2766ABF30086927E /* CalendarView.swift in Sources */,
 				7999DE71277B7E0D008557EB /* ToDoListCollectionView.swift in Sources */,
 				7947DED627778C5A008C999A /* DetailView.swift in Sources */,
+				7965CED827A8411E00AEEB9E /* SubToDoView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
+				7965CEDA27A8491E00AEEB9E /* ImageView.swift in Sources */,
 				79F44343276F649200B558BF /* ViewLibrary.swift in Sources */,
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
