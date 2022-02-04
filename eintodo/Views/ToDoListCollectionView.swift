@@ -249,11 +249,11 @@ struct ToDoListCollectionDefaultListIcon: View{
 //Subviews of ToDoListCollectionRow
 struct ToDoListCollectionRowItemCounter: View{
     @EnvironmentObject private var userSelected: UserSelected
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
+    @FetchRequest var todos: FetchedResults<ToDo>
     @ObservedObject var list: ToDoList
     
     init(list: ToDoList){
-        _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@", list.listID! as CVarArg), animation: .default)
+        _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", list.listID! as CVarArg), animation: .default)
         _list = ObservedObject(wrappedValue: list)
     }
     var body: some View{
