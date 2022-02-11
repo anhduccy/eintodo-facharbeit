@@ -17,25 +17,27 @@ struct ContentView: View {
 
     @State var showAddView: Bool = false
     
+    @State var selectedView: Int? = 1
+    
     //Communication between Views
     @EnvironmentObject private var userSelected: UserSelected
 
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: Home()){
+                NavigationLink(destination: Home(), tag: 0, selection: $selectedView){
                     HStack{
                         Image(systemName: "house")
                         Text("Start")
                     }
                 }
-                NavigationLink(destination: CalendarView(filter: .deadline)){
+                NavigationLink(destination: CalendarView(filter: .deadline), tag: 1, selection: $selectedView){
                     HStack{
                         Image(systemName: "calendar")
                         Text("Kalender")
                     }
                 }
-                NavigationLink(destination: ToDoListCollectionView()){
+                NavigationLink(destination: ToDoListCollectionView(), tag: 2, selection: $selectedView){
                     HStack{
                         Image(systemName: "list.dash")
                         Text("Listen")
