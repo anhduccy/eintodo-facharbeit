@@ -61,7 +61,8 @@ struct ContentView: View {
             .listStyle(.sidebar)
             .frame(minWidth: 250)
             .toolbar{
-                ToolbarItem {
+                ToolbarItemGroup{
+                    Spacer()
                     Button(action:{
                         showAddView.toggle()
                     }, label: {
@@ -71,9 +72,6 @@ struct ContentView: View {
                             DetailView(detailViewType: .add, todo: ToDo(), list: lists[0].listTitle! , listID: lists[0].listID!, isPresented: $showAddView)
                         }
                         .keyboardShortcut("n", modifiers: [.command])
-                }
-                
-                ToolbarItem {
                     Button(action: {
                         showToDoListCollectionEditView.toggle()
                     }, label: {
