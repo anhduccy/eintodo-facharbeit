@@ -204,12 +204,7 @@ struct ToDoListCollectionEditView: View{
         userSelected.selectedToDoListID = newToDoList.listID!
         userSelected.selectedView = 1
 
-        do{
-            try viewContext.save()
-        }catch{
-            let nsError = error as NSError
-            fatalError("Could not add CoreData-Entity in ToDoListDetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
     }
     public func updateToDoList(){
         todos.nsPredicate = NSPredicate(format: "todoList == %@", toDoList.listTitle! as CVarArg)
@@ -225,21 +220,13 @@ struct ToDoListCollectionEditView: View{
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title
         userSelected.selectedToDoListID = toDoList.listID!
-        do{
-            try viewContext.save()
-        }catch{
-            let nsError = error as NSError
-            fatalError("Could not update CoreData-Entity in ToDoListDetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
+
     }
     public func deleteToDoList(){
         viewContext.delete(toDoList)
-        do{
-            try viewContext.save()
-        }catch{
-            let nsError = error as NSError
-            fatalError("Could not delete CoreData-Entity in ToDoListDetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
+
     }
 }
 

@@ -16,11 +16,16 @@ func createList(viewContext: NSManagedObjectContext){
     newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
     newToDoList.listColor = "indigo"
     newToDoList.listSymbol = "list.bullet"
+    saveContext(context: viewContext)
+}
+
+//CoreData - Save ViewContext
+public func saveContext(context: NSManagedObjectContext){
     do{
-        try viewContext.save()
+        try context.save()
     }catch{
         let nsError = error as NSError
-        fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
+        fatalError("Could not save NSManagedObjectContext: \(nsError), \(nsError.userInfo)")
     }
 }
 

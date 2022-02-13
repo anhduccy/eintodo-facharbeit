@@ -102,12 +102,7 @@ struct ContentView: View {
                     todo.todoDeadline = formattedDate
                     updateUserNotification(title: todo.todoTitle!, id: todo.todoID!, date: formattedDate, type: "deadline")
                 }
-                do{
-                    try viewContext.save()
-                }catch{
-                    let nsError = error as NSError
-                    fatalError("Could not update all to-dos due a change of AppStorage DeadlineTime in SettingsView: \(nsError), \(nsError.userInfo)")
-                }
+                saveContext(context: viewContext)
             }
         }
     }
