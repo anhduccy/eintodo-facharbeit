@@ -8,6 +8,35 @@
 import SwiftUI
 
 //System Icons and Image Settings
+
+//Icon for SF Symbols which has not ".circle.fill"
+struct SystemCircleIcon: View{
+    init(image: String, size: CGFloat, foregroundColor: Color = .white, backgroundColor: Color){
+        self.image = image
+        self.size = size
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+    }
+    
+    let image: String
+    let size: CGFloat
+    let foregroundColor: Color
+    let backgroundColor: Color
+    
+    var body: some View{
+        ZStack{
+            Circle().fill(backgroundColor)
+                .frame(width: size, height: size)
+            Image(systemName: image)
+                .resizable()
+                .scaledToFit()
+                .frame(width: size/2, height: size/2)
+                .foregroundColor(foregroundColor)
+        }
+    }
+}
+
+//Icon for SF Symbols which has ".circle.fill"
 struct SystemIcon: View {
     init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
         self.image = image

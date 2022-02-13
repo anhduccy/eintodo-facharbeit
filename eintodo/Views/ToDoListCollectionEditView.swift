@@ -188,7 +188,6 @@ struct ToDoListCollectionEditView: View{
             case .add:
                 break
             }
-            
         }
     }
     public func addToDoList(){
@@ -203,7 +202,6 @@ struct ToDoListCollectionEditView: View{
         userSelected.selectedToDoList = title
         userSelected.selectedToDoListID = newToDoList.listID!
         userSelected.selectedView = 1
-
         saveContext(context: viewContext)
     }
     public func updateToDoList(){
@@ -221,12 +219,10 @@ struct ToDoListCollectionEditView: View{
         userSelected.selectedToDoList = title
         userSelected.selectedToDoListID = toDoList.listID!
         saveContext(context: viewContext)
-
     }
     public func deleteToDoList(){
         viewContext.delete(toDoList)
         saveContext(context: viewContext)
-
     }
 }
 

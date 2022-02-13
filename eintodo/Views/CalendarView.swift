@@ -207,13 +207,6 @@ struct CalendarView: View {
             .frame(minWidth: 300)
         }
         .navigationTitle("Kalender")
-        .toolbar{
-            ToolbarItem{
-                Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
-                    userSelected.showDoneToDos.toggle()
-                }
-            }
-        }
     }
 }
 

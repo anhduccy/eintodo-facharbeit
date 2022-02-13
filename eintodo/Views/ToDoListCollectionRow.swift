@@ -27,15 +27,7 @@ struct ToDoListCollectionRow: View{
     var body: some View{
         HStack{
             //List icon
-            ZStack{
-                Circle().fill(getColorFromString(string: list.listColor ?? "indigo"))
-                    .frame(width: 20, height: 20)
-                Image(systemName: list.listSymbol ?? "list.bullet")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 10, height: 10)
-                    .foregroundColor(.white)
-            }
+            SystemCircleIcon(image: list.listSymbol ?? "list.bullet", size: 20, backgroundColor: getColorFromString(string: list.listColor ?? "indigo"))
             //List name
             Text(list.listTitle ?? "Error").font(.body)
             Spacer()

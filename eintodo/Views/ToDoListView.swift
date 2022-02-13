@@ -195,25 +195,22 @@ struct ToDoListView: View {
         .padding()
         .frame(minWidth: 375)
         .background(colorScheme == .dark ? .clear : .white)
+        .toolbar{
+            ToolbarItem{
+                Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
+                    userSelected.showDoneToDos.toggle()
+                }
+            }
+        }
     }
     public func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { todos[$0] }.forEach(viewContext.delete)
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Could not delete ListItem as CoreData-Entity in ListView \(nsError), \(nsError.userInfo)")
-            }
+            saveContext(context: viewContext)
         }
     }
     public func updateToDo(){
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not update CoreData-Entity in ListView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
     }
 }
 
