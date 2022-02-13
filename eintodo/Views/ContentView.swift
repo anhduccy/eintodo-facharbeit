@@ -28,20 +28,13 @@ struct ContentView: View {
                 Section{
                     NavigationLink(destination: Home(), tag: 0, selection: $userSelected.selectedView){
                         HStack{
-                            ZStack{
-                                Circle().strokeBorder(.white).frame(width: 20, height: 20)
-                                SystemImage(image: "house", color: .white, size: 12.5, isActivated: true)
-
-                            }
+                            Image(systemName: "house")
                             Text("Start")
                         }
                     }
                     NavigationLink(destination: CalendarView(filter: .deadline), tag: 1, selection: $userSelected.selectedView){
                         HStack{
-                            ZStack{
-                                Circle().strokeBorder(.white).frame(width: 20, height: 20)
-                                SystemImage(image: "calendar", color: .white, size: 10, isActivated: true)
-                            }
+                            Image(systemName: "calendar")
                             Text("Kalender")
                         }
                     }
