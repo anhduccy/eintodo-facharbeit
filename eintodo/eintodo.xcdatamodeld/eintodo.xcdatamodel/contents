@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21D49" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="SubToDo" representedClassName="SubToDo" syncable="YES" codeGenerationType="class">
         <attribute name="idOfMainToDo" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="subtodoID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

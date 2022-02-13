@@ -8,6 +8,22 @@ import Foundation
 import SwiftUI
 import UserNotifications
 
+//Create a ToDoList, if there are no lists available
+func createList(viewContext: NSManagedObjectContext){
+    let newToDoList = ToDoList(context: viewContext)
+    newToDoList.listID = UUID()
+    newToDoList.listTitle = "Neue Liste"
+    newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
+    newToDoList.listColor = "indigo"
+    newToDoList.listSymbol = "list.bullet"
+    do{
+        try viewContext.save()
+    }catch{
+        let nsError = error as NSError
+        fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
+    }
+}
+
 //GETTER
 //Get the start of month
 func getStartOfMonth() -> Date {

@@ -1,0 +1,63 @@
+//
+//  ToDoListCollectionRow.swift
+//  eintodo
+//
+//  Created by anh :) on 28.12.21.
+//
+
+/**
+ ToDoListCollectionRow ist eine Zeile für jede benutzerdefinierte Liste im ContentView (Sidebar-Leiste)
+ */
+
+import SwiftUI
+
+//Subviews of ToDoListCollection
+struct ToDoListCollectionRow: View{
+    @EnvironmentObject var userSelected: UserSelected
+    @FetchRequest var todos: FetchedResults<ToDo>
+    @ObservedObject var list: ToDoList
+    
+    @State var showToDoListsDetailView: Bool = false
+
+    init(list: ToDoList){
+        _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", list.listID! as CVarArg), animation: .default)
+        _list = ObservedObject(wrappedValue: list)
+    }
+    
+    var body: some View{
+        HStack{
+            //List icon
+            ZStack{
+                Circle().fill(getColorFromString(string: list.listColor ?? "indigo"))
+                    .frame(width: 20, height: 20)
+                Image(systemName: list.listSymbol ?? "list.bullet")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 10, height: 10)
+                    .foregroundColor(.white)
+            }
+            //List name
+            Text(list.listTitle ?? "Error").font(.body)
+            Spacer()
+            //Counter of ToDos in List
+            Text("\(todos.count)")
+                .font(.body)
+                .fontWeight(.light)
+                .foregroundColor(.gray)
+            //Info button for List
+            Button(action: {
+                withAnimation{
+                    userSelected.selectedToDoListID = list.listID ?? UUID()
+                    showToDoListsDetailView.toggle()
+                }
+            }, label: {
+                Image(systemName: "info.circle")
+                    .foregroundColor(.gray)
+            })
+                .buttonStyle(.plain)
+                .sheet(isPresented: $showToDoListsDetailView){
+                    ToDoListCollectionEditView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
+                }
+        }
+    }
+}

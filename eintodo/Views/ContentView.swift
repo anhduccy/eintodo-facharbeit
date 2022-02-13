@@ -15,69 +15,81 @@ struct ContentView: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
+    //Show view attributes
     @State var showAddView: Bool = false
-    
-    @State var selectedView: Int? = 1
-    
+    @State var showToDoListCollectionEditView: Bool = false
+
     //Communication between Views
     @EnvironmentObject private var userSelected: UserSelected
 
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: Home(), tag: 0, selection: $selectedView){
-                    HStack{
-                        Image(systemName: "house")
-                        Text("Start")
+                Section{
+                    NavigationLink(destination: Home(), tag: 0, selection: $userSelected.selectedView){
+                        HStack{
+                            Image(systemName: "house")
+                            Text("Start")
+                        }
+                    }
+                    NavigationLink(destination: CalendarView(filter: .deadline), tag: 1, selection: $userSelected.selectedView){
+                        HStack{
+                            Image(systemName: "calendar")
+                            Text("Kalender")
+                        }
                     }
                 }
-                NavigationLink(destination: CalendarView(filter: .deadline), tag: 1, selection: $selectedView){
-                    HStack{
-                        Image(systemName: "calendar")
-                        Text("Kalender")
+                
+                Section(header: Text("Meine Listen")){
+                    ForEach(Array(zip(lists.indices, lists)), id: \.1){ index, list in
+                        NavigationLink(
+                            destination: ToDoListView(title: userSelected.selectedToDoList, listFilterType: .list, userSelected: userSelected)
+                                .onAppear{
+                                    userSelected.selectedToDoList = list.listTitle ?? "Error"
+                                    userSelected.selectedToDoListID = list.listID ?? UUID()
+                                },
+                            tag: index + 2,
+                            selection: $userSelected.selectedView
+                        ){
+                            HStack{
+                                ToDoListCollectionRow(list: list)
+                            }
+                        }
                     }
                 }
-                NavigationLink(destination: ToDoListCollectionView(), tag: 2, selection: $selectedView){
-                    HStack{
-                        Image(systemName: "list.dash")
-                        Text("Listen")
-                    }
-                }
-                Spacer()
             }
             .listStyle(.sidebar)
-            .frame(minWidth: 210)
-            .toolbar {
+            .frame(minWidth: 250)
+            .toolbar{
                 ToolbarItem {
                     Button(action:{
                         showAddView.toggle()
                     }, label: {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add ToDo", systemImage: "checkmark.circle.fill")
                     })
                         .sheet(isPresented: $showAddView){
                             DetailView(detailViewType: .add, todo: ToDo(), list: lists[0].listTitle! , listID: lists[0].listID!, isPresented: $showAddView)
                         }
                         .keyboardShortcut("n", modifiers: [.command])
                 }
+                
+                ToolbarItem {
+                    Button(action: {
+                        showToDoListCollectionEditView.toggle()
+                    }, label: {
+                        Label("Add ToDo", systemImage: "list.bullet")
+
+                    })
+                    .sheet(isPresented: $showToDoListCollectionEditView){
+                        ToDoListCollectionEditView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
+                    }
+                }
             }
         }
         //INITIALIZING FOR THE APP
         .onAppear{
             //Create a list if there is no lists at the beginning
-            if lists.isEmpty{
-                let newToDoList = ToDoList(context: viewContext)
-                newToDoList.listID = UUID()
-                newToDoList.listTitle = "Neue Liste"
-                newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
-                newToDoList.listColor = "indigo"
-                newToDoList.listSymbol = "list.bullet"
-                do{
-                    try viewContext.save()
-                }catch{
-                    let nsError = error as NSError
-                    fatalError("Could not add a first List in ContentView: \(nsError), \(nsError.userInfo)")
-                }
-            }
+            if(lists.isEmpty){createList(viewContext: viewContext)}
             
             //Set the first list as the selected to do list
             userSelected.selectedToDoList = lists[0].listTitle!

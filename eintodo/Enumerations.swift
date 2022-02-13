@@ -9,13 +9,15 @@ import Foundation
 import SwiftUI
 
 class UserSelected: ObservableObject{
+    @Published var selectedView: Int?
     @Published var selectedDate: Date
     @Published var lastSelectedDate: Date
     @Published var selectedToDoList: String
     @Published var selectedToDoListID: UUID
     @Published var showDoneToDos: Bool
 
-    init(selectedDate: Date, lastSelectedDate: Date, selectedToDoList: String, selectedToDoListID: UUID, showDoneToDos: Bool){
+    init(selectedView: Int?, selectedDate: Date, lastSelectedDate: Date, selectedToDoList: String, selectedToDoListID: UUID, showDoneToDos: Bool){
+        self.selectedView = selectedView
         self.selectedDate = selectedDate
         self.lastSelectedDate = lastSelectedDate
         self.selectedToDoList = selectedToDoList

@@ -12,6 +12,7 @@ struct ToDoListCollectionEditView: View{
     @Environment(\.colorScheme) public var colorScheme
     @EnvironmentObject var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [], animation: .default) var todos: FetchedResults<ToDo>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     let type: DetailViewTypes
 
@@ -201,6 +202,7 @@ struct ToDoListCollectionEditView: View{
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title
         userSelected.selectedToDoListID = newToDoList.listID!
+        userSelected.selectedView = 1
 
         do{
             try viewContext.save()
@@ -223,7 +225,6 @@ struct ToDoListCollectionEditView: View{
         //Set selected to do list to the edited one
         userSelected.selectedToDoList = title
         userSelected.selectedToDoListID = toDoList.listID!
-
         do{
             try viewContext.save()
         }catch{
