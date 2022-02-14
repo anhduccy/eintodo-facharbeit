@@ -48,6 +48,24 @@ struct DetailView: View {
     var body: some View {
         ZStack{
             VStack{
+                //List
+                Button(action: {
+                    showListPicker.toggle()
+                }, label: {
+                    HStack{
+                        SystemCircleIcon(image: getToDoListSymbol(with: listID), size: 20, backgroundColor: getToDoListColor(with: listID))
+                        Text(list)
+                            .foregroundColor(getToDoListColor(with: listID))
+                        Spacer()
+                    }
+                })
+                .popover(isPresented: $showListPicker){
+                    VStack{
+                        Text("Liste auswählen").font(.title2.bold())
+                        DetailViewListPicker(listsValueString: $list, listsValueID: $listID)
+                    }
+                    .padding()
+                }.buttonStyle(.plain)
                 //Group of TextField - Title, Notes, URLs
                 VStack(spacing: 2){
                     TextField("Titel", text: $title)
@@ -81,47 +99,6 @@ struct DetailView: View {
                                 Text("Allgemein").font(.headline)
                                 Spacer()
                             }
-                            //List
-                            Button(action: {
-                                showListPicker.toggle()
-                            },
-                                   label: {
-                                HStack{
-                                    switch(detailViewType){
-                                    case .add:
-                                        ZStack{
-                                            Circle()
-                                                .fill(getToDoListColor(with: listID))
-                                                .frame(width: 25, height: 25)
-                                            Image(systemName: getToDoListSymbol(with: listID))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 12.5, height: 12.5)
-                                                .foregroundColor(.white)
-                                        }
-                                    case .edit:
-                                        ZStack{
-                                            Circle()
-                                                .fill(getToDoListColor(with: listID))
-                                                .frame(width: 25, height: 25)
-                                            Image(systemName: getToDoListSymbol(with: listID))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 12.5, height: 12.5)
-                                                .foregroundColor(.white)
-                                        }
-                                    }
-                                    Text("Ausgewählte Liste - " + list)
-                                    Spacer()
-                                }
-                            })
-                            .popover(isPresented: $showListPicker){
-                                VStack{
-                                    Text("Liste auswählen").font(.title2.bold())
-                                    DetailViewListPicker(listsValueString: $list, listsValueID: $listID)
-                                }
-                                .padding()
-                            }.buttonStyle(.plain)
                             
                             //Deadline
                             VStack{
