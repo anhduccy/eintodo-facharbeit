@@ -124,7 +124,6 @@ struct ToDoListView: View {
     }
     
     let title: String
-    let SystemImageSize: CGFloat = 17.5
     
     var body: some View {
         VStack{
@@ -145,42 +144,9 @@ struct ToDoListView: View {
                     } else {
                         //ListView
                         ForEach(todos, id: \.self){ todo in
-                            //ListItem
                             HStack{
-                                //Checkmark button
-                                Button(action: {
-                                    todo.todoIsDone.toggle()
-                                    if(todo.todoIsDone == true){
-                                        deleteUserNotification(identifier: todo.todoID!)
-                                    }
-                                    updateToDo()
-                                    }, label: {
-                                    if(todo.todoIsDone){
-                                        SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
-                                    } else {
-                                        SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
-                                    }
-                                })
-                                    .frame(width: SystemImageSize, height: SystemImageSize)
-                                    .buttonStyle(.plain)
-                                    .padding(.leading, 5)
-                                
                                 //Labelling
                                 ToDoListRow(todo)
-                                Spacer()
-                                Button(action: {
-                                    todo.todoIsMarked.toggle()
-                                    updateToDo()
-                                }, label: {
-                                    if(todo.todoIsMarked){
-                                        SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
-                                            .padding(5)
-                                    } else {
-                                        SystemImage(image: "star", color: .white, size: 15, isActivated: true)
-                                            .padding(5)
-                                    }
-                                })
-                                    .buttonStyle(.plain)
                             }
                             .padding(5)
                             .background(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
@@ -202,19 +168,11 @@ struct ToDoListView: View {
             }
         }
     }
-    public func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { todos[$0] }.forEach(viewContext.delete)
-            saveContext(context: viewContext)
-        }
-    }
-    public func updateToDo(){
-        saveContext(context: viewContext)
-    }
 }
 
 //Subviews
 struct ToDoListRow: View {
+    @Environment(\.managedObjectContext) public var viewContext
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var subToDos: FetchedResults<SubToDo>
     
@@ -222,6 +180,7 @@ struct ToDoListRow: View {
     @State var isPresented: Bool = false
         
     let text_color: Color = .white
+    let SystemImageSize: CGFloat = 17.5
 
     init(_ todo: ToDo) {
         self.todo = todo
@@ -230,6 +189,25 @@ struct ToDoListRow: View {
 
     var body: some View {
         HStack{
+            //Checkmark button
+            Button(action: {
+                todo.todoIsDone.toggle()
+                if(todo.todoIsDone == true){
+                    deleteUserNotification(identifier: todo.todoID!)
+                }
+                saveContext(context: viewContext)
+                }, label: {
+                if(todo.todoIsDone){
+                    SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
+                } else {
+                    SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
+                }
+            })
+                .frame(width: SystemImageSize, height: SystemImageSize)
+                .buttonStyle(.plain)
+                .padding(.leading, 5)
+            
+            
             //Labelling
             Button(action: {
                 isPresented.toggle()
@@ -263,6 +241,8 @@ struct ToDoListRow: View {
                 .padding(.bottom, 5)
             })
                 .buttonStyle(.plain)
+            
+            //Information of content in ToDo
             if(todo.todoNotes != ""){
                 SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
             }
@@ -272,6 +252,23 @@ struct ToDoListRow: View {
             if(!subToDos.isEmpty){
                 SystemImage(image: getNumberIcon(), color: .white, size: 15, isActivated: true)
             }
+            
+            Spacer()
+            
+            //IsMarked button
+            Button(action: {
+                todo.todoIsMarked.toggle()
+                saveContext(context: viewContext)
+            }, label: {
+                if(todo.todoIsMarked){
+                    SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
+                        .padding(5)
+                } else {
+                    SystemImage(image: "star", color: .white, size: 15, isActivated: true)
+                        .padding(5)
+                }
+            })
+                .buttonStyle(.plain)
         }
         .sheet(isPresented: $isPresented) {
             DetailView(detailViewType: .display, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
