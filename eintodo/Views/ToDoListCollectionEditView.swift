@@ -128,7 +128,7 @@ struct ToDoListCollectionEditView: View{
                     .foregroundColor(Colors.secondaryColor)
                     .buttonStyle(.plain)
                     switch(type){
-                    case .display:
+                    case .edit:
                         Spacer()
                         Button(action: {
                             deleteToDoList()
@@ -149,7 +149,7 @@ struct ToDoListCollectionEditView: View{
                     if(title != ""){
                         Button(action: {
                             switch(type){
-                            case .display:
+                            case .edit:
                                 updateToDoList()
                             case .add:
                                 addToDoList()
@@ -180,7 +180,7 @@ struct ToDoListCollectionEditView: View{
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
         .onAppear{
             switch(type){
-            case .display:
+            case .edit:
                 title = toDoList.listTitle!
                 description = toDoList.listDescription!
                 selectedColor = toDoList.listColor!

@@ -22,7 +22,7 @@ struct CalendarView: View {
     @State var navigateDate: Date = Date()
     
     @State var showFilterPopover = false
-    @State var filter: FilterToDoType
+    @State var filter: CalendarViewFilterToDoType
     @State var showDateNavigatorPopover = false
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
@@ -201,7 +201,7 @@ struct CalendarView: View {
                 }.padding()
                 //Hidden navigation link to navigate between dates
                 VStack {
-                    NavigationLink(destination: ToDoListView(title: DateInString(date: userSelected.lastSelectedDate, type: "display"), listFilterType: toDoListFilterType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
+                    NavigationLink(destination: ToDoListView(title: DateInString(date: userSelected.lastSelectedDate, type: "display"), rowType: .calendar, listFilterType: toDoListFilterType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
             }
             .frame(minWidth: 300)
@@ -366,7 +366,7 @@ struct DateNavigatorPopover: View{
     }
 }
 struct SelectFilterPopover: View{
-    @Binding var filter: FilterToDoType
+    @Binding var filter: CalendarViewFilterToDoType
     var body: some View{
         VStack{
             HStack{
@@ -375,9 +375,9 @@ struct SelectFilterPopover: View{
             }
             HStack{
                 Picker("", selection: $filter){
-                    Text("Fällig am ").tag(FilterToDoType.deadline)
-                    Text("Erinnerung").tag(FilterToDoType.notification)
-                    Text("Markiert").tag(FilterToDoType.isMarked)
+                    Text("Fällig am ").tag(CalendarViewFilterToDoType.deadline)
+                    Text("Erinnerung").tag(CalendarViewFilterToDoType.notification)
+                    Text("Markiert").tag(CalendarViewFilterToDoType.isMarked)
                 }
                 .pickerStyle(.inline)
                 Spacer()

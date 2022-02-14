@@ -46,7 +46,7 @@ struct ToDoListCollectionRow: View{
             })
                 .buttonStyle(.plain)
                 .sheet(isPresented: $showToDoListsDetailView){
-                    ToDoListCollectionEditView(type: .display, isPresented: $showToDoListsDetailView, toDoList: list)
+                    ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsDetailView, toDoList: list)
                 }
         }
     }

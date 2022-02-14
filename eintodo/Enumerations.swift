@@ -56,13 +56,17 @@ enum ToDoListFilterType {
     case all
 }
 enum DetailViewTypes {
-    case add
-    case display
+    case add, edit
 }
 
 //Enums - Filter types
-enum FilterToDoType {
+enum CalendarViewFilterToDoType {
     case deadline
     case notification
     case isMarked
 }
+
+enum ToDoListRowType {
+    case list, calendar
+}
+

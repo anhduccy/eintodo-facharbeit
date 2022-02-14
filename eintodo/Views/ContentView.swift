@@ -43,7 +43,7 @@ struct ContentView: View {
                 Section(header: Text("Meine Listen")){
                     ForEach(Array(zip(lists.indices, lists)), id: \.1){ index, list in
                         NavigationLink(
-                            destination: ToDoListView(title: userSelected.selectedToDoList, listFilterType: .list, userSelected: userSelected)
+                            destination: ToDoListView(title: userSelected.selectedToDoList, rowType: .list, listFilterType: .list, userSelected: userSelected)
                                 .onAppear{
                                     userSelected.selectedToDoList = list.listTitle ?? "Error"
                                     userSelected.selectedToDoListID = list.listID ?? UUID()

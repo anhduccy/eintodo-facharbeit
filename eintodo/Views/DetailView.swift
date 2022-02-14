@@ -99,7 +99,7 @@ struct DetailView: View {
                                                 .frame(width: 12.5, height: 12.5)
                                                 .foregroundColor(.white)
                                         }
-                                    case .display:
+                                    case .edit:
                                         ZStack{
                                             Circle()
                                                 .fill(getToDoListColor(with: listID))
@@ -237,7 +237,7 @@ struct DetailView: View {
                     //Cancel
                     Button("Abbrechen"){dismissDetailView()}.buttonStyle(.plain).foregroundColor(Colors.secondaryColor)
                     switch(detailViewType){
-                    case .display:
+                    case .edit:
                         Spacer()
                         //Delete
                         Button(action: {
@@ -257,7 +257,7 @@ struct DetailView: View {
                     if(title != "" && list != ""){
                         Button(action: {
                             switch(detailViewType){
-                            case .display:
+                            case .edit:
                                 updateToDo(editViewType: detailViewType, todo: todo)
                             case .add:
                                 updateToDo(editViewType: detailViewType)
@@ -309,7 +309,7 @@ struct DetailView: View {
                     list = userSelected.selectedToDoList
                     listID = userSelected.selectedToDoListID
                 }
-            case .display: //Value assignment of CoreData storage, if type is display
+            case .edit: //Value assignment of CoreData storage, if type is display
                 id = todo.todoID!
                 title = todo.todoTitle ?? "Error"
                 notes = todo.todoNotes ?? "Error"
@@ -364,7 +364,7 @@ extension DetailView{
         switch(editViewType){
         case .add:
             objToDo.todoID = id
-        case .display:
+        case .edit:
             objToDo = todo
         }
         //Texts
