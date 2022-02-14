@@ -91,7 +91,7 @@ struct DetailView: View {
                 
                 Divider()
                 
-                ScrollView{
+                ScrollView(showsIndicators: false){
                     VStack(spacing: 20){
                         //Group of Buttons - List, Deadline, Notifications, isMarked, Priorities, Images
                         VStack{
@@ -372,12 +372,7 @@ extension DetailView{
         objToDo.todoImages = NSImageArrayToCoreData(images: images)
         //Set the ToDo to undone
         objToDo.todoIsDone = false
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not add CoreData-Entity ToDo in DetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
     }
     func deleteToDo(){
         withAnimation {
@@ -387,12 +382,7 @@ extension DetailView{
             for subToDo in subToDos{
                 viewContext.delete(subToDo)
             }
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Could not delete CoreData-Entity in DetailView: \(nsError), \(nsError.userInfo)")
-            }
+            saveContext(context: viewContext)
         }
     }
     //DISMISSING DetailView

@@ -38,8 +38,8 @@ struct SecondsCalculated {
 }
 struct Sizes {
     static let defaultSheetWidth: CGFloat = 400
-    static let defaultSheetHeight: CGFloat = 400
-    static let defaultSheetHeightDetailView: CGFloat = 500
+    static let defaultSheetHeight: CGFloat = 500
+    static let defaultSheetHeightDetailView: CGFloat = 450
 }
 struct Colors {
     static let primaryColor: Color = .indigo
@@ -69,4 +69,3 @@ enum CalendarViewFilterToDoType {
 enum ToDoListRowType {
     case list, calendar
 }
-

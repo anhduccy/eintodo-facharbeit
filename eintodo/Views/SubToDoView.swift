@@ -113,21 +113,12 @@ class SubToDoFunctions {
     let viewContext = PersistenceController.shared.container.viewContext
     func deleteSubToDo(subToDo: SubToDo){
         viewContext.delete(subToDo)
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not delete CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
     }
     func updateSubToDo(subToDo: SubToDo, title: String){
         subToDo.subtodoTitle = title
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not update CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
+
     }
     func addSubToDo(subToDos: FetchedResults<SubToDo>, title: String, idOfMainToDo: UUID){
         let newSubToDo = SubToDo(context: viewContext)
@@ -138,12 +129,8 @@ class SubToDoFunctions {
         itemsInSubToDos += 1
         newSubToDo.subtodoSortIndex = Int16(itemsInSubToDos)
         newSubToDo.idOfMainToDo = idOfMainToDo
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Could not add CoreData-Entity SubToDo in DetailView: \(nsError), \(nsError.userInfo)")
-        }
+        saveContext(context: viewContext)
+
     }
 }
 
