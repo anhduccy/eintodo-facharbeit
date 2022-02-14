@@ -19,7 +19,6 @@ struct ToDoListCollectionRow: View{
     @ObservedObject var list: ToDoList
     
     @State var showToDoListsDetailView: Bool = false
-    @State var overInfoButton: Bool = false
 
     init(list: ToDoList){
         _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", list.listID! as CVarArg), animation: .default)
@@ -34,29 +33,22 @@ struct ToDoListCollectionRow: View{
             Text(list.listTitle ?? "Error").font(.body)
             Spacer()
             //Info button for List
-            if(overInfoButton){
-                Button(action: {
-                    withAnimation{
-                        userSelected.selectedToDoListID = list.listID ?? UUID()
-                        showToDoListsDetailView.toggle()
-                    }
-                }, label: {
-                    Image(systemName: "info.circle")
-                })
-                    .buttonStyle(.plain)
-                    .sheet(isPresented: $showToDoListsDetailView){
-                        ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsDetailView, toDoList: list)
-                    }
-            }
+            Button(action: {
+                withAnimation{
+                    userSelected.selectedToDoListID = list.listID ?? UUID()
+                    showToDoListsDetailView.toggle()
+                }
+            }, label: {
+                Image(systemName: "info.circle")
+            })
+                .buttonStyle(.plain)
+                .sheet(isPresented: $showToDoListsDetailView){
+                    ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsDetailView, toDoList: list)
+                }
             //Counter of ToDos in List
             Text("\(todos.count)")
                 .font(.body)
                 .fontWeight(.light)
-        }
-        .onHover{ over in
-            withAnimation{
-                overInfoButton = over
-            }
         }
     }
 }
