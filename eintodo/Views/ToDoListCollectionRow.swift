@@ -35,7 +35,6 @@ struct ToDoListCollectionRow: View{
             Text("\(todos.count)")
                 .font(.body)
                 .fontWeight(.light)
-                .foregroundColor(.gray)
             //Info button for List
             Button(action: {
                 withAnimation{
@@ -44,7 +43,6 @@ struct ToDoListCollectionRow: View{
                 }
             }, label: {
                 Image(systemName: "info.circle")
-                    .foregroundColor(.gray)
             })
                 .buttonStyle(.plain)
                 .sheet(isPresented: $showToDoListsDetailView){

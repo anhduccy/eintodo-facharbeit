@@ -134,16 +134,15 @@ struct ToDoListView: View {
                     Spacer()
                 }
                 List{
-                    Section(header: Text("Erinnerungen")){
-                        if(todos.isEmpty){
-                            VStack{
-                                HStack{
-                                    Text("Du hast noch nichts für den Tag geplant")
-                                        .foregroundColor(.gray)
-                                    Spacer()
-                                }
+                    if(todos.isEmpty){
+                        VStack{
+                            HStack{
+                                Text("Du hast noch nichts für den Tag geplant")
+                                    .foregroundColor(.gray)
+                                Spacer()
                             }
                         }
+                    } else {
                         //ListView
                         ForEach(todos, id: \.self){ todo in
                             //ListItem
@@ -189,8 +188,8 @@ struct ToDoListView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
             }
+            .listStyle(.plain)
         }
         .padding()
         .frame(minWidth: 375)

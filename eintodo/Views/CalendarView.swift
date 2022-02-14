@@ -65,7 +65,7 @@ struct CalendarView: View {
                             ZStack{
                                 Circle().fill().foregroundColor(Colors.primaryColor).opacity(0.2)
                                     .frame(width: 24, height: 24, alignment: .center)
-                                Image(systemName: "cursorarrow.rays")
+                                Image(systemName: "arrow.turn.up.right")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         })
