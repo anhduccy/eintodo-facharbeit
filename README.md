@@ -1,3 +1,3 @@
-# Eintodo
+# eintodo
 
-Eintodo is a basic todo-app with a Calendar function.
+**eintodo** is a basic todo-app with a Calendar function.
