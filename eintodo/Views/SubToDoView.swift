@@ -8,7 +8,7 @@
 import SwiftUI
 
 //SubToDoList - View to add a SubToDo + Area to show the list
-struct SubToDoList: View{
+struct SubToDoListView: View{
     @Environment(\.managedObjectContext) public var viewContext
     @FetchRequest var subToDos: FetchedResults<SubToDo>
     @State var sub_title: String = ""
@@ -30,9 +30,7 @@ struct SubToDoList: View{
                 Spacer()
             }
             ForEach(subToDos, id: \.self){ subToDo in
-                HStack{
-                    SubToDoListRow(subToDo: subToDo, sub_title: subToDo.subtodoTitle!)
-                }
+                SubToDoListRow(subToDo: subToDo, sub_title: subToDo.subtodoTitle!)
             }
             HStack{
                 Button(action: {
@@ -77,7 +75,6 @@ struct SubToDoListRow: View{
                         .onHover{ over in
                             withAnimation{
                                 overCheckmarkBox = over
-
                             }
                         }
                 }
@@ -97,8 +94,7 @@ struct SubToDoListRow: View{
                 SubToDoFunctions().deleteSubToDo(subToDo: subToDo)
             }, label: {
                 SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 20, isActivated: true)
-            })
-                .buttonStyle(.plain)
+            }).buttonStyle(.plain)
                 .onHover{ over in
                     withAnimation{
                         overDeleteButton = over
@@ -118,7 +114,6 @@ class SubToDoFunctions {
     func updateSubToDo(subToDo: SubToDo, title: String){
         subToDo.subtodoTitle = title
         saveContext(context: viewContext)
-
     }
     func addSubToDo(subToDos: FetchedResults<SubToDo>, title: String, idOfMainToDo: UUID){
         let newSubToDo = SubToDo(context: viewContext)
@@ -130,7 +125,6 @@ class SubToDoFunctions {
         newSubToDo.subtodoSortIndex = Int16(itemsInSubToDos)
         newSubToDo.idOfMainToDo = idOfMainToDo
         saveContext(context: viewContext)
-
     }
 }
 

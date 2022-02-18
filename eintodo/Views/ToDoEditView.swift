@@ -8,7 +8,7 @@
 import SwiftUI
 import UserNotifications
 
-struct EditView: View {
+struct ToDoEditView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
     @Environment(\.openURL) var openURL
@@ -62,7 +62,7 @@ struct EditView: View {
                 .popover(isPresented: $showListPicker){
                     VStack{
                         Text("Liste auswählen").font(.title2.bold())
-                        EditViewListPicker(listsValueString: $list, listsValueID: $listID)
+                        ToDoEditViewListPicker(listsValueString: $list, listsValueID: $listID)
                     }
                     .padding()
                 }.buttonStyle(.plain)
@@ -206,7 +206,7 @@ struct EditView: View {
                         //Images
                         ImageView(images: $images)
                         //SubToDos
-                        SubToDoList(id: id)
+                        SubToDoListView(id: id)
                     }
                 }
                 //Submit Buttons
@@ -283,7 +283,7 @@ struct EditView: View {
     }
 }
 
-extension EditView{
+extension ToDoEditView{
     //Get information of ToDoList for the specified ToDo
     func getToDoListColor(with: UUID) -> Color{
         var color: String = ""

@@ -69,7 +69,7 @@ struct ContentView: View {
                         Label("Add ToDo", systemImage: "checkmark.circle.fill")
                     })
                         .sheet(isPresented: $showAddView){
-                            EditView(editViewType: .add, todo: ToDo(), list: lists[0].listTitle! , listID: lists[0].listID!, isPresented: $showAddView)
+                            ToDoEditView(editViewType: .add, todo: ToDo(), list: lists[0].listTitle! , listID: lists[0].listID!, isPresented: $showAddView)
                         }
                         .keyboardShortcut("n", modifiers: [.command])
                     Button(action: {

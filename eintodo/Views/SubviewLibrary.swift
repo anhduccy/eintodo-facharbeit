@@ -28,7 +28,7 @@ struct SelectPriorityPopover: View{
     }
 }
 //ListPicker to select lists
-struct EditViewListPicker: View{
+struct ToDoEditViewListPicker: View{
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     @Binding var listsValueString: String
     @Binding var listsValueID: UUID

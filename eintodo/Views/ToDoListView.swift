@@ -268,7 +268,7 @@ struct ToDoListRow: View {
                 }).buttonStyle(.plain)
             }.padding(10)
             .sheet(isPresented: $isPresented) {
-                EditView(editViewType: .edit, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
+                ToDoEditView(editViewType: .edit, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
             }
         }
     }
