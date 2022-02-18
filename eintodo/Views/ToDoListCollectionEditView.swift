@@ -118,8 +118,8 @@ struct ToDoListCollectionEditView: View{
                 Spacer()
                 SubmitButtonsWithCondition(condition: title != "", isPresented: $isPresented, updateAction: {
                     switch(type){
-                    case .edit: updateToDoList()
-                    case .add: addToDoList()
+                    case .edit: updateToDoList(editViewType: .edit, todoList: toDoList)
+                    case .add: updateToDoList(editViewType: .add)
                     }
                 }, deleteAction: deleteToDoList, cancelAction: {}, type: type)
             }
@@ -138,37 +138,32 @@ struct ToDoListCollectionEditView: View{
             }
         }
     }
-    public func addToDoList(){
-        //Initialize the ToDoList
-        let newToDoList = ToDoList(context: viewContext)
-        newToDoList.listID = UUID()
-        newToDoList.listTitle = title
-        newToDoList.listDescription = description
-        newToDoList.listColor = selectedColor
-        newToDoList.listSymbol = selectedSymbol
-        //Set selected to do list to the edited one
-        userSelected.selectedToDoList = title
-        userSelected.selectedToDoListID = newToDoList.listID!
-        userSelected.selectedView = 1
-        saveContext(context: viewContext)
-    }
-    public func updateToDoList(){
-        todos.nsPredicate = NSPredicate(format: "todoList == %@", toDoList.listTitle! as CVarArg)
-        //Update ToDoList
-        toDoList.listTitle = title
-        toDoList.listDescription = description
-        toDoList.listColor = selectedColor
-        toDoList.listSymbol = selectedSymbol
-        //Update the titles of all todos in the list
-        for todo in todos{
-            todo.todoList = title
+}
+
+extension ToDoListCollectionEditView{
+    private func updateToDoList(editViewType: DetailViewTypes, todoList: ToDoList = ToDoList()){
+        var objToDoList = ToDoList(context: viewContext)
+        switch(editViewType){
+        case .add:
+            objToDoList.listID = UUID()
+        case .edit:
+            objToDoList = todoList
+            todos.nsPredicate = NSPredicate(format: "todoList == %@", toDoList.listTitle! as CVarArg)
+            for todo in todos{
+                todo.todoList = title
+            }
+            userSelected.selectedView = 1
         }
-        //Set selected to do list to the edited one
+        objToDoList.listTitle = title
+        objToDoList.listDescription = description
+        objToDoList.listColor = selectedColor
+        objToDoList.listSymbol = selectedSymbol
+        
         userSelected.selectedToDoList = title
-        userSelected.selectedToDoListID = toDoList.listID!
+        userSelected.selectedToDoListID = objToDoList.listID!
         saveContext(context: viewContext)
     }
-    public func deleteToDoList(){
+    private func deleteToDoList(){
         viewContext.delete(toDoList)
         saveContext(context: viewContext)
     }
