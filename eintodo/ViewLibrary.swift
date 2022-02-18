@@ -91,3 +91,67 @@ struct SystemImage: View{
         }
     }
 }
+
+//Submit Button
+struct SubmitButtonsWithCondition: View{
+    @Environment(\.colorScheme) var appearance
+    let condition: Bool
+    @Binding var isPresented: Bool
+    
+    let updateAction: () -> Void
+    let deleteAction: () -> Void
+    let cancelAction: () -> Void
+    let type: DetailViewTypes
+    @State var overDeleteButton: Bool = false
+    var body: some View{
+        HStack{
+            //Cancel Button
+            Button("Abbrechen"){
+                cancelAction()
+                isPresented.toggle()
+            }
+            .foregroundColor(Colors.secondaryColor)
+            .buttonStyle(.plain)
+            //Delete Button
+            if type == .edit{
+                Spacer()
+                Button(action: {
+                    deleteAction()
+                    isPresented.toggle()
+                }, label: {
+                    SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
+                })
+                    .buttonStyle(.plain)
+                    .onHover{ over in
+                        withAnimation{
+                            overDeleteButton = over
+                        }
+                    }
+            }
+            Spacer()
+            //Done Button
+            if(condition){
+                Button(action: {
+                    updateAction()
+                    isPresented.toggle()
+                }, label: {
+                    Text("Fertig")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .foregroundColor(appearance == .dark ? Colors.secondaryColor : Colors.primaryColor)
+                })
+                .buttonStyle(.plain)
+            } else {
+                Button(action: {
+                    isPresented.toggle()
+                }, label: {
+                    Text("Fertig")
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.gray)
+                })
+                .buttonStyle(.plain)
+            }
+        }
+    }
+}

@@ -209,53 +209,21 @@ struct DetailView: View {
                         SubToDoList(id: id)
                     }
                 }
-                //Group - Control buttons
-                HStack{
-                    //Cancel
-                    Button("Abbrechen"){dismissDetailView()}.buttonStyle(.plain).foregroundColor(Colors.secondaryColor)
+                //Submit Buttons
+                SubmitButtonsWithCondition(condition: title != "" && list != "", isPresented: $isPresented, updateAction: {
                     switch(detailViewType){
                     case .edit:
-                        Spacer()
-                        //Delete
-                        Button(action: {
-                            deleteToDo()
-                            dismissDetailView()
-                        }, label: {
-                            SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
-                        }).buttonStyle(.plain)
-                            .onHover{ over in
-                                withAnimation{overDeleteButton = over}
-                            }
-                        Spacer()
+                        updateToDo(editViewType: detailViewType, todo: todo)
                     case .add:
-                        Spacer()
+                        updateToDo(editViewType: detailViewType)
                     }
-                    //Done
-                    if(title != "" && list != ""){
-                        Button(action: {
-                            switch(detailViewType){
-                            case .edit:
-                                updateToDo(editViewType: detailViewType, todo: todo)
-                            case .add:
-                                updateToDo(editViewType: detailViewType)
-                            }
-                            dismissDetailView()
-                        }, label: {
-                            Text("Fertig")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                                .foregroundColor(colorScheme == .dark ? Colors.secondaryColor : Colors.primaryColor)
-                        })
-                        .buttonStyle(.plain)
-                    } else {
-                        Button(action: {dismissDetailView()}, label: {
-                            Text("Fertig")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.gray)
-                        }).buttonStyle(.plain)
-                    }
-                }
+                    userSelected.selectedDate = deadline
+                }, deleteAction: {
+                    deleteToDo()
+                    userSelected.selectedDate = deadline
+                }, cancelAction: {
+                    userSelected.selectedDate = deadline
+                }, type: detailViewType)
             }
             .padding()
         }
@@ -384,10 +352,5 @@ extension DetailView{
             }
             saveContext(context: viewContext)
         }
-    }
-    //DISMISSING DetailView
-    func dismissDetailView(){
-        userSelected.selectedDate = deadline
-        isPresented.toggle()
     }
 }
