@@ -279,7 +279,6 @@ struct DetailView: View {
                 priority = Int(todo.todoPriority)
                 images = CoreDataToNSImageArray(coreDataObject: todo.todoImages) ?? []
             }
-            askForUserNotificationPermission()
         }
     }
 }

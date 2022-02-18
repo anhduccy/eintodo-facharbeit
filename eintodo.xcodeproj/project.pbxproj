@@ -52,6 +52,7 @@
 		79B56F45277FB83900D0EC16 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		79F44342276F649200B558BF /* ViewLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLibrary.swift; sourceTree = "<group>"; };
+		79F5826327BFB669004933ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +85,7 @@
 		794855E9276690410086927E /* eintodo */ = {
 			isa = PBXGroup;
 			children = (
+				79F5826327BFB669004933ED /* Info.plist */,
 				794855EA276690410086927E /* eintodoApp.swift */,
 				79BAB9BB276BBDDD009EB5A3 /* Views */,
 				79F44342276F649200B558BF /* ViewLibrary.swift */,
@@ -373,6 +375,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = eintodo/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -401,6 +404,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = eintodo/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

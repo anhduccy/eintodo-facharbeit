@@ -59,7 +59,7 @@ struct ContentView: View {
                 }
             }
             .listStyle(.sidebar)
-            .frame(minWidth: 250)
+            .frame(minWidth: 200)
             .toolbar{
                 ToolbarItemGroup{
                     Spacer()
@@ -92,6 +92,8 @@ struct ContentView: View {
             //Set the first list as the selected to do list
             userSelected.selectedToDoList = lists[0].listTitle!
             userSelected.selectedToDoListID = lists[0].listID!
+            
+            askForUserNotificationPermission()
         }
         .onChange(of: deadlineTime){ newValue in
             for todo in todos{

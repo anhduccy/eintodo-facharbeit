@@ -32,6 +32,10 @@ struct ToDoListCollectionRow: View{
             //List name
             Text(list.listTitle ?? "Error").font(.body)
             Spacer()
+            //Counter of ToDos in List
+            Text("\(todos.count)")
+                .font(.body)
+                .fontWeight(.light)
             //Info button for List
             Button(action: {
                 withAnimation{
@@ -45,10 +49,6 @@ struct ToDoListCollectionRow: View{
                 .sheet(isPresented: $showToDoListsDetailView){
                     ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsDetailView, toDoList: list)
                 }
-            //Counter of ToDos in List
-            Text("\(todos.count)")
-                .font(.body)
-                .fontWeight(.light)
         }
     }
 }
