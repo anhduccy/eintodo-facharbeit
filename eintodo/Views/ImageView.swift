@@ -64,12 +64,12 @@ struct ImageView: View{
         do {
             let imageData = try Data(contentsOf: URL)
             return NSImage(data: imageData)
-        } catch {print("Error loading image in DetailView: \(error)")}
+        } catch {print("Error loading image in EditView: \(error)")}
         return nil
     }
 }
-//ImageDetailView - Show the image in a fuller size
-struct ImageDetailView: View{
+//ImageEditView - Show the image in a fuller size
+struct ImageEditView: View{
     @Binding var images: [NSImage]
     @Binding var isPresented: Bool
     @Binding var selectedIndexOfURL: Int
@@ -106,7 +106,7 @@ struct ImageDetailView: View{
         .frame(height: 500)
     }
 }
-//ImageButton - For Each Image to open the ImageDetailView
+//ImageButton - For Each Image to open the ImageEditView
 struct ImageButton: View{
     @State var isPresented: Bool = false
     @State var selectedIndexOfURL: Int
@@ -124,7 +124,7 @@ struct ImageButton: View{
                 .cornerRadius(10)
 
         }).sheet(isPresented: $isPresented){
-            ImageDetailView(images: $images, isPresented: $isPresented, selectedIndexOfURL: $selectedIndexOfURL, image: image)
+            ImageEditView(images: $images, isPresented: $isPresented, selectedIndexOfURL: $selectedIndexOfURL, image: image)
         }.buttonStyle(.plain)
     }
 }

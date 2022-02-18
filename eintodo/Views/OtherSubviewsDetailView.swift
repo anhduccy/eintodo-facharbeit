@@ -1,5 +1,5 @@
 //
-//  SubviewsOfDetailView.swift
+//  SubviewsOfEditView.swift
 //  eintodo
 //
 //  Created by anh :) on 31.01.22.
@@ -28,7 +28,7 @@ struct SelectPriorityPopover: View{
     }
 }
 //ListPicker to select lists
-struct DetailViewListPicker: View{
+struct EditViewListPicker: View{
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     @Binding var listsValueString: String
     @Binding var listsValueID: UUID

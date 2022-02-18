@@ -18,7 +18,7 @@ struct ToDoListCollectionRow: View{
     @FetchRequest var todos: FetchedResults<ToDo>
     @ObservedObject var list: ToDoList
     
-    @State var showToDoListsDetailView: Bool = false
+    @State var showToDoListsEditView: Bool = false
 
     init(list: ToDoList){
         _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", list.listID! as CVarArg), animation: .default)
@@ -40,14 +40,14 @@ struct ToDoListCollectionRow: View{
             Button(action: {
                 withAnimation{
                     userSelected.selectedToDoListID = list.listID ?? UUID()
-                    showToDoListsDetailView.toggle()
+                    showToDoListsEditView.toggle()
                 }
             }, label: {
                 Image(systemName: "info.circle")
             })
                 .buttonStyle(.plain)
-                .sheet(isPresented: $showToDoListsDetailView){
-                    ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsDetailView, toDoList: list)
+                .sheet(isPresented: $showToDoListsEditView){
+                    ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsEditView, toDoList: list)
                 }
         }
     }

@@ -101,7 +101,7 @@ struct SubmitButtonsWithCondition: View{
     let updateAction: () -> Void
     let deleteAction: () -> Void
     let cancelAction: () -> Void
-    let type: DetailViewTypes
+    let type: EditViewTypes
     @State var overDeleteButton: Bool = false
     var body: some View{
         HStack{

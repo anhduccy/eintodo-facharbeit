@@ -39,7 +39,7 @@ struct SecondsCalculated {
 struct Sizes {
     static let defaultSheetWidth: CGFloat = 400
     static let defaultSheetHeight: CGFloat = 500
-    static let defaultSheetHeightDetailView: CGFloat = 450
+    static let defaultSheetHeightEditView: CGFloat = 450
 }
 struct Colors {
     static let primaryColor: Color = .indigo
@@ -55,7 +55,7 @@ enum ToDoListFilterType {
     case list
     case all
 }
-enum DetailViewTypes {
+enum EditViewTypes {
     case add, edit
 }
 

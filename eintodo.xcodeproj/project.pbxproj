@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		79281B152776428200F32528 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79281B142776428200F32528 /* Extensions.swift */; };
 		7940F648277CCE2A001BA7EF /* ToDoListCollectionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7940F647277CCE2A001BA7EF /* ToDoListCollectionEditView.swift */; };
-		7947DED627778C5A008C999A /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7947DED527778C5A008C999A /* DetailView.swift */; };
+		7947DED627778C5A008C999A /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7947DED527778C5A008C999A /* EditView.swift */; };
 		7947DED827778EA6008C999A /* Enumerations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7947DED727778EA6008C999A /* Enumerations.swift */; };
 		794855EB276690410086927E /* eintodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EA276690410086927E /* eintodoApp.swift */; };
 		794855ED276690410086927E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794855EC276690410086927E /* ContentView.swift */; };
@@ -32,7 +32,7 @@
 /* Begin PBXFileReference section */
 		79281B142776428200F32528 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		7940F647277CCE2A001BA7EF /* ToDoListCollectionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListCollectionEditView.swift; sourceTree = "<group>"; };
-		7947DED527778C5A008C999A /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		7947DED527778C5A008C999A /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		7947DED727778EA6008C999A /* Enumerations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enumerations.swift; sourceTree = "<group>"; };
 		794855E7276690410086927E /* eintodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eintodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		794855EA276690410086927E /* eintodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = eintodoApp.swift; sourceTree = "<group>"; };
@@ -112,7 +112,7 @@
 		7965CEDC27A849C200AEEB9E /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
-				7947DED527778C5A008C999A /* DetailView.swift */,
+				7947DED527778C5A008C999A /* EditView.swift */,
 				7965CEDD27A849D700AEEB9E /* Subviews */,
 			);
 			name = ToDo;
@@ -224,7 +224,7 @@
 				7965CED627A83C8B00AEEB9E /* OtherSubviewsDetailView.swift in Sources */,
 				7948560F2766ABF30086927E /* CalendarView.swift in Sources */,
 				7999DE71277B7E0D008557EB /* ToDoListCollectionRow.swift in Sources */,
-				7947DED627778C5A008C999A /* DetailView.swift in Sources */,
+				7947DED627778C5A008C999A /* EditView.swift in Sources */,
 				7965CED827A8411E00AEEB9E /* SubToDoView.swift in Sources */,
 				794855F4276690410086927E /* Persistence.swift in Sources */,
 				7965CEDA27A8491E00AEEB9E /* ImageView.swift in Sources */,

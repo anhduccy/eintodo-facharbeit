@@ -1,5 +1,5 @@
 //
-//  DetailView.swift
+//  EditView.swift
 //  eintodo
 //
 //  Created by anh :) on 12.12.21.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UserNotifications
 
-struct DetailView: View {
+struct EditView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
     @Environment(\.openURL) var openURL
@@ -19,7 +19,7 @@ struct DetailView: View {
     @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
     @FetchRequest(sortDescriptors: []) var subToDos: FetchedResults<SubToDo>
 
-    let detailViewType: DetailViewTypes
+    let editViewType: EditViewTypes
 
     //Values for ToDo
     @State var todo: ToDo
@@ -62,7 +62,7 @@ struct DetailView: View {
                 .popover(isPresented: $showListPicker){
                     VStack{
                         Text("Liste auswählen").font(.title2.bold())
-                        DetailViewListPicker(listsValueString: $list, listsValueID: $listID)
+                        EditViewListPicker(listsValueString: $list, listsValueID: $listID)
                     }
                     .padding()
                 }.buttonStyle(.plain)
@@ -211,11 +211,11 @@ struct DetailView: View {
                 }
                 //Submit Buttons
                 SubmitButtonsWithCondition(condition: title != "" && list != "", isPresented: $isPresented, updateAction: {
-                    switch(detailViewType){
+                    switch(editViewType){
                     case .edit:
-                        updateToDo(editViewType: detailViewType, todo: todo)
+                        updateToDo(editViewType: editViewType, todo: todo)
                     case .add:
-                        updateToDo(editViewType: detailViewType)
+                        updateToDo(editViewType: editViewType)
                     }
                     userSelected.selectedDate = deadline
                 }, deleteAction: {
@@ -223,13 +223,13 @@ struct DetailView: View {
                     userSelected.selectedDate = deadline
                 }, cancelAction: {
                     userSelected.selectedDate = deadline
-                }, type: detailViewType)
+                }, type: editViewType)
             }
             .padding()
         }
-        .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeightDetailView)
+        .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeightEditView)
         .onAppear{
-            switch(detailViewType){
+            switch(editViewType){
             case .add:
                 if deadline == Dates.defaultDate{
                     showDeadline = false
@@ -283,7 +283,7 @@ struct DetailView: View {
     }
 }
 
-extension DetailView{
+extension EditView{
     //Get information of ToDoList for the specified ToDo
     func getToDoListColor(with: UUID) -> Color{
         var color: String = ""
@@ -303,7 +303,7 @@ extension DetailView{
     }
     
     //CORE-DATA - Add, update and delete ToDo
-    func updateToDo(editViewType: DetailViewTypes, todo: ToDo = ToDo()){
+    func updateToDo(editViewType: EditViewTypes, todo: ToDo = ToDo()){
         var objToDo = ToDo(context: viewContext)
         switch(editViewType){
         case .add:
