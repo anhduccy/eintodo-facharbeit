@@ -173,7 +173,7 @@ struct ToDoListRow: View {
                 }, label: {
                     RoundedRectangle(cornerRadius: 8.5)
                         .fill(.ultraThinMaterial)
-                        .shadow(color: .bluex, radius: 3)
+                        .shadow(color: .blue, radius: 3)
                 }).buttonStyle(.plain)
                 HStack{
                     //Checkmark button

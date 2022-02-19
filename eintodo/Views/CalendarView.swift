@@ -98,78 +98,46 @@ struct CalendarView: View {
                         }
                         
                         ForEach(extractDate(), id: \.self){ dayValue in
-                            VStack{
-                                if(dayValue.day >= 0){
-                                    ZStack{
-                                        //IF dayValue.date is the same day as selected date -> Circle blue
+                            if(dayValue.day >= 0){
+                                Button(action: {
+                                    userSelected.selectedDate = dayValue.date
+                                    userSelected.lastSelectedDate = userSelected.selectedDate
+                                    self.toDoListFilterType = .dates
+                                }, label: {
+                                    VStack{
                                         if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date)){
-                                            Circle().fill(Color.indigo)
+                                            ZStack{
+                                                Circle().fill(Colors.primaryColor)
+                                                    .opacity(0.2)
+                                                Text("\(dayValue.day)")
+                                                    .foregroundColor(Colors.primaryColor)
+                                            }
                                         } else {
                                             switch(filter){
                                             case .deadline, .notification:
-                                                    //IF (there are todos at dayValue.date) AND (there are none todos which overpass the deadline) -> Circle primary color
-                                                    if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
-                                                        Circle().fill(Colors.primaryColor)
-                                                    
-                                                    //IF (there are todos at dayValue.date) AND (there are some which overpass the deadline) -> Circle red
-                                                    } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
-                                                        Circle().fill(Color.red)
-                                                        
-                                                    //IF (On dayValue.date are just Done-To-Dos) AND (showDoneToDos is activated) -> Circle primary color shadowed
-                                                    } else if(isJustDoneToDos(date: dayValue.date) && userSelected.showDoneToDos){
-                                                        Circle().fill(Colors.primaryColor).opacity(0.2)
-                                                    }
+                                                if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
+                                                    Text("\(dayValue.day)").foregroundColor(Colors.primaryColor)
+                                                } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
+                                                    Text("\(dayValue.day)").foregroundColor(.red)
+                                                } else if(isJustDoneToDos(date: dayValue.date) && userSelected.showDoneToDos){
+                                                    Text("\(dayValue.day)").foregroundColor(Colors.primaryColor).opacity(0.5)
+                                                } else {
+                                                    Text("\(dayValue.day)")
+                                                }
                                             case .isMarked:
                                                 if(!isEmptyOnDate(date: dayValue.date)){
-                                                    Circle().fill(Color.yellow)
+                                                    Text("\(dayValue.day)").foregroundColor(.yellow).opacity(0.5)
                                                 } else if(isJustDoneToDos(date: dayValue.date)){
-                                                    Circle().fill(Color.yellow).opacity(0.2)
-                                                }
-                                            }
-                                        }
-                                        Button(action: {
-                                            userSelected.selectedDate = dayValue.date
-                                            userSelected.lastSelectedDate = userSelected.selectedDate
-                                            self.toDoListFilterType = .dates
-                                        }){
-                                            ZStack{
-                                                //IF (dayValue.date is current date) AND (dayValue.date is not selected date) AND (there are none to-dos at dayValue.date), display the text blue
-                                                if(isToday(date: dayValue.date) && !isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date) && isEmptyOnDate(date: dayValue.date)){
-                                                    Text("\(dayValue.day)")
-                                                        .foregroundColor(Color.blue)
+                                                    Text("\(dayValue.day)").foregroundColor(.yellow).opacity(0.5)
                                                 } else {
-                                                    switch(filter){
-                                                    case .deadline, .notification:
-                                                        // ELSE IF (dayValue.date is selected date) AND (there are todos at dayValue.date), display the text white, because Circle is supported
-                                                        if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date) || !isEmptyOnDate(date: dayValue.date)){
-                                                            Text("\(dayValue.day)")
-                                                                .foregroundColor(Color.white)
-                                                        } else {
-                                                            Text("\(dayValue.day)")
-                                                        }
-                                                    case .isMarked:
-                                                        if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date)){
-                                                            Text("\(dayValue.day)")
-                                                            .foregroundColor(Color.white)
-                                                        } else if(!isEmptyOnDate(date: dayValue.date)){
-                                                            Text("\(dayValue.day)")
-                                                            .foregroundColor(Color.black)
-                                                        } else {
-                                                            Text("\(dayValue.day)")
-                                                        }
-                                                    }
+                                                    Text("\(dayValue.day)")
                                                 }
                                             }
-                                            .frame(width: 30, height: 30, alignment: .center)
                                         }
-                                        .buttonStyle(.plain)
-                                    }
-                                } else {
-                                    Text("")
-                                }
-                            }
-                            .onChange(of: filter){ newValue in
-                                predicateList(date: dayValue.date)
+                                    }.frame(width: 29, height: 29, alignment: .center)
+                                }).buttonStyle(.plain)
+                            } else {
+                                Text("")
                             }
                         }
                     }
