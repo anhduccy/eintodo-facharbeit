@@ -74,18 +74,12 @@ struct ToDoListView: View {
     var body: some View {
         VStack{
             VStack(spacing: 10){
-                HStack{
-                    Text(title).font(.largeTitle.bold())
-                    Spacer()
-                }
+                LeftText(text: title, font: .largeTitle, fontWeight: .bold)
                 List{
                     if(todos.isEmpty){
                         VStack{
-                            HStack{
-                                Text("Du hast noch nichts für den Tag geplant")
-                                    .foregroundColor(.gray)
-                                Spacer()
-                            }
+                            LeftText(text: "Du hast noch nichts für den Tag geplant")
+                                .foregroundColor(.gray)
                         }
                     } else {
                         //ListView
@@ -154,28 +148,14 @@ struct ToDoListRow: View {
                     
                     //Labelling
                     VStack{
-                        HStack{
-                            Text(todo.todoTitle ?? "Error")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(text_color)
-                            Spacer()
-                        }
+                        LeftText(text: todo.todoTitle ?? "Error", font: .headline, fontWeight: .semibold)
+                            .foregroundColor(text_color)
                         if todo.todoDeadline != Dates.defaultDate{
-                            HStack{
-                                Text(DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"))
-                                    .foregroundColor(text_color)
-                                    .fontWeight(.light)
-                                Spacer()
-                            }
+                            LeftText(text: DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"), fontWeight: .light)
+                                .foregroundColor(text_color)
                         }
                         if todo.todoNotification != Dates.defaultDate{
-                            HStack{
-                                Text(DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"))
-                                    .foregroundColor(text_color)
-                                    .fontWeight(.light)
-                                Spacer()
-                            }
+                            LeftText(text: DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"), fontWeight: .light)
                         }
                     }
                     

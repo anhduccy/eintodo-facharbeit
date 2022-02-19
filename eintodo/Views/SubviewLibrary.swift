@@ -12,10 +12,7 @@ struct SelectPriorityPopover: View{
     @Binding var priority: Int
     var body: some View{
         VStack{
-            HStack{
-                Text("Priorität").font(.title2.bold())
-                Spacer()
-            }
+            LeftText(text: "Priorität", font: .title2, fontWeight: .bold)
             Picker("", selection: $priority){
                 Text("Hoch").tag(3)
                 Text("Mittel").tag(2)

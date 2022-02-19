@@ -55,10 +55,7 @@ struct ToDoListCollectionEditView: View{
                 ScrollView{
                     //Colors
                     VStack(spacing: 0){
-                        HStack{
-                            Text("Farbe").font(.headline)
-                            Spacer()
-                        }
+                        LeftText(text: "Farbe", font: .headline)
                         HStack{
                             ForEach(colors, id: \.self){ color in
                                 Button(action: {
@@ -78,10 +75,7 @@ struct ToDoListCollectionEditView: View{
                     }
                     //Symbols
                     VStack{
-                        HStack{
-                            Text("Symbole").font(.headline)
-                            Spacer()
-                        }
+                        LeftText(text: "Symbole", font: .headline)
                         LazyVGrid(columns: columns){
                             ForEach(symbols, id: \.self){ symbol in
                                 Button(action: {

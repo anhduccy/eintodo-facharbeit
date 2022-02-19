@@ -350,10 +350,7 @@ struct DateNavigatorPopover: View{
     @Binding var navigateDate: Date
     var body: some View{
         VStack{
-            HStack{
-                Text("Navigiere zu").font(.title2.bold())
-                Spacer()
-            }
+            LeftText(text: "Navigiere zu", font: .title2, fontWeight: .bold)
             DatePicker("", selection: $navigateDate, displayedComponents: [.date])
                 .datePickerStyle(.field)
                 .onChange(of: navigateDate){ newValue in
@@ -369,10 +366,7 @@ struct SelectFilterPopover: View{
     @Binding var filter: CalendarViewFilterToDoType
     var body: some View{
         VStack{
-            HStack{
-                Text("Filter").font(.title2.bold())
-                Spacer()
-            }
+            LeftText(text: "Filter", font: .title2, fontWeight: .bold)
             HStack{
                 Picker("", selection: $filter){
                     Text("Fällig am ").tag(CalendarViewFilterToDoType.deadline)

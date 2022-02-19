@@ -25,10 +25,7 @@ struct SettingsView: View {
     var body: some View {
         ZStack{
             VStack(spacing: 20){
-                HStack{
-                    Text("Einstellungen").font(.title.bold())
-                    Spacer()
-                }
+                LeftText(text: "Einstellungen", font: .title, fontWeight: .bold)
                 DatePicker("Standard-Erinnerungszeit für Fällig", selection: $deadlineTime, displayedComponents: .hourAndMinute)
                 Spacer()
             }

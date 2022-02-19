@@ -13,10 +13,7 @@ struct ImageView: View{
     var body: some View{
         ZStack{
             VStack{
-                HStack{
-                    Text("Bilder").font(.headline)
-                    Spacer()
-                }
+                LeftText(text: "Bilder", font: .headline)
                 HStack{
                     Button(action: selectImage){
                         ZStack{

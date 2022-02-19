@@ -25,10 +25,7 @@ struct SubToDoListView: View{
     var body: some View{
         //SubToDos
         VStack{
-            HStack{
-                Text("Erinnerungen").font(.headline)
-                Spacer()
-            }
+            LeftText(text: "Erinnerungen", font: .headline)
             ForEach(subToDos, id: \.self){ subToDo in
                 SubToDoListRow(subToDo: subToDo, sub_title: subToDo.subtodoTitle!)
             }

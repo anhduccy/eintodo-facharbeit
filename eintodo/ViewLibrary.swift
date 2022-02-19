@@ -7,6 +7,26 @@
 
 import SwiftUI
 
+//Label
+struct LeftText: View{
+    let text: String
+    let font: Font
+    let fontWeight: Font.Weight
+    init(text: String, font: Font = .body, fontWeight: Font.Weight = .regular){
+        self.text = text
+        self.font = font
+        self.fontWeight = fontWeight
+    }
+    var body: some View{
+        HStack{
+            Text(text)
+                .font(font)
+                .fontWeight(fontWeight)
+            Spacer()
+        }
+    }
+}
+
 //System Icons and Image Settings
 
 //Icon for SF Symbols which has not ".circle.fill"
