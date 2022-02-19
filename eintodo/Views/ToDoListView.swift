@@ -115,12 +115,35 @@ struct ToDoListView: View {
                     if(!todos.isEmpty){
                         ProgressCircle(todos: todos)
                     }
-                }
+                }.padding(.leading, 7.5)
                 List{
                     if(todos.isEmpty){
                         VStack{
                             LeftText(text: "Du hast noch nichts für den Tag geplant")
                                 .foregroundColor(.gray)
+                        }
+                    } else if(isAllDone() && !userSelected.showDoneToDos){
+                        VStack{
+                            LeftText(text: "Du hast alle Erinnerungen bereits erledigt")
+                                .foregroundColor(.gray)
+                            HStack{
+                                Button(action: {
+                                    withAnimation{
+                                        userSelected.showDoneToDos.toggle()
+                                    }
+                                }, label: {
+                                    Text("Erledigte Erinnerungen einblenden")
+                                        .padding(10)
+                                        .foregroundColor(.gray)
+                                        .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.gray, lineWidth: 1)
+                                        )
+                                }).buttonStyle(.plain)
+                                    .padding(.leading, 1)
+                                Spacer()
+                            }
+                           
                         }
                     } else {
                         //ListView
@@ -141,6 +164,19 @@ struct ToDoListView: View {
         .padding()
         .frame(minWidth: 375)
         .background(colorScheme == .dark ? .clear : .white)
+    }
+    public func isAllDone()->Bool{
+        var item = 0
+        for todo in todos{
+            if todo.todoIsDone{
+                item += 1
+            }
+        }
+        if item == todos.count{
+            return true
+        } else {
+            return false
+        }
     }
 }
 
