@@ -38,12 +38,6 @@ struct ContentView: View {
                             Text("Kalender")
                         }
                     }
-                    NavigationLink(destination: Logo(), tag: 100, selection: $userSelected.selectedView){
-                        HStack{
-                            Image(systemName: "calendar")
-                            Text("Kalender")
-                        }
-                    }
                 }
                 
                 Section(header: Text("Meine Listen")){
