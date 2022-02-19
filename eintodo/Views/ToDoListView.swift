@@ -229,34 +229,39 @@ struct ToDoListRow: View {
                         .frame(width: SystemImageSize, height: SystemImageSize)
                         .buttonStyle(.plain)
                     
-                    //Labelling
-                    VStack(spacing: 1){
-                        LeftText(text: todo.todoTitle ?? "Error", font: .headline, fontWeight: .semibold)
-                        if todo.todoDeadline != Dates.defaultDate{
-                            LeftText(text: DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"), fontWeight: .light)
-                                .foregroundColor(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: .gray))
+                    Button(action: {
+                        isPresented.toggle()
+                    }, label: {
+                        //Labelling
+                        VStack(spacing: 1){
+                            LeftText(text: todo.todoTitle ?? "Error", font: .headline, fontWeight: .semibold)
+                            if todo.todoDeadline != Dates.defaultDate{
+                                LeftText(text: DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"), fontWeight: .light)
+                                    .foregroundColor(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: .gray))
+                            }
+                            if todo.todoNotification != Dates.defaultDate{
+                                LeftText(text: DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"),  fontWeight: .light)
+                                    .foregroundColor(.gray)
+                            }
                         }
-                        if todo.todoNotification != Dates.defaultDate{
-                            LeftText(text: DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"),  fontWeight: .light)
-                                .foregroundColor(.gray)
+                        HStack(spacing: 4.5){
+                            //Information of content in ToDo
+                            if(todo.todoNotes != ""){
+                                SystemCircleIcon(image: "note.text", size: 25, backgroundColor: Colors.primaryColor)
+                            }
+                            if(hasImage()){
+                                SystemCircleIcon(image: "photo.fill", size: 25, backgroundColor: Colors.primaryColor)
+                            }
+                            if(!subToDos.isEmpty){
+                                SystemCircleIcon(image: getNumberIcon(), size: 25, backgroundColor: Colors.primaryColor)
+                            }
+                            //Show List Icon if ToDoListRow is in CalendarView
+                            if(rowType == .calendar){
+                                SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                            }
                         }
-                    }
-                    HStack(spacing: 4.5){
-                        //Information of content in ToDo
-                        if(todo.todoNotes != ""){
-                            SystemCircleIcon(image: "note.text", size: 25, backgroundColor: Colors.primaryColor)
-                        }
-                        if(hasImage()){
-                            SystemCircleIcon(image: "photo.fill", size: 25, backgroundColor: Colors.primaryColor)
-                        }
-                        if(!subToDos.isEmpty){
-                            SystemCircleIcon(image: getNumberIcon(), size: 25, backgroundColor: Colors.primaryColor)
-                        }
-                        //Show List Icon if ToDoListRow is in CalendarView
-                        if(rowType == .calendar){
-                            SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
-                        }
-                    }
+                    }).buttonStyle(.plain)
+                    
                     //IsMarked button
                     Button(action: {
                         withAnimation{
