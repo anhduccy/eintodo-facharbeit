@@ -227,6 +227,7 @@ struct ToDoEditView: View {
             }
             .padding()
         }
+        .background(.ultraThinMaterial)
         .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeightEditView)
         .onAppear{
             switch(editViewType){

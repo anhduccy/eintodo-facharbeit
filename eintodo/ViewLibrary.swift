@@ -98,14 +98,14 @@ struct SystemImage: View{
             Image(systemName: image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: size, height: size)
+                .frame(width: size)
                 .foregroundColor(color)
                 .opacity(opacity)
         } else {
             Image(systemName: image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: size, height: size)
+                .frame(width: size)
                 .foregroundColor(.gray)
                 .opacity(colorScheme == .dark ? 1 : 0.5)
         }
@@ -130,7 +130,7 @@ struct SubmitButtonsWithCondition: View{
                 cancelAction()
                 isPresented.toggle()
             }
-            .foregroundColor(Colors.secondaryColor)
+            .foregroundColor(.gray)
             .buttonStyle(.plain)
             //Delete Button
             if type == .edit{

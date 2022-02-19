@@ -103,7 +103,7 @@ struct CalendarView: View {
                                     ZStack{
                                         //IF dayValue.date is the same day as selected date -> Circle blue
                                         if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date)){
-                                            Circle().fill(Color.blue)
+                                            Circle().fill(Color.indigo)
                                         } else {
                                             switch(filter){
                                             case .deadline, .notification:

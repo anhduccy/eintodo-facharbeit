@@ -120,13 +120,14 @@ struct ToDoListCollectionEditView: View{
             .padding()
         }
         .frame(width: Sizes.defaultSheetWidth, height: Sizes.defaultSheetHeight)
+        .background(.ultraThinMaterial)
         .onAppear{
             switch(type){
             case .edit:
-                title = toDoList.listTitle!
-                description = toDoList.listDescription!
-                selectedColor = toDoList.listColor!
-                selectedSymbol = toDoList.listSymbol!
+                title = toDoList.listTitle ?? "Error"
+                description = toDoList.listDescription ?? "Error"
+                selectedColor = toDoList.listColor ?? "indigo"
+                selectedSymbol = toDoList.listSymbol ?? "list.bullet"
             case .add:
                 break
             }
@@ -136,9 +137,10 @@ struct ToDoListCollectionEditView: View{
 
 extension ToDoListCollectionEditView{
     private func updateToDoList(editViewType: EditViewTypes, todoList: ToDoList = ToDoList()){
-        var objToDoList = ToDoList(context: viewContext)
+        var objToDoList = ToDoList()
         switch(editViewType){
         case .add:
+            objToDoList = ToDoList(context: viewContext)
             objToDoList.listID = UUID()
         case .edit:
             objToDoList = todoList

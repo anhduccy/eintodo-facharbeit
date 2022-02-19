@@ -95,8 +95,8 @@ struct ContentView: View {
             if(lists.isEmpty){createList(viewContext: viewContext)}
             
             //Set the first list as the selected to do list
-            userSelected.selectedToDoList = lists[0].listTitle!
-            userSelected.selectedToDoListID = lists[0].listID!
+            userSelected.selectedToDoList = lists[0].listTitle ?? ""
+            userSelected.selectedToDoListID = lists[0].listID ?? UUID()
             
             askForUserNotificationPermission()
         }

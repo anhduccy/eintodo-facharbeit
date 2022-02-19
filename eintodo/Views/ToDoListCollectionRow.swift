@@ -21,7 +21,8 @@ struct ToDoListCollectionRow: View{
     @State var showToDoListsEditView: Bool = false
 
     init(list: ToDoList){
-        _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", list.listID! as CVarArg), animation: .default)
+        let id = list.listID ?? UUID()
+        _todos = FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], predicate: NSPredicate(format: "idOfToDoList == %@ && todoIsDone == false", id as CVarArg), animation: .default)
         _list = ObservedObject(wrappedValue: list)
     }
     

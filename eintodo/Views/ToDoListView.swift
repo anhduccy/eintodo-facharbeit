@@ -8,6 +8,41 @@
 import SwiftUI
 import Foundation
 
+struct ProgressCircle: View{
+    let todos: FetchedResults<ToDo>
+    var body: some View{
+        HStack(spacing: 7.5){
+            Text("\(progress().done)/\(progress().all)").bold().foregroundColor(.gray)
+            ZStack{
+                Circle()
+                    .stroke(lineWidth: 6)
+                    .opacity(0.2)
+                    .foregroundColor(Colors.primaryColor)
+                Circle()
+                    .trim(from: 0.0, to: progress().percentage)
+                    .stroke(style: StrokeStyle(lineWidth: 6, lineCap: .round, lineJoin: .round))
+                    .foregroundColor(Colors.primaryColor)
+                    .rotationEffect(Angle(degrees: 270))
+            }
+            .frame(width: 30, height: 30)
+        }
+    }
+    private func progress()->(percentage: CGFloat, done: Int, all: Int){
+        var doneToDo = 0
+        let allToDo = todos.count
+        for todo in todos{
+            if todo.todoIsDone{
+                doneToDo += 1
+            }
+        }
+        var percentage: Double = 0
+        if(allToDo != 0){
+            percentage = Double(doneToDo) / Double(allToDo)
+        }
+        return (percentage, doneToDo, allToDo)
+    }
+}
+
 struct ToDoListView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
@@ -74,7 +109,13 @@ struct ToDoListView: View {
     var body: some View {
         VStack{
             VStack(spacing: 10){
-                LeftText(text: title, font: .largeTitle, fontWeight: .bold)
+                HStack{
+                    LeftText(text: title, font: .largeTitle, fontWeight: .bold)
+                    Spacer()
+                    if(!todos.isEmpty){
+                        ProgressCircle(todos: todos)
+                    }
+                }
                 List{
                     if(todos.isEmpty){
                         VStack{
@@ -88,6 +129,10 @@ struct ToDoListView: View {
                                 ToDoListRow(rowType: rowType, todo: todo)
                             }
                         }
+                        .padding(.top, 3)
+                        .padding(.bottom, 3)
+                        .padding(.trailing, 12.5)
+                        .padding(.leading, 12.5)
                     }
                 }
             }
@@ -102,6 +147,7 @@ struct ToDoListView: View {
 //Subviews
 struct ToDoListRow: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @Environment(\.colorScheme) var appearance
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest var lists: FetchedResults<ToDoList>
     @FetchRequest var subToDos: FetchedResults<SubToDo>
@@ -110,8 +156,7 @@ struct ToDoListRow: View {
     @State var isPresented: Bool = false
     
     let rowType: ToDoListRowType
-    let text_color: Color = .white
-    let SystemImageSize: CGFloat = 17.5
+    let SystemImageSize: CGFloat = 20
 
     init(rowType: ToDoListRowType, todo: ToDo) {
         self.todo = todo
@@ -126,7 +171,9 @@ struct ToDoListRow: View {
                 Button(action: {
                     isPresented.toggle()
                 }, label: {
-                    RoundedRectangle(cornerRadius: 8.5).fill(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
+                    RoundedRectangle(cornerRadius: 8.5)
+                        .fill(.ultraThinMaterial)
+                        .shadow(color: .bluex, radius: 3)
                 }).buttonStyle(.plain)
                 HStack{
                     //Checkmark button
@@ -138,53 +185,52 @@ struct ToDoListRow: View {
                         saveContext(context: viewContext)
                         }, label: {
                         if(todo.todoIsDone){
-                            SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
+                            SystemImage(image: "checkmark.square.fill", color: .blue, size: SystemImageSize, isActivated: true)
                         } else {
-                            SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
+                            SystemImage(image: "square", color: .gray, size: SystemImageSize, isActivated: true)
                         }
                     })
                         .frame(width: SystemImageSize, height: SystemImageSize)
                         .buttonStyle(.plain)
                     
                     //Labelling
-                    VStack{
+                    VStack(spacing: 1){
                         LeftText(text: todo.todoTitle ?? "Error", font: .headline, fontWeight: .semibold)
-                            .foregroundColor(text_color)
                         if todo.todoDeadline != Dates.defaultDate{
                             LeftText(text: DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"), fontWeight: .light)
-                                .foregroundColor(text_color)
+                                .foregroundColor(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: .gray))
                         }
                         if todo.todoNotification != Dates.defaultDate{
-                            LeftText(text: DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"), fontWeight: .light)
+                            LeftText(text: DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"),  fontWeight: .light)
+                                .foregroundColor(.gray)
                         }
                     }
-                    
-                    //Information of content in ToDo
-                    if(todo.todoNotes != ""){
-                        SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
-                    }
-                    if(hasImage()){
-                        SystemImage(image: "photo.fill", color: .white, size: 15, isActivated: true)
-                    }
-                    if(!subToDos.isEmpty){
-                        SystemImage(image: getNumberIcon(), color: .white, size: 15, isActivated: true)
-                    }
-                    //Show List Icon if ToDoListRow is in CalendarView
-                    if(rowType == .calendar){
-                        SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                    HStack(spacing: 4.5){
+                        //Information of content in ToDo
+                        if(todo.todoNotes != ""){
+                            SystemImage(image: "pencil.circle.fill", color: Colors.primaryColor, size: 25, isActivated: true)
+                        }
+                        if(hasImage()){
+                            SystemImage(image: "photo.circle.fill", color: Colors.primaryColor, size: 25, isActivated: true)
+                        }
+                        if(!subToDos.isEmpty){
+                            SystemImage(image: getNumberIcon(), color: Colors.primaryColor, size: 25, isActivated: true)
+                        }
+                        //Show List Icon if ToDoListRow is in CalendarView
+                        if(rowType == .calendar){
+                            SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                        }
                     }
                     //IsMarked button
                     Button(action: {
-                        todo.todoIsMarked.toggle()
-                        saveContext(context: viewContext)
-                    }, label: {
-                        if(todo.todoIsMarked){
-                            SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
-                        } else {
-                            SystemImage(image: "star", color: .white, size: 15, isActivated: true)
+                        withAnimation{
+                            todo.todoIsMarked.toggle()
+                            saveContext(context: viewContext)
                         }
+                    }, label: {
+                        SystemImage(image: todo.todoIsMarked ? "star.circle.fill" : "star.circle", color: .yellow, size: 25, isActivated: true)
                     }).buttonStyle(.plain)
-                }.padding(10)
+                }.padding(12.5)
                 .sheet(isPresented: $isPresented) {
                     ToDoEditView(editViewType: .edit, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
                 }

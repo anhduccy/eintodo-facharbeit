@@ -42,7 +42,7 @@ struct Sizes {
     static let defaultSheetHeightEditView: CGFloat = 450
 }
 struct Colors {
-    static let primaryColor: Color = .indigo
+    static let primaryColor: Color = .blue
     static let secondaryColor: Color = Color(red: 139/255, green: 136/255, blue: 248/255)
 }
 
