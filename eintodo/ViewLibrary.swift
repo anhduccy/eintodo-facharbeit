@@ -50,7 +50,7 @@ struct SystemCircleIcon: View{
             Image(systemName: image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: size/2, height: size/2)
+                .frame(width: size/1.75, height: size/1.75)
                 .foregroundColor(foregroundColor)
         }
     }

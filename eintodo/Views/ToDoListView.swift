@@ -244,13 +244,13 @@ struct ToDoListRow: View {
                     HStack(spacing: 4.5){
                         //Information of content in ToDo
                         if(todo.todoNotes != ""){
-                            SystemImage(image: "pencil.circle.fill", color: Colors.primaryColor, size: 25, isActivated: true)
+                            SystemCircleIcon(image: "note.text", size: 25, backgroundColor: Colors.primaryColor)
                         }
                         if(hasImage()){
-                            SystemImage(image: "photo.circle.fill", color: Colors.primaryColor, size: 25, isActivated: true)
+                            SystemCircleIcon(image: "photo.fill", size: 25, backgroundColor: Colors.primaryColor)
                         }
                         if(!subToDos.isEmpty){
-                            SystemImage(image: getNumberIcon(), color: Colors.primaryColor, size: 25, isActivated: true)
+                            SystemCircleIcon(image: getNumberIcon(), size: 25, backgroundColor: Colors.primaryColor)
                         }
                         //Show List Icon if ToDoListRow is in CalendarView
                         if(rowType == .calendar){
@@ -264,7 +264,7 @@ struct ToDoListRow: View {
                             saveContext(context: viewContext)
                         }
                     }, label: {
-                        SystemImage(image: todo.todoIsMarked ? "star.circle.fill" : "star.circle", color: .yellow, size: 25, isActivated: true)
+                        SystemCircleIcon(image: todo.todoIsMarked ? "star.fill" : "star", size: 25, backgroundColor: .init(red: 250/255, green: 187/255, blue: 2/255))
                     }).buttonStyle(.plain)
                 }.padding(12.5)
                 .sheet(isPresented: $isPresented) {
