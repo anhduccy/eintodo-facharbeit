@@ -32,47 +32,31 @@ struct ToDoListView: View {
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "(todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)"
-            
-            if(userSelected.showDoneToDos == true){
-                predicate = NSPredicate(format: predicateFormat, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
-            } else { //To-Dos with deadline and/or notfication and show done to-dos is false
-                predicate =  NSPredicate(format: "(\(predicateFormat)) && todoIsDone == false", dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
-            }
+            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
+            predicate = NSPredicate(format: predicateFormat, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
         case .noDates: //To-Dos without deadline and notification
             sortDescriptor =
                 [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]
             predicateFormat = "todoDeadline == %@ && todoNotification == %@"
-            
-            if(userSelected.showDoneToDos == true){
-                predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
-            } else { //To-Dos without deadline and notfication and show done to-dos is false
-                predicate =  NSPredicate(format: predicateFormat + " && todoIsDone == false", defaultDate as CVarArg, defaultDate as CVarArg)
-            }
+            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
+            predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
         case .inPastAndNotDone: //All To-Dos in the past and which has not been done yet
             sortDescriptor =
                 [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "todoDeadline < %@ && todoDeadline != %@"
-            
-            if(userSelected.showDoneToDos == true){
-                predicate = NSPredicate(format: predicateFormat, currentDate as CVarArg, defaultDate as CVarArg)
-            } else {
-                predicate = NSPredicate(format: predicateFormat + " && todoIsDone == false", currentDate as CVarArg, defaultDate as CVarArg)
-            }
+            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
+            predicate = NSPredicate(format: predicateFormat, currentDate as CVarArg, defaultDate as CVarArg)
         case .marked:
             sortDescriptor =
                 [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "todoIsMarked == true"
-            
-            if(userSelected.showDoneToDos == true){
-                predicate = NSPredicate(format: predicateFormat)
-            } else {
-                predicate = NSPredicate(format: predicateFormat + " && todoIsDone == false")
-            }
+            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
+            predicate = NSPredicate(format: predicateFormat)
         case .all: //All To-Dos
             sortDescriptor = [ NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
@@ -85,12 +69,8 @@ struct ToDoListView: View {
                                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                                NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "idOfToDoList == %@"
-            
-            if(userSelected.showDoneToDos == true){
-                predicate = NSPredicate(format: predicateFormat, userSelected.selectedToDoListID as CVarArg)
-            } else { //All To-Dos which has not been done yet
-                predicate = NSPredicate(format: predicateFormat + " && todoIsDone == false", userSelected.selectedToDoListID as CVarArg)
-            }
+            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
+            predicate = NSPredicate(format: predicateFormat, userSelected.selectedToDoListID as CVarArg)
         }
         _todos = FetchRequest(sortDescriptors: sortDescriptor, predicate: predicate, animation: .default)
         self.title = title
