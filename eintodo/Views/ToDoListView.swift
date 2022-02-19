@@ -32,14 +32,12 @@ struct ToDoListView: View {
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "(todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)"
-            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
             predicate = NSPredicate(format: predicateFormat, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
         case .noDates: //To-Dos without deadline and notification
             sortDescriptor =
                 [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]
             predicateFormat = "todoDeadline == %@ && todoNotification == %@"
-            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
             predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
         case .inPastAndNotDone: //All To-Dos in the past and which has not been done yet
             sortDescriptor =
@@ -47,7 +45,6 @@ struct ToDoListView: View {
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "todoDeadline < %@ && todoDeadline != %@"
-            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
             predicate = NSPredicate(format: predicateFormat, currentDate as CVarArg, defaultDate as CVarArg)
         case .marked:
             sortDescriptor =
@@ -55,28 +52,22 @@ struct ToDoListView: View {
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "todoIsMarked == true"
-            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
             predicate = NSPredicate(format: predicateFormat)
         case .all: //All To-Dos
             sortDescriptor = [ NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                                NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
-            if(userSelected.showDoneToDos == false){ //All To-Dos which has not been done yet
-                predicate =  NSPredicate(format: "todoIsDone == false")
-            }
         case .list:
             sortDescriptor = [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                                NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
             predicateFormat = "idOfToDoList == %@"
-            if !userSelected.showDoneToDos {predicateFormat = predicateFormat + " && todoIsDone == false"}
             predicate = NSPredicate(format: predicateFormat, userSelected.selectedToDoListID as CVarArg)
         }
         _todos = FetchRequest(sortDescriptors: sortDescriptor, predicate: predicate, animation: .default)
         self.title = title
         self.rowType = rowType
     }
-    
     let title: String
     let rowType: ToDoListRowType
     
@@ -111,13 +102,6 @@ struct ToDoListView: View {
         .padding()
         .frame(minWidth: 375)
         .background(colorScheme == .dark ? .clear : .white)
-        .toolbar{
-            ToolbarItem{
-                Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
-                    userSelected.showDoneToDos.toggle()
-                }
-            }
-        }
     }
 }
 
@@ -143,85 +127,87 @@ struct ToDoListRow: View {
     }
 
     var body: some View {
-        ZStack{
-            Button(action: {
-                isPresented.toggle()
-            }, label: {
-                RoundedRectangle(cornerRadius: 8.5).fill(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
-            }).buttonStyle(.plain)
-            HStack{
-                //Checkmark button
+        if todo.todoIsDone && !userSelected.showDoneToDos{} else {
+            ZStack{
                 Button(action: {
-                    todo.todoIsDone.toggle()
-                    if(todo.todoIsDone == true){
-                        deleteUserNotification(identifier: todo.todoID!)
-                    }
-                    saveContext(context: viewContext)
-                    }, label: {
-                    if(todo.todoIsDone){
-                        SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
-                    } else {
-                        SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
-                    }
-                })
-                    .frame(width: SystemImageSize, height: SystemImageSize)
-                    .buttonStyle(.plain)
-                
-                //Labelling
-                VStack{
-                    HStack{
-                        Text(todo.todoTitle ?? "Error")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(text_color)
-                        Spacer()
-                    }
-                    if todo.todoDeadline != Dates.defaultDate{
-                        HStack{
-                            Text(DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"))
-                                .foregroundColor(text_color)
-                                .fontWeight(.light)
-                            Spacer()
-                        }
-                    }
-                    if todo.todoNotification != Dates.defaultDate{
-                        HStack{
-                            Text(DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"))
-                                .foregroundColor(text_color)
-                                .fontWeight(.light)
-                            Spacer()
-                        }
-                    }
-                }
-                
-                //Information of content in ToDo
-                if(todo.todoNotes != ""){
-                    SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
-                }
-                if(hasImage()){
-                    SystemImage(image: "photo.fill", color: .white, size: 15, isActivated: true)
-                }
-                if(!subToDos.isEmpty){
-                    SystemImage(image: getNumberIcon(), color: .white, size: 15, isActivated: true)
-                }
-                //Show List Icon if ToDoListRow is in CalendarView
-                if(rowType == .calendar){
-                    SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
-                }
-                //IsMarked button
-                Button(action: {
-                    todo.todoIsMarked.toggle()
-                    saveContext(context: viewContext)
+                    isPresented.toggle()
                 }, label: {
-                    if(todo.todoIsMarked){
-                        SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
-                    } else {
-                        SystemImage(image: "star", color: .white, size: 15, isActivated: true)
-                    }
+                    RoundedRectangle(cornerRadius: 8.5).fill(isDateInPast(date: todo.todoDeadline ?? Dates.defaultDate, defaultColor: Colors.primaryColor))
                 }).buttonStyle(.plain)
-            }.padding(10)
-            .sheet(isPresented: $isPresented) {
-                ToDoEditView(editViewType: .edit, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
+                HStack{
+                    //Checkmark button
+                    Button(action: {
+                        todo.todoIsDone.toggle()
+                        if(todo.todoIsDone == true){
+                            deleteUserNotification(identifier: todo.todoID!)
+                        }
+                        saveContext(context: viewContext)
+                        }, label: {
+                        if(todo.todoIsDone){
+                            SystemImage(image: "checkmark.square.fill", color: .white, size: SystemImageSize, isActivated: true)
+                        } else {
+                            SystemImage(image: "square", color: .white, size: SystemImageSize, isActivated: true)
+                        }
+                    })
+                        .frame(width: SystemImageSize, height: SystemImageSize)
+                        .buttonStyle(.plain)
+                    
+                    //Labelling
+                    VStack{
+                        HStack{
+                            Text(todo.todoTitle ?? "Error")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(text_color)
+                            Spacer()
+                        }
+                        if todo.todoDeadline != Dates.defaultDate{
+                            HStack{
+                                Text(DateInString(date: todo.todoDeadline ?? Dates.defaultDate, type: "deadline"))
+                                    .foregroundColor(text_color)
+                                    .fontWeight(.light)
+                                Spacer()
+                            }
+                        }
+                        if todo.todoNotification != Dates.defaultDate{
+                            HStack{
+                                Text(DateInString(date: todo.todoNotification ?? Dates.defaultDate, type: "notification"))
+                                    .foregroundColor(text_color)
+                                    .fontWeight(.light)
+                                Spacer()
+                            }
+                        }
+                    }
+                    
+                    //Information of content in ToDo
+                    if(todo.todoNotes != ""){
+                        SystemImage(image: "note.text", color: .white, size: 15, isActivated: true)
+                    }
+                    if(hasImage()){
+                        SystemImage(image: "photo.fill", color: .white, size: 15, isActivated: true)
+                    }
+                    if(!subToDos.isEmpty){
+                        SystemImage(image: getNumberIcon(), color: .white, size: 15, isActivated: true)
+                    }
+                    //Show List Icon if ToDoListRow is in CalendarView
+                    if(rowType == .calendar){
+                        SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                    }
+                    //IsMarked button
+                    Button(action: {
+                        todo.todoIsMarked.toggle()
+                        saveContext(context: viewContext)
+                    }, label: {
+                        if(todo.todoIsMarked){
+                            SystemImage(image: "star.fill", color: .yellow, size: 15, isActivated: true)
+                        } else {
+                            SystemImage(image: "star", color: .white, size: 15, isActivated: true)
+                        }
+                    }).buttonStyle(.plain)
+                }.padding(10)
+                .sheet(isPresented: $isPresented) {
+                    ToDoEditView(editViewType: .edit, todo: todo, list: todo.todoList ?? "Error", listID: todo.idOfToDoList ?? UUID(), isPresented: $isPresented)
+                }
             }
         }
     }

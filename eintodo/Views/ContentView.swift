@@ -61,7 +61,7 @@ struct ContentView: View {
             .listStyle(.sidebar)
             .frame(minWidth: 200)
             .toolbar{
-                ToolbarItemGroup{
+                ToolbarItemGroup(placement: .automatic){
                     Spacer()
                     Button(action:{
                         showAddView.toggle()
@@ -80,6 +80,11 @@ struct ContentView: View {
                     })
                     .sheet(isPresented: $showToDoListCollectionEditView){
                         ToDoListCollectionEditView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
+                    }
+                }
+                ToolbarItem(placement: .primaryAction){
+                    Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
+                        userSelected.showDoneToDos.toggle()
                     }
                 }
             }
