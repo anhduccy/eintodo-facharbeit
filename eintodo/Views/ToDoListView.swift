@@ -196,7 +196,7 @@ struct ToDoListRow: View {
                             }
                             //Show List Icon if ToDoListRow is in CalendarView
                             if(rowType == .calendar){
-                               // SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                                SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
                             }
                         }
                     }).buttonStyle(.plain)
