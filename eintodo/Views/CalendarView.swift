@@ -196,6 +196,7 @@ extension CalendarView{
     //Display the selected month
     func getMonth() -> String{
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "de_DE")
         formatter.dateFormat = "MMMM"
         let month = formatter.string(from: userSelected.lastSelectedDate)
         return month

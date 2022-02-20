@@ -69,7 +69,7 @@ struct ToDoListCollectionRow: View{
     var body: some View{
         HStack{
             //List icon
-            SystemCircleIcon(image: list.listSymbol ?? "list.bullet", size: 20, backgroundColor: getColorFromString(string: list.listColor ?? "indigo"))
+            SystemCircleIcon(image: list.listSymbol ?? "list.bullet", size: 20, backgroundColor: getColorFromString(string: list.listColor ?? "standard"))
             //List name
             Text(list.listTitle ?? "Error").font(.body)
             Spacer()

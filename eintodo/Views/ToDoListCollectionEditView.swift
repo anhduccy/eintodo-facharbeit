@@ -12,6 +12,7 @@ struct ToDoListCollectionEditView: View{
     @Environment(\.colorScheme) public var colorScheme
     @EnvironmentObject var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [], animation: .default) var todos: FetchedResults<ToDo>
+    @FetchRequest(sortDescriptors: [], animation: .default) var subtodos: FetchedResults<SubToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
     let type: EditViewType
@@ -23,7 +24,7 @@ struct ToDoListCollectionEditView: View{
     @State var toDoList: ToDoList
     @State var title: String = "Liste"
     @State var description: String = ""
-    @State var selectedColor: String = "indigo"
+    @State var selectedColor: String = "standard"
     @State var selectedSymbol: String = "list.bullet"
     
     //Constants
@@ -126,7 +127,7 @@ struct ToDoListCollectionEditView: View{
             case .edit:
                 title = toDoList.listTitle ?? "Error"
                 description = toDoList.listDescription ?? "Error"
-                selectedColor = toDoList.listColor ?? "indigo"
+                selectedColor = toDoList.listColor ?? "standard"
                 selectedSymbol = toDoList.listSymbol ?? "list.bullet"
             case .add:
                 break
@@ -163,6 +164,10 @@ extension ToDoListCollectionEditView{
         viewContext.delete(toDoList)
         todos.nsPredicate = NSPredicate(format: "idOfToDoList == %@", toDoList.listID! as CVarArg)
         for todo in todos{
+            subtodos.nsPredicate = NSPredicate(format: "idOfToDo", todo.todoID! as CVarArg)
+            for subtodo in subtodos{
+                viewContext.delete(subtodo)
+            }
             viewContext.delete(todo)
             deleteUserNotification(identifier: todo.todoID ?? UUID())
         }

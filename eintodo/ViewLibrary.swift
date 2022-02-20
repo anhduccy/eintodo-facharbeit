@@ -178,7 +178,7 @@ struct SubmitButtonsWithCondition: View{
                     Text("Fertig")
                         .font(.body)
                         .fontWeight(.semibold)
-                        .foregroundColor(appearance == .dark ? Colors.secondaryColor : Colors.primaryColor)
+                        .foregroundColor(Colors.primaryColor)
                 })
                 .buttonStyle(.plain)
             } else {

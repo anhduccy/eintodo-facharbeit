@@ -15,7 +15,7 @@ func createList(viewContext: NSManagedObjectContext){
     newToDoList.listID = UUID()
     newToDoList.listTitle = "Neue Liste"
     newToDoList.listDescription = "Eine Liste, wo man Erinnerungen hinzufügen kann"
-    newToDoList.listColor = "indigo"
+    newToDoList.listColor = "standard"
     newToDoList.listSymbol = "list.bullet"
     saveContext(context: viewContext)
 }
@@ -106,6 +106,7 @@ func getInterval(from date: Date) -> Int {
 //Return a color from a string
 func getColorFromString(string: String)->Color{
     switch(string){
+    case "standard": return Colors.primaryColor
         case "red": return Color.red
         case "pink": return Color.pink
         case "orange": return Color.orange

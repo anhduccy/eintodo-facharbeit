@@ -12,8 +12,9 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
     
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
+    @FetchRequest(sortDescriptors: []) var subtodos: FetchedResults<SubToDo>
 
     //Show view attributes
     @State var showAddView: Bool = false
@@ -68,25 +69,20 @@ struct ContentView: View {
             .frame(minWidth: 200)
             .toolbar{
                 ToolbarItemGroup(placement: .automatic){
-                    Spacer()
-                    Button(action:{
-                        showAddView.toggle()
+                    Menu(content: {
+                        Button(action:{
+                            showAddView.toggle()
+                        }, label: {
+                            Label("Erinnerung hinzufügen", systemImage: "checkmark.circle.fill")
+                        })
+                        Button(action: {
+                            showToDoListCollectionEditView.toggle()
+                        }, label: {
+                            Label("Liste hinzufügen", systemImage: "list.bullet")
+                        })
                     }, label: {
-                        Label("Add ToDo", systemImage: "checkmark.circle.fill")
+                        Image(systemName: "plus.circle")
                     })
-                        .sheet(isPresented: $showAddView){
-                            ToDoEditView(editViewType: .add, todo: ToDo(), list: lists[0].listTitle! , listID: lists[0].listID!, isPresented: $showAddView)
-                        }
-                        .keyboardShortcut("n", modifiers: [.command])
-                    Button(action: {
-                        showToDoListCollectionEditView.toggle()
-                    }, label: {
-                        Label("Add ToDo", systemImage: "list.bullet")
-
-                    })
-                    .sheet(isPresented: $showToDoListCollectionEditView){
-                        ToDoListCollectionEditView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
-                    }
                 }
                 ToolbarItem(placement: .primaryAction){
                     Button(userSelected.showDoneToDos ? "Erledigte ausblenden" : "Erledigte einblenden"){
@@ -95,14 +91,20 @@ struct ContentView: View {
                 }
             }
         }
+        .sheet(isPresented: $showAddView){
+            ToDoEditView(editViewType: .add, todo: ToDo(), list: lists.first!.listTitle! , listID: lists.first!.listID!, isPresented: $showAddView)
+        }
+        .sheet(isPresented: $showToDoListCollectionEditView){
+            ToDoListCollectionEditView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
+        }
         //INITIALIZING FOR THE APP
         .onAppear{
             //Create a list if there is no lists at the beginning
             if(lists.isEmpty){createList(viewContext: viewContext)}
             
             //Set the first list as the selected to do list
-            userSelected.selectedToDoList = lists[0].listTitle ?? ""
-            userSelected.selectedToDoListID = lists[0].listID ?? UUID()
+            userSelected.selectedToDoList = lists.first?.listTitle ?? ""
+            userSelected.selectedToDoListID = lists.first?.listID ?? UUID()
             
             askForUserNotificationPermission()
             for todo in todos{

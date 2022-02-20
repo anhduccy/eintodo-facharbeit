@@ -41,6 +41,11 @@ struct SubToDoListView: View{
                 TextField("Neue Erinnerung", text: $sub_title).textFieldStyle(.plain)
             }
         }
+        .onDisappear{
+            if sub_title != ""{
+                SubToDoFunctions().addSubToDo(subToDos: subToDos, title: sub_title, idOfMainToDo: id)
+            }
+        }
     }
 }
 //SubToDoListTextField - Row to update the SubToDo

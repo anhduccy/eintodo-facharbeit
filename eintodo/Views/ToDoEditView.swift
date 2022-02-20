@@ -244,17 +244,8 @@ struct ToDoEditView: View {
                 } else {
                     notification = userSelected.selectedDate
                 }
-                //If the UserSelected list is not a default-generated list (there are 4) then use the Observable attribute selectedToDoList, otherwise use the first possible list stored in ToDoList
-                if(userSelected.selectedToDoList == "Heute" ||
-                   userSelected.selectedToDoList == "Alle" ||
-                   userSelected.selectedToDoList == "Fällig" ||
-                   userSelected.selectedToDoList == "Markiert"){
-                    list = lists[0].listTitle!
-                    listID = lists[0].listID!
-                } else {
-                    list = userSelected.selectedToDoList
-                    listID = userSelected.selectedToDoListID
-                }
+                list = userSelected.selectedToDoList
+                listID = userSelected.selectedToDoListID
             case .edit: //Value assignment of CoreData storage, if type is display
                 id = todo.todoID!
                 title = todo.todoTitle ?? "Error"
@@ -305,12 +296,10 @@ extension ToDoEditView{
     
     //CORE-DATA - Add, update and delete ToDo
     func updateToDo(editViewType: EditViewType, todo: ToDo = ToDo()){
-        var objToDo = ToDo(context: viewContext)
-        switch(editViewType){
-        case .add:
+        var objToDo = todo
+        if editViewType == .add{
+            objToDo = ToDo(context: viewContext)
             objToDo.todoID = id
-        case .edit:
-            objToDo = todo
         }
         //Texts
         objToDo.todoTitle = title

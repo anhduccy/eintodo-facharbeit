@@ -48,7 +48,7 @@ struct ToDoListView: View {
                                         userSelected.showDoneToDos.toggle()
                                     }
                                 }, label: {
-                                    Text("Erledigte Erinnerungen einblenden")
+                                    Text("Erledigte einblenden")
                                         .padding(10)
                                         .foregroundColor(.gray)
                                         .overlay(
@@ -67,7 +67,7 @@ struct ToDoListView: View {
                                         }
                                     }
                                 }, label: {
-                                    Text("Alle Erledigte Erinnerungen löschen")
+                                    Text("Alle Erledigten löschen")
                                         .padding(10)
                                         .foregroundColor(.gray)
                                         .overlay(
@@ -98,9 +98,6 @@ struct ToDoListView: View {
         .padding()
         .frame(minWidth: 375)
         .background(colorScheme == .dark ? .clear : .white)
-        .onAppear{
-            print(todos)
-        }
     }
     public func isAllDone()->Bool{
         var item = 0
@@ -129,7 +126,8 @@ struct ToDoListRow: View {
     @State var isPresented: Bool = false
     
     let rowType: ToDoListRowType
-    let SystemImageSize: CGFloat = 20
+    let SystemImageSize: CGFloat = 25
+    @State var color: Color
 
     init(rowType: ToDoListRowType, todo: ToDo) {
         self.todo = todo
@@ -138,6 +136,7 @@ struct ToDoListRow: View {
         let listID = todo.idOfToDoList ?? UUID()
         _lists = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "listID == %@", listID as CVarArg), animation: .default)
         self.rowType = rowType
+        _color = State(initialValue: Colors.primaryColor)
     }
 
     var body: some View {
@@ -148,7 +147,7 @@ struct ToDoListRow: View {
                 }, label: {
                     RoundedRectangle(cornerRadius: 8.5)
                         .fill(.ultraThinMaterial)
-                        .shadow(color: .blue, radius: 3)
+                        .shadow(color: color, radius: 3)
                 }).buttonStyle(.plain)
                 HStack{
                     //Checkmark button
@@ -160,12 +159,15 @@ struct ToDoListRow: View {
                         saveContext(context: viewContext)
                         }, label: {
                         if(todo.todoIsDone){
-                            SystemImage(image: "checkmark.square.fill", color: .blue, size: SystemImageSize, isActivated: true)
+                            ZStack{
+                                RoundedRectangle(cornerRadius: 5).fill(.white)
+                                SystemImage(image: "checkmark.square.fill", color: color, size: SystemImageSize/5*4, isActivated: true)
+                            }
                         } else {
                             SystemImage(image: "square", color: .gray, size: SystemImageSize, isActivated: true)
                         }
                     })
-                        .frame(width: SystemImageSize, height: SystemImageSize)
+                        .frame(width: SystemImageSize/5*4, height: SystemImageSize/5*4)
                         .buttonStyle(.plain)
                     
                     Button(action: {
@@ -186,17 +188,17 @@ struct ToDoListRow: View {
                         HStack(spacing: 4.5){
                             //Information of content in ToDo
                             if(todo.todoNotes != ""){
-                                SystemCircleIcon(image: "note.text", size: 25, backgroundColor: Colors.primaryColor)
+                                SystemCircleIcon(image: "note.text", size: SystemImageSize, backgroundColor: color)
                             }
                             if(hasImage()){
-                                SystemCircleIcon(image: "photo.fill", size: 25, backgroundColor: Colors.primaryColor)
+                                SystemCircleIcon(image: "photo.fill", size: SystemImageSize, backgroundColor: color)
                             }
                             if(!subToDos.isEmpty){
-                                SystemCircleIcon(image: getNumberIcon(), size: 25, backgroundColor: Colors.primaryColor)
+                                SystemCircleIcon(image: getNumberIcon(), size: SystemImageSize, backgroundColor: color)
                             }
                             //Show List Icon if ToDoListRow is in CalendarView
                             if(rowType == .calendar){
-                                SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                                SystemCircleIcon(image: lists.first?.listSymbol ?? "list.bullet", size: SystemImageSize, backgroundColor: getColorFromString(string: lists.first?.listColor ?? "standard"))
                             }
                         }
                     }).buttonStyle(.plain)
@@ -208,7 +210,7 @@ struct ToDoListRow: View {
                             saveContext(context: viewContext)
                         }
                     }, label: {
-                        SystemCircleIcon(image: todo.todoIsMarked ? "star.fill" : "star", size: 25, backgroundColor: .init(red: 250/255, green: 187/255, blue: 2/255))
+                        SystemCircleIcon(image: todo.todoIsMarked ? "star.fill" : "star", size: SystemImageSize, backgroundColor: todo.todoIsMarked ? .init(red: 250/255, green: 187/255, blue: 2/255) : .gray)
                     }).buttonStyle(.plain)
                 }.padding(12.5)
                 .sheet(isPresented: $isPresented) {
