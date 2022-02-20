@@ -105,6 +105,12 @@ struct ContentView: View {
             userSelected.selectedToDoListID = lists[0].listID ?? UUID()
             
             askForUserNotificationPermission()
+            for todo in todos{
+                if todo.todoID == nil {
+                    viewContext.delete(todo)
+                    saveContext(context: viewContext)
+                }
+            }
         }
         .onChange(of: deadlineTime){ newValue in
             for todo in todos{
