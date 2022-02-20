@@ -164,7 +164,7 @@ extension ToDoListCollectionEditView{
         viewContext.delete(toDoList)
         todos.nsPredicate = NSPredicate(format: "idOfToDoList == %@", toDoList.listID! as CVarArg)
         for todo in todos{
-            subtodos.nsPredicate = NSPredicate(format: "idOfToDo", todo.todoID! as CVarArg)
+            subtodos.nsPredicate = NSPredicate(format: "idOfMainToDo == %@", todo.todoID! as CVarArg)
             for subtodo in subtodos{
                 viewContext.delete(subtodo)
             }

@@ -107,6 +107,7 @@ struct ToDoEditView: View {
                                         Button(action: {
                                             withAnimation{
                                                 showDeadline.toggle()
+                                                if(!showDeadline){deadline = Dates.defaultDate}
                                             }
                                         }, label: {
                                             SystemIcon(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
@@ -137,6 +138,7 @@ struct ToDoEditView: View {
                                         Button(action: {
                                             withAnimation{
                                                 showNotification.toggle()
+                                                if(!showNotification){notification = Dates.defaultDate}
                                             }
                                         }, label: {
                                             SystemIcon(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
@@ -232,18 +234,14 @@ struct ToDoEditView: View {
         .onAppear{
             switch(editViewType){
             case .add:
+                deadline = userSelected.selectedDate
                 if deadline == Dates.defaultDate{
                     showDeadline = false
                     deadline = combineDateAndTime(date: getDate(date: Date()), time: getTime(date: AppStorageDeadlineTime))
                 } else {
                     deadline = combineDateAndTime(date: getDate(date: userSelected.selectedDate), time: getTime(date: AppStorageDeadlineTime))
                 }
-                if notification == Dates.defaultDate{
-                    showNotification = false
-                    notification = Date()
-                } else {
-                    notification = userSelected.selectedDate
-                }
+                notification = userSelected.selectedDate
                 list = userSelected.selectedToDoList
                 listID = userSelected.selectedToDoListID
             case .edit: //Value assignment of CoreData storage, if type is display
@@ -259,17 +257,15 @@ struct ToDoEditView: View {
                     deadline = combineDateAndTime(date: getDate(date: todo.todoDeadline ?? Dates.defaultDate), time: getTime(date: AppStorageDeadlineTime))
                 }
                 notification = todo.todoNotification ?? Dates.defaultDate
-                if notification == Dates.defaultDate{
-                    showNotification = false
-                    notification = Date()
-                } else {
-                    notification = todo.todoNotification!
-                }
                 isMarked = todo.todoIsMarked
                 list = todo.todoList!
                 listID = todo.idOfToDoList!
                 priority = Int(todo.todoPriority)
                 images = CoreDataToNSImageArray(coreDataObject: todo.todoImages) ?? []
+            }
+            if notification == Dates.defaultDate{
+                showNotification = false
+                notification = Date()
             }
         }
     }
@@ -306,18 +302,10 @@ extension ToDoEditView{
         objToDo.todoNotes = notes
         objToDo.todoURL = url
         //Dates
-        if showDeadline{
-            objToDo.todoDeadline = deadline
-            updateUserNotification(title: title, id: objToDo.todoID!, date: deadline, type: "deadline")
-        } else {
-            objToDo.todoDeadline = Dates.defaultDate
-        }
-        if showNotification {
-            objToDo.todoNotification = notification
-            updateUserNotification(title: title, id: objToDo.todoID!, date: notification, type: "notification")
-        } else {
-            objToDo.todoNotification = Dates.defaultDate
-        }
+        objToDo.todoDeadline = deadline
+        updateUserNotification(title: title, id: objToDo.todoID!, date: deadline, type: "deadline")
+        objToDo.todoNotification = notification
+        updateUserNotification(title: title, id: objToDo.todoID!, date: notification, type: "notification")
         //isMarked
         objToDo.todoIsMarked = isMarked
         //Priority

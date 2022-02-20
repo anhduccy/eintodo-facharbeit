@@ -239,20 +239,21 @@ func askForUserNotificationPermission(){
         }
     }
 }
-
 func updateUserNotification(title: String, id: UUID, date: Date, type: String){
-    deleteUserNotification(identifier: id)
-    //Add UserNotification
-    let content = UNMutableNotificationContent()
-    content.title = title
-    content.subtitle = DateInString(date: date, type: type)
-    content.sound = UNNotificationSound.default
-    
-    if(getInterval(from: date) > 0){
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
-        let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request)
-        print("The notification is set for \(date) \n title: \(title) \n subtitle: \(DateInString(date: date, type: type)) \n id: \(id)")
+    if date != Dates.defaultDate{
+        deleteUserNotification(identifier: id)
+        //Add UserNotification
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.subtitle = DateInString(date: date, type: type)
+        content.sound = UNNotificationSound.default
+        
+        if(getInterval(from: date) > 0){
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(getInterval(from: date)), repeats: false)
+            let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+            print("The notification is set for \(date) \n title: \(title) \n subtitle: \(DateInString(date: date, type: type)) \n id: \(id)")
+        }
     }
 }
 func deleteUserNotification(identifier: UUID){
