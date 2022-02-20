@@ -82,7 +82,7 @@ struct ToDoListCollectionRow: View{
                 }, label: {
                     Image(systemName: "info.circle")
                 }).buttonStyle(.plain)
-                    .popover(isPresented: $showToDoListsEditView){
+                    .sheet(isPresented: $showToDoListsEditView){
                         ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsEditView, toDoList: list)
                     }
             }

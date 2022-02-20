@@ -53,8 +53,11 @@ enum ToDoListFilterType {
     case list
     case all
 }
-enum EditViewTypes {
+enum EditViewType {
     case add, edit
+}
+enum SubmitButtonType {
+    case todos, todolists
 }
 
 //Enums - Filter types

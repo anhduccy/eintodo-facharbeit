@@ -19,7 +19,7 @@ struct ToDoEditView: View {
     @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ToDoList>
     @FetchRequest(sortDescriptors: []) var subToDos: FetchedResults<SubToDo>
 
-    let editViewType: EditViewTypes
+    let editViewType: EditViewType
 
     //Values for ToDo
     @State var todo: ToDo
@@ -223,7 +223,7 @@ struct ToDoEditView: View {
                     userSelected.selectedDate = deadline
                 }, cancelAction: {
                     userSelected.selectedDate = deadline
-                }, type: editViewType)
+                }, editViewType: editViewType, buttonType: .todos)
             }
             .padding()
         }
@@ -304,7 +304,7 @@ extension ToDoEditView{
     }
     
     //CORE-DATA - Add, update and delete ToDo
-    func updateToDo(editViewType: EditViewTypes, todo: ToDo = ToDo()){
+    func updateToDo(editViewType: EditViewType, todo: ToDo = ToDo()){
         var objToDo = ToDo(context: viewContext)
         switch(editViewType){
         case .add:

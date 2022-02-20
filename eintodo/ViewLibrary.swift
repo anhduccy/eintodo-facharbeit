@@ -116,12 +116,13 @@ struct SubmitButtonsWithCondition: View{
     @Environment(\.colorScheme) var appearance
     let condition: Bool
     @Binding var isPresented: Bool
-    
     let updateAction: () -> Void
     let deleteAction: () -> Void
     let cancelAction: () -> Void
-    let type: EditViewTypes
+    let editViewType: EditViewType
+    let buttonType: SubmitButtonType
     @State var overDeleteButton: Bool = false
+    @State var showingAlert: Bool = false
     var body: some View{
         HStack{
             //Cancel Button
@@ -132,20 +133,40 @@ struct SubmitButtonsWithCondition: View{
             .foregroundColor(.gray)
             .buttonStyle(.plain)
             //Delete Button
-            if type == .edit{
+            if editViewType == .edit{
                 Spacer()
-                Button(action: {
-                    deleteAction()
-                    isPresented.toggle()
-                }, label: {
-                    SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
-                })
-                    .buttonStyle(.plain)
-                    .onHover{ over in
-                        withAnimation{
-                            overDeleteButton = over
+                if buttonType == .todos{
+                    Button(action: {
+                        deleteAction()
+                        isPresented.toggle()
+                    }, label: {
+                        SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
+                    }).buttonStyle(.plain)
+                        .onHover{ over in
+                            withAnimation{
+                                overDeleteButton = over
+                            }
                         }
-                    }
+                } else {
+                    Button(action: {
+                        showingAlert.toggle()
+                    }, label: {
+                        SystemIcon(image: "trash.circle.fill", color: overDeleteButton ? Colors.primaryColor : .red, size: 25, isActivated: true)
+                    }).buttonStyle(.plain)
+                        .alert(isPresented: $showingAlert) {
+                            Alert(title: Text("Möchtest du die Liste wirklich löschen?"),
+                                  message: Text("Alle Erinnerungen in der Liste werden nämlich gelöscht"),
+                                  primaryButton: .default(Text("Löschen"), action: {
+                                deleteAction()
+                                isPresented.toggle()}),
+                                  secondaryButton: .default(Text("Abbrechen"), action: {}))
+                        }
+                        .onHover{ over in
+                            withAnimation{
+                                overDeleteButton = over
+                            }
+                        }
+                }
             }
             Spacer()
             //Done Button

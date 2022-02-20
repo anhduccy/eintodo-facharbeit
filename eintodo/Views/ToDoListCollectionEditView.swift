@@ -14,7 +14,7 @@ struct ToDoListCollectionEditView: View{
     @FetchRequest(sortDescriptors: [], animation: .default) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
 
-    let type: EditViewTypes
+    let type: EditViewType
 
     //Show EditView
     @Binding var isPresented: Bool
@@ -115,7 +115,7 @@ struct ToDoListCollectionEditView: View{
                     case .edit: updateToDoList(editViewType: .edit, todoList: toDoList)
                     case .add: updateToDoList(editViewType: .add)
                     }
-                }, deleteAction: deleteToDoList, cancelAction: {}, type: type)
+                }, deleteAction: deleteToDoList, cancelAction: {}, editViewType: type, buttonType: .todolists)
             }
             .padding()
         }
@@ -136,7 +136,7 @@ struct ToDoListCollectionEditView: View{
 }
 
 extension ToDoListCollectionEditView{
-    private func updateToDoList(editViewType: EditViewTypes, todoList: ToDoList = ToDoList()){
+    private func updateToDoList(editViewType: EditViewType, todoList: ToDoList = ToDoList()){
         var objToDoList = ToDoList()
         switch(editViewType){
         case .add:

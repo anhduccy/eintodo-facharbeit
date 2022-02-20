@@ -22,7 +22,6 @@ struct ToDoListView: View {
     }
     let title: String
     let rowType: ToDoListRowType
-    
     var body: some View {
         VStack{
             VStack(spacing: 10){
@@ -58,9 +57,27 @@ struct ToDoListView: View {
                                         )
                                 }).buttonStyle(.plain)
                                     .padding(.leading, 1)
+                                Button(action: {
+                                    withAnimation{
+                                        for todo in todos{
+                                            if todo.todoIsDone{
+                                                viewContext.delete(todo)
+                                                saveContext(context: viewContext)
+                                            }
+                                        }
+                                    }
+                                }, label: {
+                                    Text("Alle Erledigte Erinnerungen löschen")
+                                        .padding(10)
+                                        .foregroundColor(.gray)
+                                        .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.gray, lineWidth: 1)
+                                        )
+                                }).buttonStyle(.plain)
+                                    .padding(.leading, 1)
                                 Spacer()
                             }
-                           
                         }
                     } else {
                         //ListView
