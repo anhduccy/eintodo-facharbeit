@@ -164,6 +164,7 @@ extension ToDoListCollectionEditView{
         todos.nsPredicate = NSPredicate(format: "idOfToDoList == %@", toDoList.listID! as CVarArg)
         for todo in todos{
             viewContext.delete(todo)
+            deleteUserNotification(identifier: todo.todoID ?? UUID())
         }
         saveContext(context: viewContext)
         userSelected.selectedView = (userSelected.selectedView ?? 1) - 1

@@ -8,41 +8,6 @@
 import SwiftUI
 import Foundation
 
-struct ProgressCircle: View{
-    let todos: FetchedResults<ToDo>
-    var body: some View{
-        HStack(spacing: 7.5){
-            Text("\(progress().done)/\(progress().all)").bold().foregroundColor(.gray)
-            ZStack{
-                Circle()
-                    .stroke(lineWidth: 6)
-                    .opacity(0.2)
-                    .foregroundColor(Colors.primaryColor)
-                Circle()
-                    .trim(from: 0.0, to: progress().percentage)
-                    .stroke(style: StrokeStyle(lineWidth: 6, lineCap: .round, lineJoin: .round))
-                    .foregroundColor(Colors.primaryColor)
-                    .rotationEffect(Angle(degrees: 270))
-            }
-            .frame(width: 30, height: 30)
-        }
-    }
-    private func progress()->(percentage: CGFloat, done: Int, all: Int){
-        var doneToDo = 0
-        let allToDo = todos.count
-        for todo in todos{
-            if todo.todoIsDone{
-                doneToDo += 1
-            }
-        }
-        var percentage: Double = 0
-        if(allToDo != 0){
-            percentage = Double(doneToDo) / Double(allToDo)
-        }
-        return (percentage, doneToDo, allToDo)
-    }
-}
-
 struct ToDoListView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
@@ -50,56 +15,8 @@ struct ToDoListView: View {
     @FetchRequest var todos: FetchedResults<ToDo>
         
     init(title: String, rowType: ToDoListRowType, listFilterType: ToDoListFilterType = .dates, userSelected: UserSelected){
-        let calendar = Calendar.current
-        let dateFrom = calendar.startOfDay(for: userSelected.lastSelectedDate)
-        let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
-        let defaultDate = Dates.defaultDate
-        let currentDate = Date()
-        
-        var sortDescriptor: [NSSortDescriptor] = [NSSortDescriptor()]
-        var predicate: NSPredicate = NSPredicate()
-        var predicateFormat: String = ""
-        
-        switch(listFilterType){
-        case .dates: //To-Dos with deadline and/or notfication
-            sortDescriptor =
-                [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
-            predicateFormat = "(todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)"
-            predicate = NSPredicate(format: predicateFormat, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
-        case .noDates: //To-Dos without deadline and notification
-            sortDescriptor =
-                [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]
-            predicateFormat = "todoDeadline == %@ && todoNotification == %@"
-            predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
-        case .inPast: //All To-Dos in the past and which has not been done yet
-            sortDescriptor =
-                [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
-            predicateFormat = "todoDeadline < %@ && todoDeadline != %@"
-            predicate = NSPredicate(format: predicateFormat, currentDate as CVarArg, defaultDate as CVarArg)
-        case .marked:
-            sortDescriptor =
-                [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
-                NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
-            predicateFormat = "todoIsMarked == true"
-            predicate = NSPredicate(format: predicateFormat)
-        case .all: //All To-Dos
-            sortDescriptor = [ NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
-                               NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
-                               NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
-        case .list:
-            sortDescriptor = [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
-                               NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
-                               NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
-            predicateFormat = "idOfToDoList == %@"
-            predicate = NSPredicate(format: predicateFormat, userSelected.selectedToDoListID as CVarArg)
-        }
-        _todos = FetchRequest(sortDescriptors: sortDescriptor, predicate: predicate, animation: .default)
+        let fetchAttributes = filterToDo(us: userSelected, filterType: listFilterType)
+        _todos = FetchRequest(sortDescriptors: fetchAttributes.sortDescriptors, predicate: fetchAttributes.predicate, animation: .default)
         self.title = title
         self.rowType = rowType
     }
@@ -199,8 +116,10 @@ struct ToDoListRow: View {
 
     init(rowType: ToDoListRowType, todo: ToDo) {
         self.todo = todo
-        _subToDos = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfMainToDo == %@", todo.todoID! as CVarArg), animation: .default)
-        _lists = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "listID == %@", todo.idOfToDoList! as CVarArg), animation: .default)
+        let id = todo.todoID ?? UUID()
+        _subToDos = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "idOfMainToDo == %@", id as CVarArg), animation: .default)
+        let listID = todo.idOfToDoList ?? UUID()
+        _lists = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "listID == %@", listID as CVarArg), animation: .default)
         self.rowType = rowType
     }
 
@@ -260,7 +179,7 @@ struct ToDoListRow: View {
                             }
                             //Show List Icon if ToDoListRow is in CalendarView
                             if(rowType == .calendar){
-                                SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
+                               // SystemCircleIcon(image: lists[0].listSymbol ?? "list.bullet", size: 25, backgroundColor: getColorFromString(string: lists[0].listColor ?? "indigo"))
                             }
                         }
                     }).buttonStyle(.plain)

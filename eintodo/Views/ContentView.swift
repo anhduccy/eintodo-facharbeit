@@ -41,13 +41,9 @@ struct ContentView: View {
                 }
                 
                 Section("Sortierte Listen"){
-                    NavigationLink(destination: ToDoListView(title: "Fällig", rowType: .calendar, listFilterType: .inPast, userSelected: userSelected), tag: 2, selection: $userSelected.selectedView){
-                        HStack{
-                            Image(systemName: "clock")
-                                .foregroundColor(userSelected.selectedView == 2 ? .white : Colors.primaryColor)
-                            Text("Fällig")
-                        }
-                    }
+                    ToDoListCollectionDefaultRow(us: userSelected, title: "Alle", systemName: "tray.2", tag: 2, filter: .all)
+                    ToDoListCollectionDefaultRow(us: userSelected, title: "Fällig", systemName: "clock", tag: 3, filter: .inPast)
+                    ToDoListCollectionDefaultRow(us: userSelected, title: "Markiert", systemName: "star", tag: 4, filter: .marked)
                 }
                 
                 Section(header: Text("Meine Listen")){
@@ -58,7 +54,7 @@ struct ContentView: View {
                                     userSelected.selectedToDoList = list.listTitle ?? "Error"
                                     userSelected.selectedToDoListID = list.listID ?? UUID()
                                 },
-                            tag: index + 3,
+                            tag: index + 5,
                             selection: $userSelected.selectedView
                         ){
                             HStack{

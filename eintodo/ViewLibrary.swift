@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-//Label
+//Labels
 struct LeftText: View{
     let text: String
     let font: Font
@@ -28,7 +28,6 @@ struct LeftText: View{
 }
 
 //System Icons and Image Settings
-
 //Icon for SF Symbols which has not ".circle.fill"
 struct SystemCircleIcon: View{
     init(image: String, size: CGFloat, foregroundColor: Color = .white, backgroundColor: Color){
@@ -173,5 +172,41 @@ struct SubmitButtonsWithCondition: View{
                 .buttonStyle(.plain)
             }
         }
+    }
+}
+
+//Progress Circle
+struct ProgressCircle: View{
+    let todos: FetchedResults<ToDo>
+    var body: some View{
+        HStack(spacing: 7.5){
+            Text("\(progress().done)/\(progress().all)").bold().foregroundColor(.gray)
+            ZStack{
+                Circle()
+                    .stroke(lineWidth: 6)
+                    .opacity(0.2)
+                    .foregroundColor(Colors.primaryColor)
+                Circle()
+                    .trim(from: 0.0, to: progress().percentage)
+                    .stroke(style: StrokeStyle(lineWidth: 6, lineCap: .round, lineJoin: .round))
+                    .foregroundColor(Colors.primaryColor)
+                    .rotationEffect(Angle(degrees: 270))
+            }
+            .frame(width: 30, height: 30)
+        }
+    }
+    private func progress()->(percentage: CGFloat, done: Int, all: Int){
+        var doneToDo = 0
+        let allToDo = todos.count
+        for todo in todos{
+            if todo.todoIsDone{
+                doneToDo += 1
+            }
+        }
+        var percentage: Double = 0
+        if(allToDo != 0){
+            percentage = Double(doneToDo) / Double(allToDo)
+        }
+        return (percentage, doneToDo, allToDo)
     }
 }

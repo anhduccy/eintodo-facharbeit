@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 import UserNotifications
 
+//CORE-DATA
 //Create a ToDoList, if there are no lists available
 func createList(viewContext: NSManagedObjectContext){
     let newToDoList = ToDoList(context: viewContext)
@@ -18,7 +19,6 @@ func createList(viewContext: NSManagedObjectContext){
     newToDoList.listSymbol = "list.bullet"
     saveContext(context: viewContext)
 }
-
 //CoreData - Save ViewContext
 public func saveContext(context: NSManagedObjectContext){
     do{
@@ -27,6 +27,60 @@ public func saveContext(context: NSManagedObjectContext){
         let nsError = error as NSError
         fatalError("Could not save NSManagedObjectContext: \(nsError), \(nsError.userInfo)")
     }
+}
+//CoreData - Filter ToDos
+func filterToDo(us: UserSelected, filterType: ToDoListFilterType)->(sortDescriptors: [NSSortDescriptor], predicate: NSPredicate?){
+    let calendar = Calendar.current
+    let dateFrom = calendar.startOfDay(for: us.lastSelectedDate)
+    let dateTo = calendar.date(byAdding: .minute, value: 1439, to: dateFrom)
+    let defaultDate = Dates.defaultDate
+    let currentDate = Date()
+    
+    var sortDescriptor: [NSSortDescriptor] = []
+    var predicate: NSPredicate? = nil
+    var predicateFormat: String = ""
+    
+    switch(filterType){
+    case .dates: //To-Dos with deadline and/or notfication
+        sortDescriptor =
+            [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
+        predicateFormat = "(todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)"
+        predicate = NSPredicate(format: predicateFormat, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
+    case .noDates: //To-Dos without deadline and notification
+        sortDescriptor =
+            [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]
+        predicateFormat = "todoDeadline == %@ && todoNotification == %@"
+        predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
+    case .inPast: //All To-Dos in the past and which has not been done yet
+        sortDescriptor =
+            [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
+        predicateFormat = "todoDeadline < %@ && todoDeadline != %@"
+        predicate = NSPredicate(format: predicateFormat, currentDate as CVarArg, defaultDate as CVarArg)
+    case .marked:
+        sortDescriptor =
+            [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+            NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
+        predicateFormat = "todoIsMarked == true"
+        predicate = NSPredicate(format: predicateFormat)
+    case .all: //All To-Dos
+        sortDescriptor = [ NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                           NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                           NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
+        predicate = nil
+    case .list:
+        sortDescriptor = [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
+                           NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
+                           NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
+        predicateFormat = "idOfToDoList == %@"
+        predicate = NSPredicate(format: predicateFormat, us.selectedToDoListID as CVarArg)
+    }
+    return(sortDescriptor, predicate)
 }
 
 //GETTER
