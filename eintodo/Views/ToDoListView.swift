@@ -74,7 +74,7 @@ struct ToDoListView: View {
                 NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]
             predicateFormat = "todoDeadline == %@ && todoNotification == %@"
             predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
-        case .inPastAndNotDone: //All To-Dos in the past and which has not been done yet
+        case .inPast: //All To-Dos in the past and which has not been done yet
             sortDescriptor =
                 [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                 NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
@@ -164,6 +164,9 @@ struct ToDoListView: View {
         .padding()
         .frame(minWidth: 375)
         .background(colorScheme == .dark ? .clear : .white)
+        .onAppear{
+            print(todos)
+        }
     }
     public func isAllDone()->Bool{
         var item = 0

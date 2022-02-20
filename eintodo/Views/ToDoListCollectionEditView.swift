@@ -142,13 +142,13 @@ extension ToDoListCollectionEditView{
         case .add:
             objToDoList = ToDoList(context: viewContext)
             objToDoList.listID = UUID()
+            userSelected.selectedView = 1
         case .edit:
             objToDoList = todoList
             todos.nsPredicate = NSPredicate(format: "todoList == %@", toDoList.listTitle! as CVarArg)
             for todo in todos{
                 todo.todoList = title
             }
-            userSelected.selectedView = 1
         }
         objToDoList.listTitle = title
         objToDoList.listDescription = description
@@ -161,7 +161,12 @@ extension ToDoListCollectionEditView{
     }
     private func deleteToDoList(){
         viewContext.delete(toDoList)
+        todos.nsPredicate = NSPredicate(format: "idOfToDoList == %@", toDoList.listID! as CVarArg)
+        for todo in todos{
+            viewContext.delete(todo)
+        }
         saveContext(context: viewContext)
+        userSelected.selectedView = (userSelected.selectedView ?? 1) - 1
     }
 }
 

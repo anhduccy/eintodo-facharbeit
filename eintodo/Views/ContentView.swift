@@ -40,6 +40,16 @@ struct ContentView: View {
                     }
                 }
                 
+                Section("Sortierte Listen"){
+                    NavigationLink(destination: ToDoListView(title: "Fällig", rowType: .calendar, listFilterType: .inPast, userSelected: userSelected), tag: 2, selection: $userSelected.selectedView){
+                        HStack{
+                            Image(systemName: "clock")
+                                .foregroundColor(userSelected.selectedView == 2 ? .white : Colors.primaryColor)
+                            Text("Fällig")
+                        }
+                    }
+                }
+                
                 Section(header: Text("Meine Listen")){
                     ForEach(Array(zip(lists.indices, lists)), id: \.1){ index, list in
                         NavigationLink(
@@ -48,7 +58,7 @@ struct ContentView: View {
                                     userSelected.selectedToDoList = list.listTitle ?? "Error"
                                     userSelected.selectedToDoListID = list.listID ?? UUID()
                                 },
-                            tag: index + 2,
+                            tag: index + 3,
                             selection: $userSelected.selectedView
                         ){
                             HStack{
