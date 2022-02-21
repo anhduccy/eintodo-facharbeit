@@ -96,7 +96,7 @@ struct ToDoListView: View {
             .listStyle(.plain)
         }
         .padding()
-        .frame(minWidth: 375)
+        .frame(minWidth: 450, minHeight: 400)
         .background(colorScheme == .dark ? .clear : .white)
     }
     public func isAllDone()->Bool{

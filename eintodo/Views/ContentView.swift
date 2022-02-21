@@ -66,7 +66,7 @@ struct ContentView: View {
                 }
             }
             .listStyle(.sidebar)
-            .frame(minWidth: 200)
+            .frame(minWidth: 175)
             .toolbar{
                 ToolbarItemGroup(placement: .automatic){
                     Menu(content: {
