@@ -42,7 +42,7 @@ struct Sizes {
     static let defaultSheetHeightEditView: CGFloat = 450
 }
 struct Colors {
-    static let primaryColor: Color = .red
+    static let primaryColor: Color = .blue
 }
 
 //Enums - View types
