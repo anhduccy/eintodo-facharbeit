@@ -210,7 +210,7 @@ struct ToDoListRow: View {
                             saveContext(context: viewContext)
                         }
                     }, label: {
-                        SystemCircleIcon(image: todo.todoIsMarked ? "star.fill" : "star", size: SystemImageSize, backgroundColor: todo.todoIsMarked ? .init(red: 250/255, green: 187/255, blue: 2/255) : .gray)
+                        SystemCircleIcon(image: todo.todoIsMarked ? "star.fill" : "star", size: SystemImageSize, backgroundColor: todo.todoIsMarked ? .init(red: 250/255, green: 187/255, blue: 2/255) : .gray, isActivated: todo.todoIsMarked)
                     }).buttonStyle(.plain)
                 }.padding(12.5)
                 .sheet(isPresented: $isPresented) {

@@ -30,27 +30,30 @@ struct LeftText: View{
 //System Icons and Image Settings
 //Icon for SF Symbols which has not ".circle.fill"
 struct SystemCircleIcon: View{
-    init(image: String, size: CGFloat, foregroundColor: Color = .white, backgroundColor: Color){
+    init(image: String, size: CGFloat, foregroundColor: Color = .white, backgroundColor: Color, isActivated: Bool = true){
         self.image = image
         self.size = size
         self.foregroundColor = foregroundColor
         self.backgroundColor = backgroundColor
+        self.isActivated = isActivated
     }
     
     let image: String
     let size: CGFloat
     let foregroundColor: Color
     let backgroundColor: Color
+    let isActivated: Bool
     
     var body: some View{
         ZStack{
             Circle().fill(backgroundColor)
                 .frame(width: size, height: size)
+                .opacity(isActivated ? 1.0 : 0.2)
             Image(systemName: image)
                 .resizable()
                 .scaledToFit()
                 .frame(width: size/1.75, height: size/1.75)
-                .foregroundColor(foregroundColor)
+                .foregroundColor(isActivated ? foregroundColor : .gray)
         }
     }
 }
