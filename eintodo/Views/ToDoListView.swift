@@ -187,6 +187,12 @@ struct ToDoListRow: View {
                         }
                         HStack(spacing: 4.5){
                             //Information of content in ToDo
+                            if(todo.todoPriority != 0){
+                                ZStack{
+                                    Image(systemName: getPriority())
+                                        .foregroundColor(Colors.primaryColor)
+                                }.frame(width: SystemImageSize, height: SystemImageSize)
+                            }
                             if(todo.todoNotes != ""){
                                 SystemCircleIcon(image: "note.text", size: SystemImageSize, backgroundColor: color)
                             }
@@ -229,6 +235,18 @@ struct ToDoListRow: View {
             return false
         } else {
             return true
+        }
+    }
+    private func getPriority()->String{
+        switch todo.todoPriority{
+        case 1:
+            return "exclamationmark"
+        case 2:
+            return "exclamationmark.2"
+        case 3:
+            return "exclamationmark.3"
+        default:
+            return ""
         }
     }
 }

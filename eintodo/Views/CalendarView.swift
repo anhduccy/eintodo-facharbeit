@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    @Environment(\.colorScheme) public var appearance
     @EnvironmentObject private var userSelected: UserSelected
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], animation: .default)
     public var todos: FetchedResults<ToDo>
@@ -37,6 +38,7 @@ struct CalendarView: View {
                     HStack{
                         Text(getYear())
                             .font(.title2)
+                            .fontWeight(.light)
                         Text(getMonth())
                             .font(.title2.bold())
                         Spacer()
@@ -116,21 +118,26 @@ struct CalendarView: View {
                                             switch(filter){
                                             case .deadline, .notification:
                                                 if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
-                                                    Text("\(dayValue.day)").foregroundColor(Colors.primaryColor)
+                                                    Text("\(dayValue.day)").foregroundColor(Colors.primaryColor).fontWeight(.light)
                                                 } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
-                                                    Text("\(dayValue.day)").foregroundColor(.red)
+                                                    Text("\(dayValue.day)").foregroundColor(.red).fontWeight(.light)
                                                 } else if(isJustDoneToDos(date: dayValue.date) && userSelected.showDoneToDos){
-                                                    Text("\(dayValue.day)").foregroundColor(Colors.primaryColor).opacity(0.5)
+                                                    Text("\(dayValue.day)").foregroundColor(Colors.primaryColor).fontWeight(.light).opacity(0.5)
                                                 } else {
-                                                    Text("\(dayValue.day)")
+                                                    Text("\(dayValue.day)").fontWeight(.light)
                                                 }
                                             case .isMarked:
                                                 if(!isEmptyOnDate(date: dayValue.date)){
-                                                    Text("\(dayValue.day)").foregroundColor(.yellow).opacity(0.5)
-                                                } else if(isJustDoneToDos(date: dayValue.date)){
-                                                    Text("\(dayValue.day)").foregroundColor(.yellow).opacity(0.5)
-                                                } else {
                                                     Text("\(dayValue.day)")
+                                                        .foregroundColor(appearance == .dark ? .yellow : Color.init(red: 255/255, green: 170/255, blue: 29/255))
+                                                        .fontWeight(.light)
+                                                } else if(isJustDoneToDos(date: dayValue.date)){
+                                                    Text("\(dayValue.day)")
+                                                        .foregroundColor(appearance == .dark ? .yellow : Color.init(red: 255/255, green: 170/255, blue: 29/255))
+                                                        .fontWeight(.light)
+                                                        .opacity(0.5)
+                                                } else {
+                                                    Text("\(dayValue.day)").fontWeight(.light)
                                                 }
                                             }
                                         }

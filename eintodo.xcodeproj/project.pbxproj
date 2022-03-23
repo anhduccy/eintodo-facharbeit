@@ -24,7 +24,6 @@
 		7965CEDA27A8491E00AEEB9E /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7965CED927A8491E00AEEB9E /* ImageView.swift */; };
 		7999DE71277B7E0D008557EB /* ToDoListCollectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999DE70277B7E0D008557EB /* ToDoListCollectionRow.swift */; };
 		79AC542D2771283B00E935D8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AC542C2771283B00E935D8 /* SettingsView.swift */; };
-		79B56F46277FB83900D0EC16 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B56F45277FB83900D0EC16 /* Home.swift */; };
 		79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BAB9B7276BB205009EB5A3 /* Functions.swift */; };
 		79F44343276F649200B558BF /* ViewLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F44342276F649200B558BF /* ViewLibrary.swift */; };
 /* End PBXBuildFile section */
@@ -49,7 +48,6 @@
 		7965CED927A8491E00AEEB9E /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		7999DE70277B7E0D008557EB /* ToDoListCollectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListCollectionRow.swift; sourceTree = "<group>"; };
 		79AC542C2771283B00E935D8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		79B56F45277FB83900D0EC16 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		79BAB9B7276BB205009EB5A3 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		79F44342276F649200B558BF /* ViewLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLibrary.swift; sourceTree = "<group>"; };
 		79F5826327BFB669004933ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -133,7 +131,6 @@
 			children = (
 				794855EC276690410086927E /* ContentView.swift */,
 				79AC542C2771283B00E935D8 /* SettingsView.swift */,
-				79B56F45277FB83900D0EC16 /* Home.swift */,
 				7948560E2766ABF30086927E /* CalendarView.swift */,
 				79E98E2427A5BCBC0026DFA0 /* ToDoList */,
 				7965CEDC27A849C200AEEB9E /* ToDo */,
@@ -231,7 +228,6 @@
 				79F44343276F649200B558BF /* ViewLibrary.swift in Sources */,
 				79BAB9B8276BB205009EB5A3 /* Functions.swift in Sources */,
 				794855ED276690410086927E /* ContentView.swift in Sources */,
-				79B56F46277FB83900D0EC16 /* Home.swift in Sources */,
 				794856032766996D0086927E /* ToDoListView.swift in Sources */,
 				7940F648277CCE2A001BA7EF /* ToDoListCollectionEditView.swift in Sources */,
 				79281B152776428200F32528 /* Extensions.swift in Sources */,

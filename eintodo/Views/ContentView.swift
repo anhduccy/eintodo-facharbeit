@@ -26,13 +26,6 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List{
-                NavigationLink(destination: Home(), tag: 0, selection: $userSelected.selectedView){
-                    HStack{
-                        Image(systemName: "house")
-                            .foregroundColor(userSelected.selectedView == 0 ? .white : Colors.primaryColor)
-                        Text("Start")
-                    }
-                }
                 NavigationLink(destination: CalendarView(filter: .deadline), tag: 1, selection: $userSelected.selectedView){
                     HStack{
                         Image(systemName: "calendar")
