@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-//Labels
+/**
+ Teil-Views, die von vielen Views genutzt werden
+ */
+
+//Labels - Links zentrierter Text
 struct LeftText: View{
     let text: String
     let font: Font
@@ -28,7 +32,7 @@ struct LeftText: View{
 }
 
 //System Icons and Image Settings
-//Icon for SF Symbols which has not ".circle.fill"
+//Icon für SF Symbols was nicht ".circle.fill" hat - Standardeinstellungen für Icon-Anzeige mit einem Kreis
 struct SystemCircleIcon: View{
     init(image: String, size: CGFloat, foregroundColor: Color = .white, backgroundColor: Color, isActivated: Bool = true){
         self.image = image
@@ -58,7 +62,7 @@ struct SystemCircleIcon: View{
     }
 }
 
-//Icon for SF Symbols which has ".circle.fill"
+//Icon for SF Symbols which has ".circle.fill" - Standardeinstellungen für Icon-Anzeige
 struct SystemIcon: View {
     init(image: String, color: Color = Colors.primaryColor, size: CGFloat, isActivated: Bool, opacity: CGFloat = 1){
         self.image = image
@@ -81,6 +85,7 @@ struct SystemIcon: View {
         }
     }
 }
+//Standardeinstellungen fpr ein Bild
 struct SystemImage: View{
     @Environment(\.colorScheme) public var colorScheme
     let image: String
@@ -114,7 +119,7 @@ struct SystemImage: View{
     }
 }
 
-//Submit Button
+//"Löschen", "Hinzufügen" und "Abbrechen"
 struct SubmitButtonsWithCondition: View{
     @Environment(\.colorScheme) var appearance
     let condition: Bool
@@ -199,7 +204,7 @@ struct SubmitButtonsWithCondition: View{
     }
 }
 
-//Progress Circle
+//Fortschrittskreis der Erinnerungsliste
 struct ProgressCircle: View{
     let todos: FetchedResults<ToDo>
     var body: some View{
@@ -219,6 +224,7 @@ struct ProgressCircle: View{
             .frame(width: 30, height: 30)
         }
     }
+    //Berechne den Fortschritt
     private func progress()->(percentage: CGFloat, done: Int, all: Int){
         var doneToDo = 0
         let allToDo = todos.count

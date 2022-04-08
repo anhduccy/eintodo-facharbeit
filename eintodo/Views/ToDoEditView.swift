@@ -8,6 +8,10 @@
 import SwiftUI
 import UserNotifications
 
+/**
+ Detaillierte Sheet-Ansicht für eine Erinnerung: Hier werden die Inforamtionen einer Erinnerung angezeigt oder  definiert
+ */
+
 struct ToDoEditView: View {
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
@@ -21,7 +25,7 @@ struct ToDoEditView: View {
 
     let editViewType: EditViewType
 
-    //Values for ToDo
+    //Standardwerte für ein ToDo
     @State var todo: ToDo
     @State var id: UUID = UUID()
     @State var title: String = ""
@@ -35,20 +39,20 @@ struct ToDoEditView: View {
     @State var listID: UUID
     @State var images: [NSImage] = []
     
-    //Toggles and Conditions for Animation
+    //Toggles und Bedingungen für eine Animation
     @State var showDeadline = true
     @State var showNotification = true
     @State var showPriorityPopover = false
     @State private var overDeleteButton = false
 
-    //Coomunication between other views
+    //Kommunikation mit anderen Views
     @Binding var isPresented: Bool
     @State var showListPicker: Bool = false
     
     var body: some View {
         ZStack{
             VStack{
-                //List
+                //List-Picker
                 Button(action: {
                     showListPicker.toggle()
                 }, label: {
@@ -66,7 +70,7 @@ struct ToDoEditView: View {
                     }
                     .padding()
                 }.buttonStyle(.plain)
-                //Group of TextField - Title, Notes, URLs
+                //Gruppe von Text - Titel, Notizen und URL
                 VStack(spacing: 2){
                     TextField("Titel", text: $title)
                         .font(.title.bold())
@@ -93,7 +97,7 @@ struct ToDoEditView: View {
                 
                 ScrollView(showsIndicators: false){
                     VStack(spacing: 20){
-                        //Group of Buttons - List, Deadline, Notifications, isMarked, Priorities, Images
+                        //Gruppe von Buttons - Deadline, Notification, Markiert, Prioritäten, Bilder
                         VStack{
                             HStack{
                                 Text("Allgemein").font(.headline)
@@ -107,7 +111,6 @@ struct ToDoEditView: View {
                                         Button(action: {
                                             withAnimation{
                                                 showDeadline.toggle()
-                                                if(!showDeadline){deadline = Dates.defaultDate}
                                             }
                                         }, label: {
                                             SystemIcon(image: "calendar.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showDeadline)
@@ -131,14 +134,13 @@ struct ToDoEditView: View {
                                 }
                             }
                             
-                            //Notifications
+                            //Notification
                             VStack{
                                 HStack{
                                     HStack{
                                         Button(action: {
                                             withAnimation{
                                                 showNotification.toggle()
-                                                if(!showNotification){notification = Dates.defaultDate}
                                             }
                                         }, label: {
                                             SystemIcon(image: "bell.circle.fill", color: Colors.primaryColor, size: 25, isActivated: showNotification)
@@ -162,7 +164,7 @@ struct ToDoEditView: View {
                                 }
                             }
                             
-                            //IsMarked
+                            //Ist markiert
                             HStack{
                                 Button(action: {
                                     withAnimation{
@@ -177,7 +179,7 @@ struct ToDoEditView: View {
                                 Spacer()
                             }
                             
-                            //Priorities
+                            //Priorität
                             HStack{
                                 Button(action: {
                                     withAnimation{
@@ -205,13 +207,13 @@ struct ToDoEditView: View {
                             }
                             Spacer()
                         }
-                        //Images
+                        //Bilder
                         ImageView(images: $images)
-                        //SubToDos
+                        //Teil-Erinnerung
                         SubToDoListView(id: id)
                     }
                 }
-                //Submit Buttons
+                //"Abbrechen", "Löschen" und "Fertig" - Button
                 SubmitButtonsWithCondition(condition: title != "" && list != "", isPresented: $isPresented, updateAction: {
                     switch(editViewType){
                     case .edit:
@@ -232,8 +234,10 @@ struct ToDoEditView: View {
         .background(.ultraThinMaterial)
         .frame(minWidth: Sizes.defaultSheetWidth, minHeight: Sizes.defaultSheetHeightEditView)
         .onAppear{
+            //Weise die Werte hinzu, wenn die View als erstes Mal gezeigt wird
             switch(editViewType){
             case .add:
+                //Fall des Hinzufügens
                 deadline = userSelected.selectedDate
                 if deadline == Dates.defaultDate{
                     showDeadline = false
@@ -241,10 +245,11 @@ struct ToDoEditView: View {
                 } else {
                     deadline = combineDateAndTime(date: getDate(date: userSelected.selectedDate), time: getTime(date: AppStorageDeadlineTime))
                 }
-                notification = userSelected.selectedDate
+                notification =  combineDateAndTime(date: getDate(date: userSelected.selectedDate), time: getTime(date: Date()))
                 list = userSelected.selectedToDoList
                 listID = userSelected.selectedToDoListID
-            case .edit: //Value assignment of CoreData storage, if type is display
+            case .edit:
+                //Fall einer Datenübergabe -> Anzeige
                 id = todo.todoID!
                 title = todo.todoTitle ?? "Error"
                 notes = todo.todoNotes ?? "Error"
@@ -272,7 +277,7 @@ struct ToDoEditView: View {
 }
 
 extension ToDoEditView{
-    //Get information of ToDoList for the specified ToDo
+    //Gib Listenfarbe der Erinnerungsliste für den To-Do
     func getToDoListColor(with: UUID) -> Color{
         var color: String = ""
         lists.nsPredicate = NSPredicate(format: "listID == %@", with as CVarArg)
@@ -281,6 +286,7 @@ extension ToDoEditView{
         }
         return getColorFromString(string: color)
     }
+    //Gib Listensymbol der Erinnerungsliste für den To-Do
     func getToDoListSymbol(with: UUID) -> String{
         var symbol = ""
         lists.nsPredicate = NSPredicate(format: "listID == %@", with as CVarArg)
@@ -290,22 +296,30 @@ extension ToDoEditView{
         return symbol
     }
     
-    //CORE-DATA - Add, update and delete ToDo
+    //Aktualisiere oder Füge To-Do hinzu
     func updateToDo(editViewType: EditViewType, todo: ToDo = ToDo()){
         var objToDo = todo
         if editViewType == .add{
             objToDo = ToDo(context: viewContext)
             objToDo.todoID = id
         }
-        //Texts
+        //Texte
         objToDo.todoTitle = title
         objToDo.todoNotes = notes
         objToDo.todoURL = url
         //Dates
-        objToDo.todoDeadline = deadline
-        updateUserNotification(title: title, id: objToDo.todoID!, date: deadline, type: "deadline")
-        objToDo.todoNotification = notification
-        updateUserNotification(title: title, id: objToDo.todoID!, date: notification, type: "notification")
+        if showDeadline{
+            objToDo.todoDeadline = deadline
+            updateUserNotification(title: title, id: objToDo.todoID!, date: deadline, type: "deadline")
+        } else {
+            objToDo.todoDeadline = Dates.defaultDate
+        }
+        if showNotification{
+            objToDo.todoNotification = notification
+            updateUserNotification(title: title, id: objToDo.todoID!, date: notification, type: "notification")
+        } else {
+            objToDo.todoNotification = Dates.defaultDate
+        }
         //isMarked
         objToDo.todoIsMarked = isMarked
         //Priority
@@ -319,6 +333,7 @@ extension ToDoEditView{
         objToDo.todoIsDone = false
         saveContext(context: viewContext)
     }
+    //Lösche die Erinnerung und alle Teilerinnerungen mit sich
     func deleteToDo(){
         withAnimation {
             deleteUserNotification(identifier: todo.todoID!)

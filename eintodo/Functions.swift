@@ -9,7 +9,7 @@ import SwiftUI
 import UserNotifications
 
 //CORE-DATA
-//Create a ToDoList, if there are no lists available
+//Erstelle ein ToDoList, wenn keine vorhanden sind
 func createList(viewContext: NSManagedObjectContext){
     let newToDoList = ToDoList(context: viewContext)
     newToDoList.listID = UUID()
@@ -19,7 +19,7 @@ func createList(viewContext: NSManagedObjectContext){
     newToDoList.listSymbol = "list.bullet"
     saveContext(context: viewContext)
 }
-//CoreData - Save ViewContext
+//CoreData - Sichern durch ViewContext
 public func saveContext(context: NSManagedObjectContext){
     do{
         try context.save()
@@ -28,7 +28,7 @@ public func saveContext(context: NSManagedObjectContext){
         fatalError("Could not save NSManagedObjectContext: \(nsError), \(nsError.userInfo)")
     }
 }
-//CoreData - Filter ToDos
+//CoreData - Alle Erinnerungslisten-Filter
 func filterToDo(us: UserSelected, filterType: ToDoListFilterType)->(sortDescriptors: [NSSortDescriptor], predicate: NSPredicate?){
     let calendar = Calendar.current
     let dateFrom = calendar.startOfDay(for: us.lastSelectedDate)
@@ -41,39 +41,39 @@ func filterToDo(us: UserSelected, filterType: ToDoListFilterType)->(sortDescript
     var predicateFormat: String = ""
     
     switch(filterType){
-    case .dates: //To-Dos with deadline and/or notfication
+    case .dates: //To-Dos mit deadline und/oder notfication
         sortDescriptor =
             [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
         predicateFormat = "(todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)"
         predicate = NSPredicate(format: predicateFormat, dateTo! as CVarArg, dateFrom as CVarArg, dateTo! as CVarArg, dateFrom as CVarArg)
-    case .noDates: //To-Dos without deadline and notification
+    case .noDates: //To-Dos ohne deadline und notification
         sortDescriptor =
             [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]
         predicateFormat = "todoDeadline == %@ && todoNotification == %@"
         predicate = NSPredicate(format: predicateFormat, defaultDate as CVarArg,  defaultDate as CVarArg)
-    case .inPast: //All To-Dos in the past and which has not been done yet
+    case .inPast: //Alle To-Dos in der Vergangenheit was noch nicht erledigt wurde
         sortDescriptor =
             [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
         predicateFormat = "todoDeadline < %@ && todoDeadline != %@"
         predicate = NSPredicate(format: predicateFormat, currentDate as CVarArg, defaultDate as CVarArg)
-    case .marked:
+    case .marked: //Alle markierten Erinnerungen
         sortDescriptor =
             [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
             NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
         predicateFormat = "todoIsMarked == true"
         predicate = NSPredicate(format: predicateFormat)
-    case .all: //All To-Dos
+    case .all: //Alle To-Dos
         sortDescriptor = [ NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                            NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                            NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
         predicate = nil
-    case .list:
+    case .list: //Filtern nach Liste
         sortDescriptor = [NSSortDescriptor(keyPath: \ToDo.todoIsDone, ascending: true),
                            NSSortDescriptor(keyPath: \ToDo.todoDeadline, ascending: true),
                            NSSortDescriptor(keyPath: \ToDo.todoNotification, ascending: true)]
@@ -84,11 +84,11 @@ func filterToDo(us: UserSelected, filterType: ToDoListFilterType)->(sortDescript
 }
 
 //GETTER
-//Get the start of month
+//Gib den Start des Monats
 func getStartOfMonth() -> Date {
     return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: Date())))!
 }
-//Get difference of month between input date and current date (not interval)
+//Gib den Interval des Monats, die zwischen dem Input Datum und dem Aktuellen Datum liegen
 func getMonthInterval(from date: Date) -> Int {
     var interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
     if(interval > 0){
@@ -98,12 +98,12 @@ func getMonthInterval(from date: Date) -> Int {
     }
     return interval
 }
-//Get interval in sconds between input date and current date
+//Gib den Interval in Sekunden an, die zwischen dem Input Datum und dem Aktuellen Datum liegen
 func getInterval(from date: Date) -> Int {
     let interval = Calendar.current.dateComponents([.second], from: Date(), to: date).second!
     return interval
 }
-//Return a color from a string
+//Return Farbe von String
 func getColorFromString(string: String)->Color{
     switch(string){
     case "standard": return Colors.primaryColor
@@ -120,19 +120,19 @@ func getColorFromString(string: String)->Color{
         default: return Color.indigo
     }
 }
-//Get time from date and return it as a String
+//Konvertiere die Input-Zeit und gebe es als String zurück
 func getTime(date: Date)->String{
     let formatter = DateFormatter()
     formatter.dateFormat = "HH:mm"
     return formatter.string(from: date)
 }
-//Get day, month and year from date and return it as a String
+//Konvertiere das Datum und gebe es als String zurück
 func getDate(date: Date)->String{
     let formatter = DateFormatter()
     formatter.dateFormat = "dd.MM.yyyy"
     return formatter.string(from: date)
 }
-//Combine date (String) and time (String) to a new date and return it as the type Date
+//Kombiniere das Datum (String) und die Zeit (String) zu einem neuen Datum ung gebe es als Typ Datum zurück
 func combineDateAndTime(date: String, time: String)->Date{
     let formatter = DateFormatter()
     formatter.dateFormat = "dd.MM.yyyy, HH:mm"
@@ -141,7 +141,7 @@ func combineDateAndTime(date: String, time: String)->Date{
 }
  
 //Formatters
-//Format Date into String -> A support function for ViewLibrary (ListRow)
+//Formattiere Datum zum String
  func DateInString(date: Date, format: String = "dd.MM.yyyy", type: String) -> String{
     let timeFormatter = DateFormatter()
     timeFormatter.dateFormat = ", HH:mm"
@@ -149,7 +149,7 @@ func combineDateAndTime(date: String, time: String)->Date{
     formatter.dateFormat = format
     var output = ""
     
-    if(type == "deadline"){ // Type is deadline
+    if(type == "deadline"){ // Typ ist deadline
         if(isTomorrow(date: date)){
             output = "Morgen fällig"
         } else if (isToday(date: date)){
@@ -159,7 +159,7 @@ func combineDateAndTime(date: String, time: String)->Date{
         } else {
             output = "Fällig am " + formatter.string(from: date)
         }
-    } else if(type == "notification"){ // Type is notification
+    } else if(type == "notification"){ // Typ ist notification (bei ToDoEditRow)
         if(isTomorrow(date: date)){
             output = "Morgen" + timeFormatter.string(from: date)
         } else if (isToday(date: date)){
@@ -169,14 +169,17 @@ func combineDateAndTime(date: String, time: String)->Date{
         } else {
             output = formatter.string(from: date) + timeFormatter.string(from: date)
         }
-    } else if (type == "display"){ // Type is display
+    } else if (type == "display"){ // Typ ist display
         if(isTomorrow(date: date)){
             output = "Morgen"
         } else if (isToday(date: date)){
             output = "Heute"
         } else if (isYesterday(date: date)){
             output = "Gestern"
-        } else {
+        } else if(date == Dates.defaultDate){
+            output = "Erinnerungen ohne Datum"
+        }
+        else {
             output = formatter.string(from: date)
         }
     } else {
@@ -185,24 +188,24 @@ func combineDateAndTime(date: String, time: String)->Date{
     return output
 }
 
-//Comparisons
-//Compare two dates and return true if it is the same
+//Vergleiche
+//Vergleiche zwei Datum, wenn gleicher Tag -> true
  func isSameDay(date1: Date, date2: Date) -> Bool {
     return Calendar.current.isDate(date1, inSameDayAs: date2)
 }
-//If input date is equal as the yesterday's date, return true
+//Wenn Datum ist gestern -> true
  func isYesterday(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Date().addingTimeInterval(-TimeInterval(SecondsCalculated.day)))
 }
-//If input date is current date, return true
+//Wenn Datum ist heute -> true
  func isToday(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Date())
 }
-//If input date is equal as the tomorrow date, return true
+//Wenn Datum ist morgen -> true
  func isTomorrow(date: Date)->Bool{
     return Calendar.current.isDate(date, inSameDayAs: Date().addingTimeInterval(TimeInterval(SecondsCalculated.day)))
 }
-//If input date is before the current date, return a color
+//Wenn Datum in der Vergangenheit liegt -> rote Farbe (ToDoListRow)
  func isDateInPast(date: Date, defaultColor: Color)->Color{
     let currentDate = Calendar.current.startOfDay(for: Date())
     if date != Dates.defaultDate{
@@ -215,7 +218,7 @@ func combineDateAndTime(date: String, time: String)->Date{
         return defaultColor
     }
 }
-//If input date is before the current date, return true
+//Wenn Datum in der Vergangenheit liegt -> true
  func isDateInPast(date: Date) -> Bool{
     let currentDate = Calendar.current.startOfDay(for: Date())
     if date != Dates.defaultDate{
@@ -229,7 +232,8 @@ func combineDateAndTime(date: String, time: String)->Date{
     }
 }
 
-//USERNOTIFICATION - Ask for permisson, add and delete notification of ToDo.deadline and ToDo.notification
+//USERNOTIFICATION
+//Erbittet die Erlaubnis Mitteilungen zu senden
 func askForUserNotificationPermission(){
     //Ask user for UserNotification permission
     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){ success, error in
@@ -239,6 +243,7 @@ func askForUserNotificationPermission(){
         }
     }
 }
+//Füge Mitteilung hinzu
 func updateUserNotification(title: String, id: UUID, date: Date, type: String){
     if date != Dates.defaultDate{
         deleteUserNotification(identifier: id)
@@ -256,14 +261,13 @@ func updateUserNotification(title: String, id: UUID, date: Date, type: String){
         }
     }
 }
+//Lösche Mitteilung
 func deleteUserNotification(identifier: UUID){
     UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier.uuidString])
     print("The notification is deleted for the id \(identifier) \n")
 }
 
-/* Convert [NSImage] to Data and backwards (Storing Images)
- * This will be disallowed in the future (Further information in the terminal, if you try to save an image)
- */
+//Konvertiere [NSImage] to Data und zurück zur Speicherung von Bildern
 func NSImageArrayToCoreData(images: [NSImage])->Data? {
     let imageArray = NSMutableArray()
     for img in images{

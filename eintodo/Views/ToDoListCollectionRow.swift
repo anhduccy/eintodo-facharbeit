@@ -6,8 +6,8 @@
 //
 
 /**
- ToDoListCollectionDefaultRow ist eine Zeile für jede vom Programm gelieferte Liste im ContentView (Sidebar-Leiste)
- ToDoListCollectionRow ist eine Zeile für jede benutzerdefinierte Liste im ContentView (Sidebar-Leiste)
+ ToDoListCollectionDefaultRow ist eine Zeile für jede vom Programm gelieferte Liste (Sortierte Listen) im ContentView (Sidebar-Leiste)
+ ToDoListCollectionRow ist eine Zeile für jede benutzerdefinierte Liste (Meine Liste) im ContentView (Sidebar-Leiste)
  */
 
 import SwiftUI
@@ -34,13 +34,14 @@ struct ToDoListCollectionDefaultRow: View{
                     .foregroundColor(userSelected.selectedView == tag ? .white : Colors.primaryColor)
                 Text(title)
                 Spacer()
-                //Counter of ToDos in List
+                //Item-Counter für eine ToDoList
                 Text("\(countNotDoneToDos())")
                     .font(.body)
                     .fontWeight(.light)
             }
         }
     }
+    //Funktion: Zähle noch nicht erledigte Todos
     private func countNotDoneToDos()->Int{
         var counter = 0
         for todo in todos{
@@ -68,11 +69,12 @@ struct ToDoListCollectionRow: View{
     }
     var body: some View{
         HStack{
-            //List icon
+            //Icon-Liste
             SystemCircleIcon(image: list.listSymbol ?? "list.bullet", size: 20, backgroundColor: getColorFromString(string: list.listColor ?? "standard"))
-            //List name
+            //Name der Liste
             Text(list.listTitle ?? "Error").font(.body)
             Spacer()
+            //Information Button um Detail Sheet der To-Do-Liste anzuzeigen
             if(onHover){
                 Button(action: {
                     withAnimation{
@@ -86,12 +88,12 @@ struct ToDoListCollectionRow: View{
                         ToDoListCollectionEditView(type: .edit, isPresented: $showToDoListsEditView, toDoList: list)
                     }
             }
-            //Counter of ToDos in List
+            //Item-Counter von Liste
             Text("\(todos.count)")
                 .font(.body)
                 .fontWeight(.light)
         }
-        .onHover{ over in
+        .onHover{ over in //Wenn der Mauszeiger über einer der Listen sind Zeige Info-Button
             if !showToDoListsEditView{
                 onHover = over
             }

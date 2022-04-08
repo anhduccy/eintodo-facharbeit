@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-class UserSelected: ObservableObject{
+
+class UserSelected: ObservableObject{ //Attribute die global mitverfolgt werden und aktualisiert werden
     @Published var selectedView: Int?
     @Published var selectedDate: Date
     @Published var lastSelectedDate: Date
@@ -26,7 +27,7 @@ class UserSelected: ObservableObject{
     }
 }
 
-//Structs - Global variables
+//Structs - Global Variablen
 struct Dates {
     static let defaultDate = Date(timeIntervalSince1970: 0)
 }
@@ -45,7 +46,7 @@ struct Colors {
     static let primaryColor: Color = .blue
 }
 
-//Enums - View types
+//Enums - View Typen
 enum ToDoListFilterType {
     case dates, noDates, inPast
     case marked
@@ -59,7 +60,7 @@ enum SubmitButtonType {
     case todos, todolists
 }
 
-//Enums - Filter types
+//Enums - Filtertypen
 enum CalendarViewFilterToDoType {
     case deadline
     case notification

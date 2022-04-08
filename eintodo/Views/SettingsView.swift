@@ -8,7 +8,11 @@
 import SwiftUI
 import Foundation
 
-//Add Date to AppStorage, because AppStorage as default does not support the type Date
+/**
+ SettingsView stellt Default-Einstellungen einer Standard-Erinnerung ein
+ */
+
+//Füge den Typ Date (Datum), dem AppStorage (Systemeinstellungsspeicher; SES) zu, weil das es nicht unterstützt
 extension Date: RawRepresentable {
     private static let formatter = ISO8601DateFormatter()
     
@@ -20,8 +24,11 @@ extension Date: RawRepresentable {
         self = Date.formatter.date(from: rawValue) ?? Date()
     }
 }
+
+//Einstellungs-View
 struct SettingsView: View {
-    @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
+    @AppStorage("deadlineTime") private var deadlineTime: Date = Date() //Abruf des Wertes vom SES
+    //View
     var body: some View {
         ZStack{
             VStack(spacing: 20){

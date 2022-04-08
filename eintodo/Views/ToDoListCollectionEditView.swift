@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+/**
+ Detaillierte Sheet-Ansicht für eine Liste: Hier werden die Formalitäten einer Erinnerungsliste vom Nutzer definiert
+ Es gibt zwei Fälle: Hinzufügen und Anzeigen, die in einer Struktur beschreiben werden
+ */
+
 struct ToDoListCollectionEditView: View{
     @Environment(\.managedObjectContext) public var viewContext
     @Environment(\.colorScheme) public var colorScheme
@@ -17,17 +22,17 @@ struct ToDoListCollectionEditView: View{
 
     let type: EditViewType
 
-    //Show EditView
+    //Zeige ToDoListCollectionEditView
     @Binding var isPresented: Bool
     
-    //Values for ToDoList
+    //Initial Werte für ToDoList
     @State var toDoList: ToDoList
     @State var title: String = "Liste"
     @State var description: String = ""
     @State var selectedColor: String = "standard"
     @State var selectedSymbol: String = "list.bullet"
     
-    //Constants
+    //Konstanten für die Views
     let colors: [String] = ["pink", "red", "orange", "yellow", "green", "blue", "indigo", "purple", "brown", "gray"]
     let symbols: [String] = ["list.bullet", "bookmark.fill", "mappin", "gift.fill", "graduationcap.fill", "doc.fill", "book.fill", "banknote", "creditcard.fill", "figure.walk", "fork.knife", "house.fill", "tv.fill", "music.note", "pc", "gamecontroller.fill", "headphones", "beats.headphones", "leaf.fill", "person.fill", "person.2.fill", "person.3.fill", "pawprint.fill", "cart.fill", "bag.fill", "shippingbox.fill", "tram.fill", "airplane", "car.fill", "sun.max.fill", "moon.fill", "drop.fill", "snowflake", "flame.fill", "screwdriver.fill", "scissors", "curlybraces", "chevron.left.forwardslash.chevron.right", "lightbulb.fill", "bubble.left.fill", "staroflife.fill", "square.fill", "circle.fill", "triangle.fill", "heart.fill", "star.fill"]
     let buttonSize: CGFloat = 30
@@ -37,6 +42,7 @@ struct ToDoListCollectionEditView: View{
     var body: some View{
         ZStack{
             VStack{
+                //Labelling
                 TextField("Titel", text: $title)
                     .font(.title.bold())
                     .textFieldStyle(.plain)
@@ -54,7 +60,7 @@ struct ToDoListCollectionEditView: View{
                         .frame(width: 25, height: 25, alignment: .center)
                 }
                 ScrollView{
-                    //Colors
+                    //Farbenauswahl
                     VStack(spacing: 0){
                         LeftText(text: "Farbe", font: .headline)
                         HStack{
@@ -74,7 +80,7 @@ struct ToDoListCollectionEditView: View{
                             }
                         }
                     }
-                    //Symbols
+                    //Symbolauswahl
                     VStack{
                         LeftText(text: "Symbole", font: .headline)
                         LazyVGrid(columns: columns){
@@ -111,6 +117,7 @@ struct ToDoListCollectionEditView: View{
                     }
                 }
                 Spacer()
+                //"Fertig" und "Abbrechen"-Button
                 SubmitButtonsWithCondition(condition: title != "", isPresented: $isPresented, updateAction: {
                     switch(type){
                     case .edit: updateToDoList(editViewType: .edit, todoList: toDoList)
@@ -125,6 +132,7 @@ struct ToDoListCollectionEditView: View{
         .onAppear{
             switch(type){
             case .edit:
+                //Zuweisung wenn ToDoList übergeben wurde
                 title = toDoList.listTitle ?? "Error"
                 description = toDoList.listDescription ?? "Error"
                 selectedColor = toDoList.listColor ?? "standard"
@@ -137,6 +145,7 @@ struct ToDoListCollectionEditView: View{
 }
 
 extension ToDoListCollectionEditView{
+    //Funktion: Aktualisiere Liste oder Füge neue Liste hinzu
     private func updateToDoList(editViewType: EditViewType, todoList: ToDoList = ToDoList()){
         var objToDoList = ToDoList()
         switch(editViewType){
@@ -160,6 +169,7 @@ extension ToDoListCollectionEditView{
         userSelected.selectedToDoListID = objToDoList.listID!
         saveContext(context: viewContext)
     }
+    //Lösche Liste
     private func deleteToDoList(){
         viewContext.delete(toDoList)
         todos.nsPredicate = NSPredicate(format: "idOfToDoList == %@", toDoList.listID! as CVarArg)

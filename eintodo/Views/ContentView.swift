@@ -8,24 +8,35 @@
 import SwiftUI
 import CoreData
 
+/**
+ ContentView definiert Sidebar-Sektionen, führt Initialisierungsschritte durch, strukturiert die App beim erstmaligen Starten
+ */
 struct ContentView: View {
+    //Attribute
+    
+    //Verknüpfung der Datenbank durch den Kontext
     @Environment(\.managedObjectContext) public var viewContext
+    
+    //Verknüpfung eines anderen Speichers (Systemeinstellungen)
     @AppStorage("deadlineTime") private var deadlineTime: Date = Date()
     
+    //Abrufen verschiedener Ergebnisse von verschiedenen Instanzen: ToDo, ToDoList und SubToDo
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)]) var todos: FetchedResults<ToDo>
     @FetchRequest(sortDescriptors: []) var subtodos: FetchedResults<SubToDo>
 
-    //Show view attributes
+    //Variablen zur Anzeige der Sheet-Views
     @State var showAddView: Bool = false
     @State var showToDoListCollectionEditView: Bool = false
 
-    //Communication between Views
+    //Verknüpfung mit einer Klasse UserSelected, die Attribute enthalten, die oft in vielen Views vorkommen
     @EnvironmentObject private var userSelected: UserSelected
 
+    //Grafische Oberfläche
     var body: some View {
         NavigationView {
             List{
+                //Kalender-Link
                 NavigationLink(destination: CalendarView(filter: .deadline), tag: 1, selection: $userSelected.selectedView){
                     HStack{
                         Image(systemName: "calendar")
@@ -34,12 +45,14 @@ struct ContentView: View {
                     }
                 }
                 
+                //Link zu den Listen, die nach Attributen gefiltert sind
                 Section("Sortierte Listen"){
                     ToDoListCollectionDefaultRow(us: userSelected, title: "Alle", systemName: "tray.2", tag: 2, filter: .all)
                     ToDoListCollectionDefaultRow(us: userSelected, title: "Fällig", systemName: "clock", tag: 3, filter: .inPast)
                     ToDoListCollectionDefaultRow(us: userSelected, title: "Markiert", systemName: "star", tag: 4, filter: .marked)
                 }
                 
+                //Link zu den benutzerdefinierten Listen
                 Section(header: Text("Meine Listen")){
                     ForEach(Array(zip(lists.indices, lists)), id: \.1){ index, list in
                         NavigationLink(
@@ -61,6 +74,7 @@ struct ContentView: View {
             .listStyle(.sidebar)
             .frame(minWidth: 175)
             .toolbar{
+                //Toolbar in der Frame-Leiste
                 ToolbarItemGroup(placement: .automatic){
                     Menu(content: {
                         Button(action:{
@@ -90,16 +104,19 @@ struct ContentView: View {
         .sheet(isPresented: $showToDoListCollectionEditView){
             ToDoListCollectionEditView(type: .add, isPresented: $showToDoListCollectionEditView, toDoList: ToDoList())
         }
-        //INITIALIZING FOR THE APP
+        //Initialisierung beim ersten Starten der App
         .onAppear{
-            //Create a list if there is no lists at the beginning
+            //Eine Liste erstellen, wenn keine vorhanden ist -> Fehlervermeidung
             if(lists.isEmpty){createList(viewContext: viewContext)}
             
-            //Set the first list as the selected to do list
+            //UserSeleczted Attribute Erstzuweisung, damit die Spaltenansicht direkt einen Wert bekommt
             userSelected.selectedToDoList = lists.first?.listTitle ?? ""
             userSelected.selectedToDoListID = lists.first?.listID ?? UUID()
             
+            //Fragt, ob der Nutzer Mitteilung haben möchte
             askForUserNotificationPermission()
+            
+            //Lösche alle Instanzen, die keinen Primärschlüssel beinhalten
             for todo in todos{
                 if todo.todoID == nil {
                     viewContext.delete(todo)
@@ -108,6 +125,7 @@ struct ContentView: View {
             }
         }
         .onChange(of: deadlineTime){ newValue in
+            //Wenn die Systemeinstellung für eine Erinnerung (Fälligkeitsdatum) verändert wird, für jede Erinnerung aktualisieren
             for todo in todos{
                 let formattedDate = combineDateAndTime(date: getDate(date: todo.todoDeadline!), time: getTime(date: deadlineTime))
                 if todo.todoDeadline != Dates.defaultDate{

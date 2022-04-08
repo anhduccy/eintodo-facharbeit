@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-//SubToDoList - View to add a SubToDo + Area to show the list
+/**
+ Teilerinnerungen - SubView von Erinnerungen (ToDoEditView)
+ */
+
 struct SubToDoListView: View{
     @Environment(\.managedObjectContext) public var viewContext
     @FetchRequest var subToDos: FetchedResults<SubToDo>
@@ -58,7 +61,7 @@ struct SubToDoListRow: View{
     
     var body: some View{
         HStack{
-            //Checkmark box
+            //Checkmark Box
             Button(action: {
                 subToDo.subtodoIsDone.toggle()
             }, label: {
@@ -81,7 +84,7 @@ struct SubToDoListRow: View{
                         }
                 }
             }).buttonStyle(.plain)
-            //TextField
+            //Textfeld
             TextField("", text: $sub_title).textFieldStyle(.plain)
                 .onDisappear{
                     if sub_title != ""{
@@ -91,7 +94,7 @@ struct SubToDoListRow: View{
                     }
                 }
             Spacer()
-            //Delete-Button
+            //Löschen-Button
             Button(action: {
                 SubToDoFunctions().deleteSubToDo(subToDo: subToDo)
             }, label: {
@@ -109,14 +112,17 @@ struct SubToDoListRow: View{
 
 class SubToDoFunctions {
     let viewContext = PersistenceController.shared.container.viewContext
+    //Lösche Teil-Erinnerungen
     func deleteSubToDo(subToDo: SubToDo){
         viewContext.delete(subToDo)
         saveContext(context: viewContext)
     }
+    //Aktualisiere Teil-Erinnerungen
     func updateSubToDo(subToDo: SubToDo, title: String){
         subToDo.subtodoTitle = title
         saveContext(context: viewContext)
     }
+    //Füge Teil-Erinnerungen hinzu
     func addSubToDo(subToDos: FetchedResults<SubToDo>, title: String, idOfMainToDo: UUID){
         let newSubToDo = SubToDo(context: viewContext)
         newSubToDo.subtodoTitle = title

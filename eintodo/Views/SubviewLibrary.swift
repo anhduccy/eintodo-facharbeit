@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-//Popover to select priority
+/**
+ Externe Auswahl Ansichten für ToDoEditView (Liste und Priorität)
+ */
+
+//Popover zur Prioritätenauswahl
 struct SelectPriorityPopover: View{
     @Binding var priority: Int
     var body: some View{
@@ -24,7 +28,7 @@ struct SelectPriorityPopover: View{
         .padding()
     }
 }
-//ListPicker to select lists
+//Listenauswahl
 struct ToDoEditViewListPicker: View{
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDoList.listTitle, ascending: true)]) var lists: FetchedResults<ToDoList>
     @Binding var listsValueString: String

@@ -7,24 +7,29 @@
 
 import SwiftUI
 
+/**
+ Kalenderansicht
+ */
 struct CalendarView: View {
     @Environment(\.managedObjectContext) public var viewContext
+    //Darkmode oder Lightmode?
     @Environment(\.colorScheme) public var appearance
     @EnvironmentObject private var userSelected: UserSelected
+    
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \ToDo.todoTitle, ascending: true)], animation: .default)
     public var todos: FetchedResults<ToDo>
     
-    //ListView attributes
-    @State var listViewIsActive: Bool = true
-    @State var toDoListFilterType: ToDoListFilterType = .dates
+    //Attribute für ToDoListView
+    @State var listViewIsActive: Bool = true //Zeige ToDoListView (Listenansicht)
+    @State var toDoListFilterType: ToDoListFilterType = .dates //Filtertyp der Listenansicht (hier nach Datum)
     
-    //Date attributes
-    @State var currentMonth: Int = 0
-    @State var navigateDate: Date = Date()
+    //Datumeinstellungen
+    @State var currentMonth: Int = 0 //Aktueller Monat
+    @State var navigateDate: Date = Date() //Datum bei Eingabe von "Navigiere zu"
     
-    @State var showFilterPopover = false
-    @State var filter: CalendarViewFilterToDoType
-    @State var showDateNavigatorPopover = false
+    @State var showFilterPopover = false //Zeige Filtereinstellungen
+    @State var filter: CalendarViewFilterToDoType //Filtertyp der Kalenderansicht
+    @State var showDateNavigatorPopover = false //Zeige "Navigiere zu"
 
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 7)
     let day: Int = 3600*24 //Day in Seconds
@@ -34,7 +39,7 @@ struct CalendarView: View {
         NavigationView{
             ZStack{
                 VStack{
-                    //Display of current month and year & navigation buttons
+                    //Aktueller Monat & Jahr mit Navigation-Button
                     HStack{
                         Text(getYear())
                             .font(.title2)
@@ -61,6 +66,7 @@ struct CalendarView: View {
                             .buttonStyle(.plain)
 
                         }
+                        //"Navigiere zu"
                         Button(action: {
                             showDateNavigatorPopover.toggle()
                         }, label: {
@@ -93,12 +99,14 @@ struct CalendarView: View {
                             }
                     }
                     
-                    //Calendar
+                    //Kalender
                     LazyVGrid(columns: columns){
+                        //Reihe: Wochentage
                         ForEach(weekdays, id: \.self){ weekday in
                             Text(weekday).bold()
                         }
                         
+                        //Wochentage 1-31, 1-30, 1-28
                         ForEach(extractDate(), id: \.self){ dayValue in
                             if(dayValue.day >= 0){
                                 Button(action: {
@@ -107,6 +115,7 @@ struct CalendarView: View {
                                     self.toDoListFilterType = .dates
                                 }, label: {
                                     VStack{
+                                        //Wenn Datum ist ausgewählt -> blauer Hintergrund
                                         if(isSameDay(date1: userSelected.lastSelectedDate, date2: dayValue.date)){
                                             ZStack{
                                                 Circle().fill(Colors.primaryColor)
@@ -115,22 +124,32 @@ struct CalendarView: View {
                                                     .foregroundColor(Colors.primaryColor)
                                             }
                                         } else {
+                                            //Nach Filter anderer Style
                                             switch(filter){
-                                            case .deadline, .notification:
+                                            case .deadline, .notification: //Bei "Fällig am" oder "Erinnerung"
+                                                //Wenn To-Do vorhanden ist und nicht in der Vergangenheit liegend -> Blaue Schrift
                                                 if(!isEmptyOnDate(date: dayValue.date) && !isDateInPast(date: dayValue.date)){
                                                     Text("\(dayValue.day)").foregroundColor(Colors.primaryColor).fontWeight(.light)
+                                                
+                                                //Wenn To-Do vorhanden ist und in der Vergangenheit liegt -> Rote Schrift
                                                 } else if(!isEmptyOnDate(date: dayValue.date) && isDateInPast(date: dayValue.date)){
                                                     Text("\(dayValue.day)").foregroundColor(.red).fontWeight(.light)
+                                                    
+                                                //Wenn To-Do erledigt wurde und Erledigte anzeigen aktiviert ist -> Leicht blau
                                                 } else if(isJustDoneToDos(date: dayValue.date) && userSelected.showDoneToDos){
                                                     Text("\(dayValue.day)").foregroundColor(Colors.primaryColor).fontWeight(.light).opacity(0.5)
+                                                    
+                                                //Sonst standard schwarz
                                                 } else {
                                                     Text("\(dayValue.day)").fontWeight(.light)
                                                 }
-                                            case .isMarked:
+                                            case .isMarked: //Filter = markierte Erinnerung
+                                                //Für Tag, hat Erinnerungen -> Gelb
                                                 if(!isEmptyOnDate(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(appearance == .dark ? .yellow : Color.init(red: 255/255, green: 170/255, blue: 29/255))
                                                         .fontWeight(.light)
+                                                //Für Tag, hat erledigte Erinnerungen -> Leichtes Gelb
                                                 } else if(isJustDoneToDos(date: dayValue.date)){
                                                     Text("\(dayValue.day)")
                                                         .foregroundColor(appearance == .dark ? .yellow : Color.init(red: 255/255, green: 170/255, blue: 29/255))
@@ -148,21 +167,18 @@ struct CalendarView: View {
                             }
                         }
                     }
+                    //Initialisierung CalendarView - Ausgewählter Tag = aktuelles Datum
                     .onAppear{
                         userSelected.selectedDate = Date()
                         userSelected.lastSelectedDate = Date()
                     }
+                    //Wenn "Navigiere zu" bestätigt wurde -> wird zu Ausgewählter Tag
                     .onChange(of: userSelected.lastSelectedDate){ newValue in
                         navigateDate = userSelected.lastSelectedDate
                     }
                     Spacer()
+                    //Erinnerungen ohne Datum
                     HStack{
-                        Button("Erinnerungen ohne Datum"){
-                            userSelected.selectedDate = Dates.defaultDate
-                            self.toDoListFilterType = .noDates
-                        }
-                        .foregroundColor(Colors.primaryColor)
-                        .buttonStyle(.plain)
                         Spacer()
                         Button("Heute"){
                             navigateDate = Date()
@@ -174,7 +190,7 @@ struct CalendarView: View {
                             .foregroundColor(Colors.primaryColor)
                     }
                 }.padding()
-                //Hidden navigation link to navigate between dates
+                //Versteckter Link zum Navigieren zwischen den ToDoListViews
                 VStack {
                     NavigationLink(destination: ToDoListView(title: DateInString(date: userSelected.lastSelectedDate, type: "display"), rowType: .calendar, listFilterType: toDoListFilterType, userSelected: userSelected), isActive: $listViewIsActive){ EmptyView() }
                 }.hidden()
@@ -186,13 +202,14 @@ struct CalendarView: View {
 }
 
 //EXTENSIONS
+//Modell für einen Tag
 struct DateValue: Hashable{
     let id = UUID().uuidString
     var day: Int
     var date: Date
 }
 extension CalendarView{
-    //Display the selected year
+    //Gib ausgewähltes Jahr
     func getYear() -> String{
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY"
@@ -200,7 +217,7 @@ extension CalendarView{
         return year
     }
     
-    //Display the selected month
+    //Gib ausgewählter Monat
     func getMonth() -> String{
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
@@ -209,14 +226,14 @@ extension CalendarView{
         return month
     }
     
-    //Get the selected month
+    //Gib aktueller Monat
     func getCurrentMonth(date: Date = Date()) -> Date {
-        let calendar = Calendar.current
+        let calendar = Calendar.current //Kalendereinstellungen wiedergeben
         var resultDate = Date()
         
         let inputDay = calendar.dateComponents([.day], from: date).day
-        let currentMonth = calendar.dateComponents([.month], from: Date()).month
-        let currentYear = calendar.dateComponents([.year], from: Date()).year
+        let currentMonth = calendar.dateComponents([.month], from: date).month
+        let currentYear = calendar.dateComponents([.year], from: date).year
         
         let dateComponents = DateComponents(calendar: .current, timeZone: calendar.timeZone, year: currentYear, month: currentMonth, day: inputDay)
         if dateComponents.isValidDate{
@@ -230,11 +247,11 @@ extension CalendarView{
         return currentMonth
     }
     
-    //Extract date for selected month from getAllDates()
+    //Extrahiere alle Datum für ausgewählten Monat
     func extractDate() -> [DateValue] {
-        let calendar = Calendar.current
+        let calendar = Calendar.current //Kalender
         
-        // Getting Current month date
+        // Alle Datum für den ausgewählten Monat
         let currentMonth = getCurrentMonth()
         var days = currentMonth.getAllDates().compactMap { date -> DateValue in
             let day = calendar.component(.day, from: date)
@@ -242,28 +259,15 @@ extension CalendarView{
             return dateValue
         }
         
-        // adding offset days to get exact week day...
+        // Offset für richtige Wochentage-Position
         let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
             for _ in 0..<firstWeekday + 5 {
-                days.insert(DateValue(day: -1, date: Date()), at: 0)
+                days.insert(DateValue(day: -1, date: Date()), at: 0) //Wenn kein Tag vorhanden
             }
             return days
         }
     
-    func returnFormatOfFilter()->String{
-        var format = ""
-        switch(filter){
-        case.deadline:
-            format = "todoDeadline <= %@ && todoDeadline >= %@"
-        case.notification:
-            format = "todoNotification <= %@ && todoNotification >= %@"
-        case.isMarked:
-            format = "((todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)) && todoIsMarked == true"
-        }
-        return format
-    }
-    
-    //If storage is empty on date at input date, return true
+    //Funktion: Wenn Ergenisse von todos leer sind -> true
     func isEmptyOnDate(date: Date)->Bool{
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: date)
@@ -279,7 +283,7 @@ extension CalendarView{
         }
     }
     
-    //If storage just has done to-dos at input date, return true
+    //Funktion: Wenn todos für das Datum nur erledigte Erinnerungen haben -> true
     func isJustDoneToDos(date: Date)->Bool{
         let calendar = Calendar.current
         let dateFrom = calendar.startOfDay(for: date)
@@ -301,10 +305,12 @@ extension CalendarView{
         }
     }
     
+    //Funktion: Filter Liste mit Datum
     func predicateList(date: Date){
         let dateFrom = Calendar.current.startOfDay(for: date)
         let dateTo = Calendar.current.date(byAdding: .minute, value: 1439, to: dateFrom)
         
+        //Filter nach Format returnFormatOfFilter()
         switch(filter){
         case .deadline:
             let predicate = NSPredicate(format: returnFormatOfFilter(), dateTo! as CVarArg, dateFrom as CVarArg)
@@ -317,11 +323,26 @@ extension CalendarView{
             todos.nsPredicate = predicate
         }
     }
+    //Filterformat für CalendarView
+    func returnFormatOfFilter()->String{
+        var format = ""
+        switch(filter){
+        case.deadline:
+            format = "todoDeadline <= %@ && todoDeadline >= %@"
+        case.notification:
+            format = "todoNotification <= %@ && todoNotification >= %@"
+        case.isMarked:
+            format = "((todoDeadline <= %@ && todoDeadline >= %@) || (todoNotification <= %@ && todoNotification >= %@)) && todoIsMarked == true"
+        }
+        return format
+    }
 }
 
-//Subviews of CalendarView
+//Subviews von CalendarView
+//"Navigiere zu"
 struct DateNavigatorPopover: View{
     @EnvironmentObject private var userSelected: UserSelected
+    //"Erbt" Variablen von Haupt-View CalendarView
     @Binding var currentMonth: Int
     @Binding var navigateDate: Date
     var body: some View{
@@ -338,6 +359,7 @@ struct DateNavigatorPopover: View{
         .padding()
     }
 }
+//UI: Filter auswählen
 struct SelectFilterPopover: View{
     @Binding var filter: CalendarViewFilterToDoType
     var body: some View{
@@ -356,6 +378,7 @@ struct SelectFilterPopover: View{
         .padding()
     }
 }
+//UI: Button zum Navigieren der Monate
 struct MonthNavigatorButton: View {
     let name: String
     let color: Color

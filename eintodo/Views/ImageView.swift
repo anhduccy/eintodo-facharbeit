@@ -8,6 +8,9 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
+/**
+ Ansichten zur Bilderanzeige der Erinnerung
+ */
 struct ImageView: View{
     @Binding var images: [NSImage]
     var body: some View{
@@ -15,6 +18,7 @@ struct ImageView: View{
             VStack{
                 LeftText(text: "Bilder", font: .headline)
                 HStack{
+                    //Bilder hinzufügen Button
                     Button(action: selectImage){
                         ZStack{
                             Rectangle()
@@ -29,7 +33,7 @@ struct ImageView: View{
                                 .foregroundColor(Colors.primaryColor)
                         }
                     }.buttonStyle(.plain)
-                    //ImageArea
+                    //Vorhandene Bilder
                     ScrollView(.horizontal){
                         HStack{
                             ForEach(images.indices, id: \.self){ index in
@@ -43,7 +47,7 @@ struct ImageView: View{
         }
     }
     private func selectImage(){
-        let panel = NSOpenPanel() //Panel to select Image in Finder
+        let panel = NSOpenPanel() //Wähle Bilder im Finder aus
         panel.prompt = "Bild auswählen"
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
@@ -57,6 +61,7 @@ struct ImageView: View{
             }
         }
     }
+    //Lade Bild
     private func load(URL: URL) -> NSImage?{
         do {
             let imageData = try Data(contentsOf: URL)
@@ -65,7 +70,7 @@ struct ImageView: View{
         return nil
     }
 }
-//ImageEditView - Show the image in a fuller size
+//ImageEditView - Bilderansicht in groß
 struct ImageEditView: View{
     @Binding var images: [NSImage]
     @Binding var isPresented: Bool
@@ -103,7 +108,7 @@ struct ImageEditView: View{
         .frame(height: 500)
     }
 }
-//ImageButton - For Each Image to open the ImageEditView
+//ImageButton - Kleine Bilder Ansicht -> Beim Betätigen wird ImageEditView aufgerufen
 struct ImageButton: View{
     @State var isPresented: Bool = false
     @State var selectedIndexOfURL: Int
