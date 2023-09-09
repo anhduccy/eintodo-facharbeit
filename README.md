@@ -1,5 +1,3 @@
 # eintodo
 
-**eintodo** is a to-do-app with a Calendar function.
-
-It is a product from a skilled work at the St.-Anna-Gymnasium in Wuppertal in 2022 which deals about the persistence framework Core Data and the GUI framework SwiftUI, both developed by Apple.
+eintodo ist eine To-Do-App basierend auf CoreData und SwiftUI. Die App ist ein Bestandteil meiner Facharbeit unter dem Thema "App-Entwicklung von MacOS - Von der Planung zur fertigen App mithilfe von SswiftUI und CoreData" in der Qualifikationsphase I.
